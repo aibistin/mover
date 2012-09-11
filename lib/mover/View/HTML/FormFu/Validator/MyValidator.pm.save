@@ -1,0 +1,22 @@
+package HTML::FormFu::Filter::MyFilter;
+use strict;
+use warnings;
+use base 'HTML::FormFu::Filter';
+ 
+sub validate_value {
+	    my ( $self, $value, $params ) = @_;
+	     
+	        my $c = $self->form->stash->{context};
+		 
+		    return 1 if $c->model('DBIC')->is_valid($value);
+		     
+		        # assuming you want to return a custom error message
+			#     # which perhaps includes something retrieved from the model
+			#         # otherwise, just return 0
+			#             die HTML::FormFu::Exception::Validator->new({
+			#                     message => 'custom error message',
+			#                         });
+			#                         }
+			#                          
+		}		
+1;

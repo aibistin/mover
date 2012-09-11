@@ -1,3 +1,6 @@
+# Got This From  https://github.com/github/gitignore
+# Added some more at the end
+#
 # Compiled source #
 ###################
 *.com
@@ -40,9 +43,32 @@ Thumbs.db
 #####################################
 *.bk
 *.bkp
-*.pm-*
-*.pm.*
+*.pm-
+*.pm.
 *.db
 *.txt
 *-bk
 *-bkp
+#------- Specific to the App::ForExample Fastcgi Setup Scripts
+*.apache2
+*.monit
+*.start-stop
+
+# Form GitHub sample Perl ignore file#
+#####################################
+blib/
+.build/
+_build/
+cover_db/
+inc/
+Build
+Build.bat
+.last_cover_stats
+Makefile
+Makefile.old
+MANIFEST.bak
+META.yml
+MYMETA.yml
+nytprof.out
+pm_to_blib
+
