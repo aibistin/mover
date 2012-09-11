@@ -1,0 +1,771 @@
+#indicator is the field that is used to test for form submission
+indicator: submit
+id: estForm
+auto_id: '%n'
+#auto_constraint_class: required
+render_processed_value: true
+auto_error_class: '%n'
+output_processors:
+    - Indent
+attributes:
+    class: form-horizontal well span10
+
+
+elements:
+#------------------------   Names  ------------------------------# 
+    - type: Block
+      tag: fieldset
+      attributes:
+        class: row-fluid 
+         
+      elements:  
+      - type: Block
+        tag: legend
+        content_xml: Customer Name
+        
+    # Customer Title (First Name Prefix)
+      - type: Text
+        name: prefix
+        label: Prefix.
+        placeholder: Mr. Mrs. Miss etc.
+        container_attributes:
+          class: element span1
+          title: Title
+          filter:
+            - Whitespace
+            - HTMLScrubber
+        attributes:
+          autofocus:
+          class: span12
+        constraints:
+          - type: Length
+            min:   0
+            max:   8
+            message:   Must be between 1 and 8 characters
+       
+     # Customer First Name
+      - type: Text
+        name: first_name
+        #id: first_name
+        label: First Name
+        placeholder: First name
+        container_attributes:
+          title: First Name
+          class: element span3
+        attributes:
+          class: 
+          class:  span11
+          ##allowBlank: 0
+        filter:
+          - Whitespace
+          - HTMLScrubber
+        constraints:
+          - Required
+            #message: "Enter a first name"
+          - type: Length
+            min:   2
+            max:   20
+            message: Must be between 2 and 20 characters
+
+     
+    # Customer Last Name
+      - type: Text
+        name: last_name
+        #id: last_name
+        label: Last Name
+        container_attributes:
+          title: Last Name
+          class: element span3
+        placeholder: Last name
+        attributes:
+          #class: required
+          class:  span11 
+        filter:
+          - Whitespace
+          - HTMLScrubber
+        #auto_constraint_class: required
+        constraints:
+          - Required
+            #message: Enter a last name
+          - type: Length
+            min:   2
+            max:   30
+            message:   Must be between 2 and 30 characters
+
+        
+    # Customer Suffix (Name Suffix)
+      - type: Text
+        name: suffix
+        label: Sfx.
+        placeholder: Sr. Jr. III etc.
+        container_attributes:
+          title: Sr. Jr. II III XXVII etc.
+          class: element span1
+        attributes:
+           class: span12
+        filter:
+            - Whitespace
+            - HTMLScrubber
+        constraints:
+          - type: Length
+            min:   0
+            max:   15
+            message:   Must be between 1 and 15 characters
+            
+      - type: Block
+        content_xml: <hr />   
+      
+    #------------------------    Address  ------------------------------# 
+    - type: Block
+      tag: fieldset
+      attributes:
+        class: row-fluid 
+         
+      elements:  
+      - type: Block
+        tag: legend
+        content_xml: Customer Address           
+   
+      #Street address
+      - type: Text
+        name: address_1
+        #id: address_1
+        label: Address 1
+        placeholder: Building/House number and street
+        container_attributes:
+          title: Street address
+          class: element span6
+        attributes:
+          class: span12
+          #allowBlank: 0
+        filter:
+          - HTMLScrubber
+        constraints:
+          - Required
+            #message: Enter the street address
+          - type: Length
+            min:   2
+            max:   30
+            message:   Must be between 2 and 30 characters
+ 
+    # Customer address 2
+      - type: Text
+        name: address_2
+        #id: address_2
+        label: Address 2
+        placeholder: Apartment number etc.
+        container_attributes:
+          class: element span6
+          title: apartment number etc.
+        attributes:
+          class: span12
+        filter:
+#            - Whitespace
+            - HTMLScrubber
+        constraints:
+          - type: Length
+            max:   30
+            message:   Must be between less than 30 characters
+   
+        
+    #------------------------    City State and Zip  -------------------------# 
+      - type: Block
+        tag: fieldset
+        attributes:
+          class: row-fluid 
+    #  elements:
+ 
+    # Customer city
+      - type: Text
+        name: city
+        #id:   city
+        label: City
+        value: 'New York'
+        placeholder: City
+        container_attributes:
+          class: element span12
+          title: city
+        attributes:
+          class: 
+          class: span2
+        filter:
+          - type: Regex
+          # Will replace the city-state-zip with city
+            match: ^(\w.*)-(\w.+)-(\d*)$
+            replace: $1
+            eval: 1
+          #- type: Callback
+            #callback: "MyValid::city_stripper"
+            #callback: "mover::Controller::Estimates::MyValid::city_stripper"
+          #- +mover::View::HTML::FormFu::Filter::MyFilter::city_stripper
+        constraints:
+          - Required
+            #message: Enter a city
+          - type: Length
+            min:   2
+            max:   30
+            message:   Must be between 1 and 30 characters
+              
+      #
+      #- type: Block
+      #  content_xml: <class="row-fluid">      
+      #
+        
+      
+    # Customer state
+      - type: Text
+        name: state
+        #id: state
+        label: State
+        #id: state
+        value: NY
+        container_attributes:
+          class: element span12
+          title: state
+        attributes:
+          #class: required
+          class: span2
+        filter:
+            - Whitespace
+            - HTMLScrubber
+        constraints:
+          - Required
+          - type: Length
+            max:   2
+            max:   2
+            message:   Must be 2 characters in length
+              
+      #- type: Block
+      #  content_xml: <class="row-fluid">      
+      #
+              
+         
+    # Customer zip
+      - type: Text
+        name: zip
+        #id: zip
+        label: Zip Code
+        placeholder: Zip Code
+        container_attributes:
+          class: element span12
+          title: zip code
+        attributes:
+          class: span2
+        filter:
+            - Whitespace
+            - HTMLScrubber
+        constraints:
+          - type: Regex
+            common:
+              - zip
+              - US
+              - { '-extended': [allow] }
+            message:   Invalid Zip Code format
+          - type: Length
+            max:   14
+            message:   Must be less than 14 characters
+  
+      - type: Block
+        content_xml: <hr />      
+    #------------------------    Phone   -------------------------#
+    - type: Block
+      tag: fieldset
+      attributes:
+        class: row-fluid 
+         
+      elements:  
+      - type: Block
+        tag: legend
+        content_xml: Contact Information
+        
+      
+    
+    # Customer phone 1
+      - type:   Text
+        name:   phone_1
+        #id:   phone_1
+        label:  Phone 1
+        placeholder: Primary phone number
+        container_attributes:
+          class:  element span3
+          title:  Primary Phone Number
+        attributes:
+          class: span12
+          class: 
+        filter:
+            - Whitespace
+            - NonNumeric
+        constraints:
+          - Required
+            #message: Enter at least one phone number
+          - type: Length
+            min: 7
+            max: 14
+            message:  Must be less than 14 characters
+
+    # Customer phone 2
+      - type:   Text
+        name:   phone_2
+        #id:   phone_2
+        label:  Phone 2
+        placeholder: Alternate phone number
+        container_attributes:
+          class: element span3 
+          title: Secondary Number
+        attributes:
+          class: span11
+        filter:
+            - Whitespace
+            - NonNumeric
+        constraints:
+          - type: Length
+            min: 7
+            max: 14
+            message:  Must be less than 14 characters
+
+    # Customer phone 3
+      - type:   Text
+        name:   phone_3
+        label:  Phone 3
+        placeholder: Just in case number
+        container_attributes:
+         class: element span3
+         title: Teritary Number
+        attributes:
+          class: span11
+        filter:
+            - Whitespace
+            - NonNumeric
+        constraints:
+          - type: Length
+            min: 7
+            max: 14
+            message:  Must be less than 14 characters
+      
+      - type: Block
+        content_xml: <hr />      
+      
+         
+    #------------------------    Email  -------------------------# 
+     
+
+      - type: Block
+        content_xml: <class="row-fluid ">       
+         
+      - type: Block
+        tag: div       
+        content_xml: <hr /> 
+       
+# Customer primary email address
+      - type:    Text
+        name:  email_1
+        #id:    email_1
+        label:   Email 1
+        placeholder: Best email address
+        add_attributes:
+          class: 
+        container_attributes:
+          class: element span5
+          title: Primary Email Address
+        attributes:
+          class: span10
+        filter:
+            - Whitespace
+            - HTMLScrubber
+        constraints:
+          - type: Email
+          - type: Length
+            max: 40
+            message:  Must be less than 40 characters
+  
+        
+# Customer secondary email address
+      - type:    Text
+        name:    email_2
+        #id:      email_2
+        label:   Email 2
+        placeholder: Alternate email address
+        container_attributes:
+          class: element span5
+        attributes:
+          class: span10
+          title: Secondary Email Address
+        filter:
+            - Whitespace
+            - HTMLScrubber
+        constraints:
+          - type: Email
+          - type: Length
+            max: 40
+            message:  Must be less than 40 characters
+        
+      - type: Block
+        tag: div       
+        content_xml:  <div class="span12"><hr /></div>
+
+
+
+    #------------------------    Repeat Customer  -------------------------# 
+    - type: Block
+      tag: fieldset
+      attributes:
+        class: row-fluid 
+         
+      elements:  
+      - type: Block
+        tag: legend
+        content_xml: Is This A Repeat Customer
+
+            
+    # Repeat customer
+      - type: Radiogroup
+        name: repeat
+        #id:  repeat_cust
+        value:  3
+        #label: Repeat Customer
+        container_attributes:
+          class: span6 
+          title: Have they moved with us before
+        #placeholder: Have they moved with us before
+        attributes:
+          class: span10
+        constraints:
+          - type: Integer
+            message: Numbers only
+        options:
+         - [ 1, 'Yes' ]
+         - [ 2, 'No'  ]
+         - [ 3, 'Maybe' ]
+         
+      - type: Block
+        content_xml: <hr />
+        
+    #------------------------    Who Recommended us -------------------------# 
+    - type: Block
+      tag: fieldset
+      attributes:
+        class: row-fluid
+         
+      elements:  
+      - type: Block
+        tag: legend
+        content_xml: Recommended By
+        
+    # Customer recommended by
+      - type: Text
+        name: recommended_by
+        #id: recommended_by
+        #label: Recommended by
+        placeholder: Who recommended us?
+        container_attributes:
+          class: element span12
+          title: Who recommended this customer to us
+        attributes:
+          class: span4
+        filter:
+          #- Whitespace
+          - HTMLScrubber
+          - type: Callback
+            callback: "MyValid::profanity_stripper"
+        constraints:
+          - type: Length
+            max: 20
+            message:  A little two wordy
+            
+            
+      - type: Block
+        content_xml: <hr />
+        
+  #------------------------    Date and Time  -------------------------# 
+
+    - type: Block
+      tag: fieldset
+      attributes:
+        class: row-fluid
+         
+      elements:  
+      - type: Block
+        tag: legend
+        content_xml: Schedule Time
+
+        
+    # Uses the JQuery UI calendar
+      - type: Text
+        name: estimate_date
+        label: Schedule Date
+        #id: estimate_date
+        placeholder: 'yyyy-mm-dd'
+        container_attributes:
+          class: span6
+          title: When is a good day for a deailed estimate
+        attributes:
+          class: span10
+          #class: required
+        filter:
+          - Whitespace
+          - HTMLScrubber
+          - type: Callback
+            callback: "MyDate::date_stripper"
+        constraints:
+          - Required
+            #message: When is this estimate to be done
+          - type: Callback
+            callback: MyDate::is_date_current
+            message: 'You must pick a date in the future'
+        inflators:
+        - type: DateTime
+          parser: 
+            strptime:  '%Y-%m-%d'
+          strptime:
+            pattern: '%Y-%m-%d'
+          message: 'In format yyyy-mm-dd'
+        deflator:
+        - type: Strftime
+          strftime: '%Y-%m-%d'
+               
+      
+  
+  # Estimate Time
+      - type: Select
+        name: estimate_time
+        label: Time
+        container_attributes:
+          class: span6
+          title: When is the best time for the estimate
+        attributes:
+          class: span10
+          #class: required
+        filter:
+          - Whitespace
+          - HTMLScrubber
+        deflator:
+        - type: Strftime
+          strftime: '%p'
+        constraints:
+          - Required
+          - type: Length
+            min: 3
+            max: 5
+            message:  Not a valid time format
+          - type: Callback
+            callback: "MyDate::is_time_valid"
+            message:  Not a good time
+        options:
+          - ['00:00','-Time-']
+        #------
+          - ['06:00','6:00am']
+          - ['06:15','6:15am']
+          - ['06:30','6:30am']
+          - ['06:45','6:45am']
+          - ['07:00','7:00am']
+          - ['07:15','7:15am']
+          - ['07:30','7:30am']
+          - ['07:45','7:45am']
+        #-------
+          - ['08:00','8:00am']
+          - ['08:30','8:30am']
+          - ['08:45','8:45am']
+          - ['09:00','9:00am']
+          - ['09:15','9:15am']
+          - ['09:30','9:30am']
+          - ['09:45','9:45am']
+          - ['10:00','10:00am']
+          - ['10:15','10:15am']
+          - ['10:30','10:30am']
+          - ['10:45','10:45am']
+          - ['11:00','11:00am']
+          - ['11:15','11:15am']
+          - ['11:30','11:30am']
+          - ['11:45','11:45am']
+          - ['12:00','12:00 Noon']
+          - ['12:15','12:15pm']
+          - ['12:30','12:30pm']
+          - ['12:45','12:45pm']
+        #-------
+          - ['13:00','1:00pm']
+          - ['13:15','1:15pm']
+          - ['13:30','1:30pm']
+          - ['13:45','1:45pm']
+          - ['14:00','2:00pm']
+          - ['14:15','2:15pm']
+          - ['14:30','2:30pm']
+          - ['14:45','2:45pm']
+          - ['15:00','3:00pm']
+          - ['15:15','3:15pm']
+          - ['15:30','3:30pm']
+          - ['15:45','3:45pm']
+          - ['16:00','4:00pm']
+          - ['16:15','4:15pm']
+          - ['16:30','4:30pm']
+          - ['16:45','4:45pm']
+          - ['17:00','5:00pm']
+          - ['17:15','5:15pm']
+          - ['17:30','5:30pm']
+          - ['17:45','5:45pm']
+          - ['18:00','6:00pm']
+          - ['18:15','6:15pm']
+          - ['18:30','6:30pm']
+          - ['18:45','6:45pm']
+          - ['19:00','7:00pm']
+          - ['19:15','7:15pm']
+          - ['19:30','7:30pm']
+          - ['19:45','7:45pm']
+          - ['20:00','8:00pm']
+          - ['20:00','8:00pm']
+          - ['20:30','8:30pm']
+          - ['20:45','8:45pm']
+          #-------
+          - ['21:00','9:00pm']
+          - ['21:15','9:15pm']
+          - ['21:30','9:30pm']
+          - ['21:45','9:45pm']
+          - ['22:00','10:00pm']
+          - ['22:15','10:15pm']
+          - ['22:30','10:30pm']
+          - ['22:45','10:45pm']
+          - ['23:00','11:00pm']
+          - ['23:15','11:15pm']
+          - ['23:30','11:30pm']
+          - ['23:45','11:45pm']
+          - ['24:00','12:00 Midnight']
+          - ['24:15','12:15am']
+          - ['24:30','12:30am']
+          - ['24:45','12:45am']
+          #------- 
+          - ['01:00','1:00am']
+          - ['01:15','1:15am']
+          - ['01:30','1:30am']
+          - ['01:45','1:45am']
+          - ['02:00','2:00am']
+          - ['02:15','2:15am']
+          - ['02:30','2:30am']
+          - ['02:45','2:45am']
+          - ['03:00','3:00am']
+          - ['03:15','3:15am']
+          - ['03:30','3:30am']
+          - ['03:45','3:45am']
+          - ['04:00','4:00am']
+          - ['04:15','4:15am']
+          - ['04:30','4:30am']
+          - ['04:45','4:45am']
+          - ['05:00','5:00am']
+          - ['05:15','5:15am']
+          - ['05:30','5:30am']
+          - ['05:45','5:45am']
+            
+      - type: Block
+        content_xml: <hr /> 
+    #  
+    #------------------------    Estimator  -------------------------# 
+
+    - type: Block
+      tag: fieldset
+      attributes:
+        class: row-fluid
+         
+      elements:  
+      - type: Block
+        tag: legend
+        content_xml: Assign An Estimator
+        
+    # Estimator
+      - type: Select
+        name: estimator_id
+        #id: estimator_id
+        placeholder: Who will do this estimate?
+        label: Estimator
+        #multiple: 0
+        size: 1
+        empty_first: 1
+        container_attributes:
+          class: span6
+          title: Select an estimator from list
+        attributes:
+          class: span10
+        filter:
+          - Whitespace
+          - HTMLScrubber
+        constraints:
+          - type: Length
+            max: 20
+            message:  Must be less than 20 characters
+            
+      - type: Block
+        content_xml: <hr />   
+    #------------------------    Comments  -------------------------# 
+    - type: Block
+      tag: fieldset
+      attributes:
+        class: row-fluid
+         
+      elements:  
+      - type: Block
+        tag: legend
+        content_xml: Additional Comments
+        
+    # More Comments
+      - type: Textarea
+        name: comments
+        #id: comments
+        #label: Comments
+        container_attributes:
+          class: element span12
+          title: Any extra information that may be helpful
+        attributes:
+          class: span6
+        placeholder: Additional information
+        filter:
+          - type: Callback
+            callback: "MyValid::profanity_stripper"
+        constraints:
+          - type: Length
+            max: 200
+            message:  Must be less than 200 characters
+            
+      - type: Block
+        content_xml: <hr />    
+ 
+    #------------------------    Submit  -------------------------# 
+    - type: Block
+      tag: fieldset
+      attributes:
+        class: row-fluid
+         
+      elements:  
+      - type: Block
+        tag: legend
+        content_xml: <hr />
+        
+ 
+     #The submit button
+      - type: Submit
+        name: submit
+        #id: submit
+        value: Schedule Estimate
+        container_attributes:
+          class: span2
+          title: Submit to schedule the estimate
+        attributes:
+          class: span11 btn btn-primary
+            
+    #The reset button
+      - type: Reset
+        name: reset
+        #id: submit
+        value: Reset Form 
+        container_attributes:
+          class: span2
+          title: Restore the form to its original state
+        attributes:
+          class: span11 btn btn-info
+              
+ #-----------------------------------------------  
+constraints:
+  - SingleValue
+  
+filters:
+    - LowerCase
+    - TrimEdges
+    - HTMLEscape
+        
+  

@@ -1,0 +1,55 @@
+
+[% IF input_one_date_form.input_date %]
+
+       [% IF c.form.has_error %]
+          
+            [% date = input_one_date_form.field_id -%]
+          <!--<div class="error">Input Error</div>-->
+      
+         [% IF c.form.missing(date) %]
+            [% help_text = 'You must enter a date' %]
+           [% field_status = 'warning' %]
+         [% END %]
+      
+         [% IF c.form.invalid(date, 'LENGTH') %]
+            [% help_text = 'The date appears too long (yyyy/mm/dd)' %]
+           [% field_status = 'error' %]
+         [% END %]
+         
+         [% IF c.form.invalid(date, 'DATETIME_STRPTIME' ) %]
+            [% help_text = 'Date should be in yyyy/mm/dd format' %]
+           [% field_status = 'error' %]
+         [% END %]
+         
+     
+      [% ELSIF c.form.success(date) %]
+         [% IF c.request.params.submit_date  == '1' %]
+            [% field_status = 'success' %]
+            [%# help_text = 'Good Date' %]
+          [% END %]
+      [% END %]
+        
+     
+
+   <form class="form-horizontal well small" method="post"  action="[% input_one_date_form.form_action %]" id="[% input_one_date_form.form_id %]">
+      <!--<fieldset>-->
+        <!-- <legend>Legend text</legend>-->
+         <div class="control-group  [% field_status %]">
+            <label class="control-label" for="[% input_one_date_form.field_id %]">[% input_one_date_form.label %]</label>
+            <div class="controls">
+               <div class="input-append">
+                  <input type="text" class="input-small" placeholder="[% input_one_date_form.place %]"
+                     label="[% input_one_date_form.label %]" title="[% input_one_date_form.title -%]"
+                     id="[% input_one_date_form.field_id %]" name="[% input_one_date_form.field_id %]" value="[% input_one_date_form.value %]"><button type="submit"
+                        name="submit_date"  value="1"
+                        class="btn btn-info btn-small">[% input_one_date_form.button_label %]</button>
+               </div> <!-- /input-append -->
+               [% IF help_text %]
+                   <span class="help-inline">[% help_text %]</span>
+               [% END %]   
+            </div>
+         </div>
+      <!--</fieldset>-->
+   </form>
+
+[% END %]

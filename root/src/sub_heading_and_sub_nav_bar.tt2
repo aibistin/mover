@@ -1,0 +1,103 @@
+
+[%# <!-- Sub heading for each department and Sub Nav Bar with Menu Choices --> %]
+
+<div class="container-fluid">
+  <header class="jumbotron subhead" id="overview">
+        <h2> [% h2_main_heading or 'Moving Co.' %]</h2>
+        <p class="lead">[% main_sub_heading or ' Automation' %]</p>
+      <div class="subnav">
+        <!-- Menu Buttons -->
+        <ul class="nav nav-pills">
+          [% IF c.user_exists %]
+          <li class="active"><a href="[% c.uri_for('/menu') %]"> <i class ="icon-home "></i> </a> </li>
+           <!-- Dropdown Estimates --> 
+            <!--  <ul class="nav nav-pills">  -->
+          <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown"  href="#">
+            Estimate Menu 
+            <b class="caret"></b>
+          </a>
+          <ul class="dropdown-menu">
+            <li><a href="[% c.uri_for('/estimates/list_for_today')%]">Estimates Scheduled For Today</a></li>
+            <li><a href="[% c.uri_for('/estimates/list_for_this_week')%]">Estimates Scheduled For This Week</a></li>
+            <li><a href="[% c.uri_for('/estimates/list_for_this_month')%]">Estimates Scheduled For This Month</a></li>
+            <li><a href="[% c.uri_for('/estimates/list_by_date')%]">View Scheduled Estimates By Date</a></li>
+            <li><a href="[% c.uri_for('/estimates/list_date_range')%]">View Scheduled Estimates Within Date Range</a></li>
+            <li><a href="[% c.uri_for('/estimatesmenu/by_estimator')%]">View Scheduled Estimates By Estimator</a></li>
+            <li><a href="[% c.uri_for('/estimatesmenu/by_customer')%]">View Scheduled Estimates By Customer</a></li>
+            <li><a href="[% c.uri_for('/estimates/list')%]">View All Estimates</a></li>
+            <li class="divider"></li>
+            <li><a href="[% c.uri_for('/estimates/schedule_estimate')
+                %]" title="Schedule An Estimate">Schedule An Estimate</a></li>
+          </ul>
+        </li>
+        <!-- End Estimates Dropdown -->
+          
+          <!-- Dropdown Customer --> 
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown"  href="#">
+            Customer Menu 
+            <b class="caret"></b>
+          </a>
+          <ul class="dropdown-menu">
+            <li><a href="[% c.uri_for('/customer/list') %]"
+              title="List All Customers">All Customers</a></li>
+            <li><a href="[% c.uri_for('/customer/list_by_customer_id') %]"
+               title="List Customer By Customer Id">Customer Id </a></li>
+            <li><a href="[% c.uri_for('/customer/list_by_last_name') %]"
+               title="List Customers By Last Name">Last Name </a></li>
+            <li><a href="[% c.uri_for('/customer/list_by_first_name') %]"
+              title="List Customers By First Name">First Name </a></li>
+            <li><a href="[% c.uri_for('/customer/list_by_phone_no') %]"
+               title="List Customer By Phone Number">Phone Number </a></li>
+            <li class="divider"></li>
+            <li><a href="[% c.uri_for('/customer/create_customer') %]" 
+              title="Create A New Customer">Create New Customer</a></li>
+          </ul>
+        </li>
+        <!-- End Customer Dropdown -->
+        
+         <!-- Dropdown Job --> 
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown"  href="#">
+            Jobs Menu 
+            <b class="caret"></b>
+          </a>
+          <ul class="dropdown-menu">
+            <li><a href="[% c.uri_for('/jobs/list') %]"
+              title="List All Jobs">All Jobs</a></li>
+    
+            <li><a href="[% c.uri_for('/jobs/list') %]"
+              title="List Jobs By First Name">First Name </a></li>
+            <li class="divider"></li>
+            <li><a href="[% c.uri_for('/jobs/create_jobs') %]" 
+              title="Create A New Job">Create New Job</a></li>
+          </ul>
+        </li>
+        <!-- End Job Dropdown -->
+       
+        <!--<li class="divider"></li>-->
+       <!-- <li><a href="[% c.uri_for('/jobs/list')
+        %]" title="List Customers">Jobs</a></li>
+        <li><a href="[% c.uri_for('/jobs/create_job')
+        %]" title="Create A New Customer">Schedule New Job</a></li>-->
+        
+        <!--<li class="divider"></li>-->
+
+        <!--<div class="nav  nav-pills pull-right">-->
+        <!--<div class="btn-group pull-right">-->
+          <li><a href="[% c.uri_for('/logout') %]">Logout</a></li>
+        <!--</div>-->
+        [% ELSE %]
+       <!-- <div class="nav nav-pills pull-right">-->
+           <li><a href="[% c.uri_for('/login') %]">Login</a></li>
+        <!--</div>-->
+        [% END %]
+        <li class="divider-vertical"></li>
+      </ul>
+    </div> <!-- /sub-nav -->
+    </header>
+   
+     
+</div> <!-- /container-fluid -->     
+ 

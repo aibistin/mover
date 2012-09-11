@@ -1,0 +1,46 @@
+[% META title = 'Estimates Menu' %]
+ <div  class="fluid">
+
+[% IF c.user_exists %]
+        
+        <!-- Create New Estimate -->
+		 <p><a href="[% c.uri_for('/estimates/schedule_estimate') %]">Schedule New Estimate</a></p>
+		
+		<!-- Estimates By Date-->
+		<p><a href="[% c.uri_for(c.controller.action_for('by_date')) %]">View Estimates By Date</a></p>
+		
+		<!-- Estimates By Estimator -->
+		<p><a href="[% c.uri_for('by_estimator') %]">View Estimates By Estimator</a></p>
+		
+		<!-- Estimates By Customer -->
+		<p><a href="[% c.uri_for('by_customer') %]">View Estimates By Customer</a></p>
+			
+		 <!-- List Estimates -->
+		<p><a href="[% c.uri_for('/estimates/list') %]">View All Estimates</a></p> 
+
+		
+		<!--
+		
+		<form action='estimates_menu' method='post'>
+		<select name='select_estimate'>
+		 <option value=<a href="[% c.uri_for(c.controller.action_for('list')) %]">View All Estimates</a>
+		 <option value=<a href="[% c.uri_for(c.controller.action_for('between_dates')) %]">Time Period</a>
+		 <option value=<a href="[% c.uri_for(c.controller.action_for('on_date')) %]">For Date</a>
+		 <option value=<a href="[% c.uri_for(c.controller.action_for('before_date')) %]">Before Date</a>
+		 <option value=<a href="[% c.uri_for(c.controller.action_for('after_date')) %]">After Date</a>
+		 <option value=<a href="[% c.uri_for(c.controller.action_for('by_date')) %]">By Date</a>
+		 <option value=<a href="[% c.uri_for(c.controller.action_for('by_date')) %]">By Estimator</a>
+		 <option value=<a href="[% c.uri_for(c.controller.action_for('by_date')) %]">By Customer</a>
+	     </select>
+		<input type='submit' value='submit'>
+	   </form>
+        -->
+        
+[% ELSE %]
+				
+		<p>You need to log on to access this information</ p>				
+				
+[% END %]
+   
+  </div><!-- End Fluid Class -->  
+ 

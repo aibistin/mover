@@ -1,0 +1,193 @@
+[%# USE Dumper %] 
+ [%#  Dumper.dump_html(c.stash.estimate_history ) %]
+[% # Body of Main Menu -%]
+
+[% META title = 'Customer Detail' %]
+
+<div class="container-fluid">
+ 
+ 
+ [% IF c.user_exists %]
+
+[%# Customer Result set %]
+[%customer = c.stash.object %]
+<div class="row-fluid">
+ <div class="span12">
+  <div class="page-header">
+   <h3>Customer: [%- customer.full_name %] </h3>
+   <h4>Customer ID: [% customer.id -%]</h4>
+   [%- repeater = customer.repeat %]
+   
+      <div class="lighter-text">
+        [% SWITCH repeater %]
+            [%   CASE '1' %]
+                <em> (Repeat Customer) </em>
+            [%   CASE '2' %]   
+                 <em> (New Customer) </em>
+            [%   CASE %]              
+                 <em> (Not Known If New Or Repeat Customer) </em>
+        [% END %]
+        
+        [% IF status_msg %]
+        <div class="span12 alert alert-success">
+          <h5 class="alert-heading">[% status_msg %]</h5>
+        </div>
+        [% END %]
+
+      </div><!-- /lighter-text -->
+  </div><!-- /page-header -->
+ </div> <!-- End Offset -->
+</div><!-- End Row Fluid -->
+
+[%# <!--Address--> %]
+<div class="row-fluid">
+ <div class="span6">
+  <address>
+   <strong><em>Residing at: </em></strong><br>
+   
+    <div class="lighter-text">
+    [%- customer.address_1 %]<br>
+    
+    [%- customer.address_2 || 'No Apt. Number etc.' %]<br>
+    
+    [%-customer.city FILTER ucfirst %]<br>
+    
+    [%- customer.state FILTER upper%] [% customer.zip%]<br>
+    </div><!-- lighter text -->
+  </addres>
+ </div><!-- /span -->
+
+
+
+ <div class="span6">
+  <address>
+  <strong><em>Contact Info: </em></strong><br>
+  [%# <!--Phone and Email--> %]
+  <div class="lighter-text">
+   <em>Phone 1:</em> [%- customer.phone_1  or '(none)' %] <br>
+   [% IF customer.phone_2 %]
+    <em>Phone 2:</em> [%- customer.phone_2 %]<br>
+   [% END %]
+   [% IF customer.phone_3 %]
+    <em>Phone 3:</em> [%- customer.phone_3%]<br>
+   [% END %]
+   
+   <em>Email:</em> [%- customer.email_1  || '(none)' %]<br>
+   [% IF customer.email_2 %]
+     <em>Email 2:</em> [%- customer.email_2%]<br>
+   [% END %]
+   [% IF customer.email_3 %]
+     <em>Email 3:</em> [%- customer.email_3%]<br>
+   [% END %]
+  </div><!-- /lighter-text -->
+  </address>
+ </div><!-- /span6 -->
+</div> <!-- /row-fluid -->
+
+
+<div class="row-fluid">
+ <div class="span6">
+[%# <!--Recommended By--> %]
+  <address>
+  <strong><em>Recommended by:</em></strong><br>
+  <div class="lighter-text">
+   [%- customer.recommended_by || "(none)" %]<br>
+  </div><!-- /lighter-text -->
+  </address>
+ </div><!-- /span6 -->
+ 
+ 
+</div><!-- /row-fluid> -->
+
+[%# <!--Customer Date--> %]
+
+
+<div class="row-fluid">
+ <div class="span12">
+  <address>
+   <strong><em>Estimate History:</em></strong><br>
+    <div class="lighter-text">
+     [% IF estimate_history.count > 0 %]
+        <address>
+        <h6>[% customer.full_name %] had [% estimate_history.count %] estimate[% IF estimate_history.count > 1 -%]s[% END %] previously: </h6>
+        [% WHILE ( est_history = estimate_history.next ) %]
+         <em class="offset1">On [% est_history.estimate_date_datetime.mdy('/') %] at [% est_history.estimate_time_datetime.strftime("%I:%M %p") || 'w/a' %]  with [% est_history.estimator.alias or est_history.estimator.full_name %].
+         <a class="btn btn-info btn-mini" href="[% c.uri_for(c.controller('Estimates').action_for('display_estimate_details'),[est_history.id]) %]">Details <i class="icon-info-sign icon-white"></i></a></em>
+        [% END %]
+        </address>
+     [% ELSE%]
+       <em> No estimate information available for this customer. </em>
+     [% END %]
+   </div><!-- /lighter-text -->
+  </address>
+
+ </div><!-- /span12 -->
+</div><!-- /row-fluid> -->
+
+[%# <!--Comments--> %]
+
+<div class="row-fluid">
+ <div class="span12">
+  <address>
+  <strong><em>Comments:</em></strong><br>
+   <div class="lighter-text">
+    [%- customer.comments  || "(none)" %]<br>
+   </div><!-- /lighter-text -->
+  </address>
+ </div><!-- /span12 -->
+</div><!-- /row-fluid> -->
+
+
+<div class="row-fluid">
+  <div class="span6">
+  <strong><em>Created By:</em></strong><br>
+   <div class="lighter-text">
+    <em>[%- customer.created_by.full_name || customer.created_by.alias  %] on [%- customer.created_datetime.mdy('/') %] at [% customer.created_datetime.strftime("%I:%M %p") %]<em><br>
+   </div><!-- /lighter-text -->
+</div><!-- /span6 -->
+ 
+[% IF updated != 0 %]
+ <!-- If Updated -->
+ <div class="span6">
+  <strong><em>Updated By:</em></strong><br>
+   <div class="lighter-text">
+    <em>[%- customer.updated_by.full_name || customer.updated_by.alias  %] on [%- customer.updated_datetime.mdy('/') %] at [% customer.updated_datetime.strftime("%I:%M %p") %]<em><br>
+  </div><!-- /lighter-text -->
+ </div><!-- /span6 -->
+[% END %]
+
+</div><!-- /row-fluid> -->
+
+
+<div class="row-fluid">
+ <hr class="soften">
+</div><!-- /row-fluid> -->
+ 
+
+<div class="row-fluid">
+ <!-- Update Delete Customer Buttons -->
+  <div class="span6">
+   <a class="btn btn-primary" title="Make Changes" href="[% c.uri_for(c.controller.action_for('update_customer'),[customer.id]) %]"> Update <i class="icon-edit icon-white"></i> </a>
+  </div><!-- /span6 -->
+
+ <div class="span6">
+  <a class="btn btn-danger" title="No Mercy" href="[% c.uri_for(c.controller.action_for('delete'),[customer.id]) %]">Delete <i class="icon-trash icon-white"></i></a>
+ </div><!-- /span6 -->
+
+</div><!-- /row-fluid> -->
+ 
+    
+ [% ELSE %]
+     <p><em> You are not logged in. Please log in to access customer data.</em></p>
+ [% END %]
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+</div><!--/.fluid-container-->  

@@ -1,0 +1,32 @@
+ [%# USE Dumper %] 
+  [%# Dumper.dump_html(c.stash.form) %]
+  
+ [% IF updating == '1'  %]
+    [% META title = 'Edit Customer Details' %]
+    
+ [% ELSE %]
+    
+   [%# META title = 'Create A Customer Record' %]
+ [% END %]
+
+
+<div class="container-fluid"> 
+ [% IF c.user_exists %]
+ 
+
+   <div class="row-fluid">
+     <h2> [% new_heading or "Enter Customer Details" %] </h2>
+   </div> <!-- / row-fluid -->
+   
+   <div class="row-fluid">
+     [% form -%]
+   </div> <!-- / row-fluid -->
+
+
+ 
+ [% ELSE %]
+     <p> You are not logged in. Please log in to create customer record.</p> 
+ [% END %]
+</div><!-- /container-fluid -->
+ 
+ 

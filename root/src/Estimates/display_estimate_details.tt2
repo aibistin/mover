@@ -1,0 +1,159 @@
+[%# USE Dumper %] 
+ [%#Dumper.dump_html(c.stash.estimate) %]
+[% # Body of Estimate Display. -%]
+
+[% META title = 'Estimate Detail' %]
+
+   
+
+ [% IF c.user_exists %]
+
+[%# Estimate Result set %]
+[%estimate = c.stash.object %]
+<div class="row-fluid">
+   <h3>Estimate Scheduled For:</h3>
+   <p class="lead">[%- estimate.customer.full_name %] </p>
+   <p>Customer ID:  [% estimate.customer.id %]<br>Estimate ID:  [% estimate.id %]</p>
+   [%- repeater = estimate.customer.repeat %]
+   
+      <div class="lighter-text">
+     [% SWITCH repeater %]
+        [%   CASE '1' %]
+            <em> (Repeat Customer) </em>
+        [%   CASE '2' %]   
+                <em> (New Customer) </em>
+        [%   CASE %]              
+                <em> (Not Known If New Or Repeat Customer) </em>
+     [% END %]
+      </div><!-- /lighter-text -->
+    
+     [% IF status_msg %]
+     <div class="span12 alert alert-success">
+        <h5 class="alert-heading">[% status_msg %]</h5>
+     </div>
+     [% END %]
+
+</div><!-- End Row Fluid -->
+
+<div class="bs-docs-contact">
+    [%# <!--Address--> %]
+  <div class="row-fluid">
+    <div class="span6">
+    <address>
+    <larger>Residing at: </larger><br>
+    
+        [%- estimate.customer.address_1 %]<br>
+        
+        [%- estimate.customer.address_2 || 'No Apt. Number etc.' %]<br>
+        
+        [%-estimate.customer.city FILTER ucfirst %]<br>
+        
+        [%- estimate.customer.state FILTER upper%] [% estimate.customer.zip%]<br>
+    </addres>
+    </div><!-- /span -->
+
+
+
+    <div class="span6">
+    <address>
+    <larger>Contact Info: </larger><br>
+    [%# <!--Phone and Email--> %]
+    <tad-larger>Phone 1:</tad-larger> [%- estimate.customer.phone_1%]<br>
+    <tad-larger>Phone 2:</tad-larger> [%- estimate.customer.phone_2%]<br>
+    <tad-larger>Phone 3:</tad-larger> [%- estimate.customer.phone_3%]<br>
+    <tad-larger>Email:</tad-larger> [%- estimate.customer.email_1  || "(none)" %]<br>
+    [% IF estimate.customer.email_2 %]
+    <tad-larger>Email 2:</tad-larger> [%- estimate.customer.email_2%]<br>
+    [% END %]
+    [% IF estimate.customer.email_3 %]
+    <tad-larger>Email 3:</tad-larger> [%- estimate.customer.email_3%]</tad-larger><br>
+    [% END %]
+    </address>
+    </div><!-- /span6 -->
+  </div> <!-- /row-fluid -->
+</div> <!-- /"bs-docs-contact" -->
+
+<div class="bs-docs-internal">
+  <div class="row-fluid">
+    <div class="span6">
+    [%# <!-- Recommended By --> %]
+    <address>
+    <larger>Recommended by:</larger><br>
+     <tad-larger>[%- estimate.customer.recommended_by || "(none)" %] </tad-larger><br>
+    </address>
+    </div><!-- /span6 -->
+    
+    <div class="span6">
+    [%# <!--Estimator--> %]
+    <address>
+    <larger>Estimator:</larger><br>
+    <tad-larger>[%- estimate.estimator.full_name || estimate.estimator.alias ||'w/a' %]</tad-larger> <br>
+    </address>
+    </div><!-- /span6 -->
+  </div><!-- /row-fluid> -->
+
+  [%# <!--Estimate Date--> %]
+
+
+  <div class="row-fluid">
+    <div class="span12">
+    <address>
+    <larger>Scheduled For:</larger><br>
+      <tad-larger> 
+        <em>[%- estimate.estimate_date_datetime.mdy || 'w/a' %]</em>
+        <em>[%- estimate.estimate_time_datetime.strftime("%I:%M %p") || 'w/a' %]</em><br>
+    </tad-larger>
+    </address>
+
+    </div><!-- /span12 -->
+  </div><!-- /row-fluid> -->
+
+  [%# <!--Comments--> %]
+
+  <div class="row-fluid">
+    <div class="span12">
+    <address>
+      <larger>Comments:</larger><br>
+      <tad-larger>  [%- estimate.comments  || "(none)" %]</tad-larger><br>
+    </address>
+    </div><!-- /span12 -->
+  </div><!-- /row-fluid> -->
+
+
+  <div class="row-fluid">
+    <div class="span6">
+    <larger>Created By:</larger><br>
+    <tad-larger>
+        <em>[%- estimate.created_by.full_name || estimate.created_by.alias  %] on [%- estimate.created_datetime.mdy('/') %] at [% estimate.created_datetime.strftime("%I:%M %p") %]<em><br>
+    </tad-larger>
+    </div><!-- /span6 -->
+    
+    [% IF updated != 0 %]
+    <!-- If Updated -->
+    <div class="span6">
+    <larger>Updated By:</larger><br>
+    <tad-larger>
+        <em>[%- estimate.updated_by.full_name || estimate.updated_by.alias  %] on [%- estimate.updated_datetime.mdy('/') %] at [% estimate.updated_datetime.strftime("%I:%M %p") %]<em><br>
+    </tad-larger>
+    </div><!-- /span6 -->
+    [% END %]
+  </div><!-- /row-fluid> -->
+</div> <!-- /"bs-docs-internal" -->
+
+<div class="row-fluid">
+ <!-- Update Delete Estimate Buttons -->
+  <div class="span6">
+   <a class="btn btn-primary" title="Make Changes" href="[% c.uri_for(c.controller.action_for('update_estimate'),[estimate.id]) %]"> Update <i class="icon-edit icon-white"></i> </a>
+  </div><!-- /span6 -->
+
+ <div class="span6">
+  <a class="btn btn-danger" title="No Mercy" href="[% c.uri_for(c.controller.action_for('delete'),[estimate.id]) %]">Delete <i class="icon-trash icon-white"></i></a>
+ </div><!-- /span6 -->
+
+</div><!-- /row-fluid> -->
+ 
+    
+ [% ELSE %]
+     <p><em> You are not logged in. Please log in to access estimate data.</em>
+ [% END %]
+ 

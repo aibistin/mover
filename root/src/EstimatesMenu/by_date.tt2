@@ -1,0 +1,34 @@
+[%# USE Dumper %] 
+  [%# Dumper.dump_html(form) %]
+
+ [% META title = 'Find Scheduled Estimates By Date' %]
+<!--<div class="container-fluid">-->
+  <div class="row-fluid">
+	<div class="span12">
+	  
+	[%# Use Formfu form here %]
+	 <div class="row-fluid">
+	  <div class="span8">
+		<div class="offset1">
+		  		<div class="page-header">
+		   <h3 class="jumbotron subhead">Use one of these options to view scheduled estimates</h3>
+		</div><!-- /page-header -->
+		<!-- Form -->
+		 [% form %]
+		 </div> <!-- End offset -->
+	  </div> <!-- End span -->
+	 </div><!-- End Row Fluid -->
+	   
+	</div> <!-- End span12 -->
+  </div><!-- End Row Fluid -->
+<!--</div>--> <!-- /end-container -->
+
+<!-- jQuery -->
+<script type="text/javascript" src="[% c.uri_for('/') %]static/jquery/js/datepicker_ui_function.js"></script>
+
+<!--  Client Side Form Validators  -->
+<!-- JQUERY  Validate -->
+<script type="text/javascript" src="[% c.uri_for('/') %]static/jquery/js/jquery_bassistance_byDate_form_valid.js"></script>
+	
+	
+	

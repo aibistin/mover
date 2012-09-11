@@ -1,0 +1,298 @@
+<!--<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" [%#%]
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">-->
+    
+<!DOCTYPE html>
+<html lang="en">    
+<head>
+<title>[% template.title or "Super Mover" %]</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Schedule Estimates">
+<meta name="author" content="austin kenny">
+
+<!-- Emastics -->
+<link   href="[% c.uri_for('/') %]static/css/emastics/reset.css" rel="stylesheet" type="text/css" />
+<link   href="[% c.uri_for('/') %]static/css/emastics/grid.css" rel="stylesheet" type="text/css"  />
+<link   href="[% c.uri_for('/') %]static/css/emastics/type.css" rel="stylesheet"  type="text/css" />
+<link   href="[% c.uri_for('/') %]static/css/emastics/plugins/gadgets.css" rel="stylesheet"  type="text/css" />
+
+<link   href="[% c.uri_for('/') %]static/css/emastics/plugins/percent-grid.css" rel="stylesheet"  type="text/css" />
+<link   href="[% c.uri_for('/') %]static/css/emastics/plugins/absolute-grid.css" rel="stylesheet"  type="text/css" />
+<link   href="[% c.uri_for('/') %]static/css/emastics/plugins/semantic.css" rel="stylesheet"  type="text/css" />
+
+<!--   Jquery Ui -->
+<link type="text/css" href="[% c.uri_for('/') %]static/jquery/css/redmond/jquery-ui-1.8.18.custom.css" rel="Stylesheet" />
+
+<!--[if IE]><link  rel="stylesheet" href="[% c.uri_for('/') %]static/css/emastics/ie.css" type="text/css" rel="stylesheet"><![endif]-->
+
+
+<!-- JQUERY  All (From Google)-->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+
+
+
+<!--   Twitter Bootstrap Stuff -->
+<link   href="[% c.uri_for('/') %]bootstrap/css/bootstrap.css" rel="stylesheet"  type="text/css" />
+<script type="text/javascript" src="[% c.uri_for('/') %]bootstrap/js/bootstrap.min.js"></script>
+<!--<img src="[% c.uri_for('/') %]bootstrap/img/glyphicons-halflings.png" />
+<img src="[% c.uri_for('/') %]bootstrap/img/glyphicons-halflings-white.png" />-->
+<!--<style type="text/css">-->
+<!--      body {-->
+<!--        padding-top: 60px;-->
+<!--        padding-bottom: 40px;-->
+<!--      }-->
+<!--      .sidebar-nav {-->
+<!--        padding: 9px 0;-->
+<!--      }-->
+<!--</style>-->
+
+
+
+<!-- Local CSS-->
+<link rel="stylesheet" href="[% c.uri_for('/') %]static/css/main.css" />
+
+
+
+ <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+
+
+
+
+
+<!-- JQUERY  All my copy but google copy may be  faster -->
+<!-- <script type="text/javascript" src="../static/jquery/jquery-1.7.1.js"></script>-->
+
+
+
+<!--   Jquery Ui (Google)-->
+<script type="text/javascript" src=https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js></script>
+
+<!--   <script type="text/javascript" src="[% c.uri_for('/') %]static/jquery/js/jquery-1.7.1.min.js"></script> -->
+<!--   <script type="text/javascript" src="[% c.uri_for('/') %]static/jquery/js/jquery-ui-1.8.18.custom.min.js"></script> -->
+
+<!--   My JScript Jquery Ui (Cities and Zip codes) -->
+<script type="text/javascript" src="[% c.uri_for('/') %]static/jquery/js/local_cities.js"></script>
+<!--<script type="text/javascript" src="[% c.uri_for('/') %]static/jquery/js/employees.js"></script>-->
+
+
+<!--   jquery tools -->
+<!--<script type="text/javascript" src="../static/jquery/jquery_tools/jquery.tools.min.js"></script>-->
+
+
+<!-- Clear old error messages -->
+<script type="text/javascript">
+//$(document).ready(function() { 
+// 
+//    $('#btn-submit').click(function() {  
+// 
+//        $(".error").hide();
+//        var hasError = false;
+// 
+//    });
+//});
+</script>
+
+
+<!--  JScript Jquery Ui Functions  (datepicker autofill etc ) -->
+<script type="text/javascript" src="[% c.uri_for('/') %]static/jquery/js/jquery_ui_functions.js"></script>
+
+<!-- Copy State and Zip code -->
+<script type="text/javascript" src="[% c.uri_for('/') %]static/jquery/js/jquery_state_zip_copy.js"></script>
+
+</script >
+
+<script type="text/javascript">
+
+/*$.validator.setDefaults({
+//submitHandler: function() { alert("Scheduling the estimate!"); }
+})*/;
+</script>
+
+
+
+<!-- JQUERY  Validate -->
+<!--//http://jquery.bassistance.de/validate/demo/-->
+<script type="text/javascript" src="[% c.uri_for('/') %]static/jquery/jquery_validation/jquery.validate.min.js"></script>
+<script type="text/javascript"   src="[% c.uri_for('/') %]static/jquery/jquery_validation/additional-methods.min.js"></script>
+<!-- validate Estimates form -->
+<script type="text/javascript" src="[% c.uri_for('/') %]static/jquery/js/jquery_bassistance_form_valid.js"></script>
+
+<!-- emastics style -->
+<style>
+  /*.main{width:90%;}*/
+ 
+  .main{width:90em;}
+ .bg1{background-color:#FFFFF0; }      /*Ivory*/
+ .bg2{background-color:#F8F8FF; }    /*GhostWhite*/
+ .bg3{background-color:#E0FFFF; }   /*Light Cyan*/
+ .bg4{background-color:#ADD8E6; }   /*Light blue*/
+ .bg5{background-color:#00BFFF; }    /*Deep Sky Blue*/
+ .bg6{background-color:#F8F8FF; }    /*Tomato*/
+ .hg1{ height:2em;}
+ .hg2{ height:5em;}
+ .hg3{ height:10em;}
+ .hg4{ height:20em;}
+ .hg5{ height:30em;}
+ .hg6{ height:40em;}
+ .hg7{ height:50em;}
+ .hg8{ height:60em;}
+ .hghalf{ height:0.5em;}
+ .hgqrtr{ height:0.25em;}
+ 
+ .ml1{margin-left:1em;}
+ .ml2{margin-left:2em;}
+ .ml3{margin-left:3em;}
+ /*.gridlines {background:url(grid.png);}*/
+
+ 
+ /*h2{display:none}*/
+ </style>
+
+<script type="text/javascript">
+				  function log( message ) {
+					  $( "<div/>" ).text( message ).prependTo( "#employee_name" );
+					  $( "#employee_name" ).scrollTop( 0 );
+				  }
+				  
+				  
+				  $(function() {
+						var emps = [% employee_ids_names %];
+						
+						$( "#employee_name" ).autocomplete({
+						   source: emps,
+						   minLength: 1,
+						   //appendTo: "#employee_name"
+						   select: function( event, ui ) {
+						  log( ui.item ?
+						ui.item.value :
+					  this.value );
+					  }
+				  });
+				}); 
+			  </script>
+
+
+</head>
+
+
+[%# ********** BODY STARTS HERE ********** -%]
+<body>
+[%# emastics main div -%]
+<!--<div class="main bg1">-->
+<div class="main tc water gridlines bg1">   <!--Outer grid area-->
+    <div class="clear"></div>     <!--Outer grid area-->
+<div class="dp100 clearfix">      <!--Outer grid area  100% fixed-->
+
+
+[%#  <!--Heading Line and Top LHS;Corner-->  -%]
+<div class="dp100 clearfix">
+<div class="dp10 bg1"><p>Carry On Moving</p></div>          
+<div class="dp90 bg1">
+<!--<div id="header">-->
+    [%# Your logo could go here -%]
+    <!--<img src="[% c.uri_for('/static/images/btn_88x31_powered.png') %]" />-->
+    <!--<img src="[% c.uri_for('/static/images/t_and_l_mechanics.png') %]" />-->
+    [%# Insert the page title -%]
+    
+  <h4>[% template.title or site.title  %]</h>
+ 
+
+<!--</div> -->   <!--  end header -->
+</div><!--  end class="dp90 -->
+</div><!--  end "dp100 clearfix" -->
+<div class="clear"></div>
+
+<!--<div class="dp100 clearfix:after" ></div> -->  <!--White Space-->
+  
+<!--<div class="dp30" style="background-color:#999;"><h1>30%</h1></div>-->
+<!--<div class="dp30" style="background-color:#888;"><h1>30%</h1></div>-->
+<!--<div class="dp40" style="background-color:#777;"><h1>40%</h1></div>-->
+<!--<div class="clear"></div>-->
+<!---->
+
+<!--Left Hand Navigation Bar--><!-- Content -->
+<div class="dp100 clearfix" >
+<div class="dp10 tl bg3" > <!--LHS-->
+
+<div id="menu">
+    <ul>
+        <li><a href="[% c.uri_for('/estimatesmenu/main_menu') %]">Home</a></li>
+         <div class="clear hghalf"> </div>
+         [% IF c.user_exists %]
+        
+        <li><a href="[% c.uri_for('/estimatesmenu/main_menu')
+            %]" title="Estimates Menu">Estimate Menu</a></li>
+        
+        <div class="clear hghalf"> </div>
+        <li><a href="[% c.uri_for('/estimates/list')
+            %]" title="Scheduled Estimates">Estimate List</a></li>
+        
+         <div class="clear hghalf"> </div>
+        <li><a href="[% c.uri_for('/estimates/schedule_estimate')
+            %]" title="Schedule An Estimate">Schedule An Estimate</a></li>
+        
+         <div class="clear hghalf"> </div>
+        <li><a href="[% c.uri_for('/customer/list')
+            %]" title="List Customers">Customers</a></li>
+        
+        <div class="clear hghalf"> </div>
+        <li><a href="[% c.uri_for('/customer/create_customer')
+            %]" title="Create A New Customer">Create New Customer</a></li>
+        
+        
+         <div class="clear hghalf"> </div>
+        <li><a href="[% c.uri_for('/logout') %]">Logout</a></li>
+        
+         <div class="clear hghalf"> </div>
+        [% ELSE %]
+        <li><a href="[% c.uri_for('/login') %]">Login</a></li>
+        [% END %]
+     </ul>
+</div>  <!-- end menu -->
+</div><!--  End  LHS "dp10 clearfix" -->
+
+<div class="dp90 bg1" > <!--RHS Content area-->
+<!--<div id="content">   -->
+    
+    
+    [%# This is where TT will stick all of your template's contents. -%]
+    [% content %]
+    
+
+[%# emastics messages -%]
+<div class="dp100 clearfix">
+<div class="dp90 bg6 hg1" > <!--Message Area at bottom of content -->
+    [%# Status and error messages %]
+    <span class="message">[% status_msg %]</span>
+    <span class="error">[% error_msg %]</span>
+</div><!-- end emastics messages -->
+<div class="dp100 clearfix"><!-- end div clearfix for message area -->
+
+</div><!-- end content "dp90"-->
+</div> <!-- end clearfix "dp10"  Left Margin and Content area-->
+      
+
+
+
+<br class="clear" />
+[%#  <!--Emastics Footer-->-%]
+<div class="dp100 clearfix" >
+<footer>
+<em class="dp100 tc" >&copy; Austin Kenny 2012</em>
+</footer>
+</div > <!-- end class=dp100 clearfix (footer) -->
+
+
+</div><!-- END Outer grid area -->
+</div><!-- END Outer grid clearfix-->
+
+</body>
+</html>
+    
+    

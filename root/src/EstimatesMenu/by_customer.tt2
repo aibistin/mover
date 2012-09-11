@@ -1,0 +1,82 @@
+
+[% META title = 'Find Estimates By Customer' %]
+
+<div  class="fluid ">
+<div class="dp100 clearfix">      <!--Outer grid area  100% fixed-->
+[%# USE Dumper %] 
+  [%#Dumper.dump_html(c) %]
+
+
+[% IF c.user_exists %]
+		<div class="dp100 clearfix">      <!--Inner-->
+		<div class="dp90 fr rc ">
+        <div class=byline ><h6>Search for scheduled estimates using one of these options</h></div>
+        <!-- Find Estimate By Customer Last Name Form -->
+		        <div class="dp100 hg1 clearfix"></div>
+				<div id="last_name_form" >
+				<form method="post" action="[% c.uri_for('by_customer') %]">
+					<div class="dp15 ml5"> Customer Last Name:</div>
+					<div class="dp20"> <!-- Input field -->
+						<input type="text" name="last_name" size="30" value="[%- last_name %]" placeholder="Find customers matching a last name"/>
+					    <title>Last Name</title>
+					  <!-- <placeholder>Last Name</placeholder> -->
+				    </div> 
+     				<div class="dp40"> 	
+				    <input type="submit" name="submit" value="Find" />
+     				</div>
+				</form>
+				</div>  <!-- End Last Name form -->
+<div class="clear"/></div>
+				<!-- Find by Customer First name -->
+				<div class="dp100 hg1 clearfix"></div>
+				<div id="first_name_form">
+				<form method="post" action="[% c.uri_for('by_customer') %]">
+				  <div class="dp15 ml5" >Customer First Name: </div>
+				  <div class="dp20"> <!-- Input field -->
+					  <input type="text" name="first_name" size="30" value="[%- first_name %]" placeholder="Find customers matching a first name"/>
+					  <title>First Name</title>
+				  </div> <!-- End Input field -->
+				  <div class="dp40"> <!-- Submit Field -->
+					  <input type="submit" name="submit" value="Find" />
+ 				  </div>  <!-- End Submit field  -->
+				</form>
+				</div>  <!-- End First Name form -->
+<div class="clear"/></div>
+ 				<!-- Search by Similar Names -->
+				<div class="dp100 hg1 clearfix"></div>
+				<div id="search_name_form">
+				<form method="post" action="[% c.uri_for('by_customer') %]">
+				  <div class="dp15 ml5" >Search By Customer First and Last Name Combinations: </div>
+				  <div class="dp20"> <!-- Input field -->
+     				  <input type="text" name="search_name" size="30" value="[%- search_name %]" placeholder="Enter up to 10 first or last names" />
+					  <title>Search Name</title>
+					  <!-- <placeholder>Search Name </placeholder>  -->
+                  </div> <!-- End Input field -->
+		          <div  class="dp40">
+					  <input type="submit" name="submit" value="Search" />
+				  </div>
+				 </form>
+				</div> <!-- End Search buySimilar Names orm -->
+				<div class="dp100 hg1 clearfix"></div>
+
+<div class="clear"/></div>
+
+</div> <!-- end class ="dp90fr rc ">  -->   
+</div>      <!--End Inner Clearfix-->
+
+<div class="dp100 tl hg2 clearfix">
+ <div class="clear"></div>
+     <div class="dp100 tc">
+     <!-- Create New Estimate -->
+    <p><a class="lipstick" href="[% c.uri_for(c.controller.action_for('main_menu')) %]">Return To Estimate Menu</a></p>
+     </div>
+</div><!-- End Clearfix -->
+
+      
+[% ELSE %]
+		<p>You need to login to use access estimate data</p>
+[% END %]
+
+
+</div>      <!--End Outer grid area  100% fixed-->
+</div><!-- End fluid class -->

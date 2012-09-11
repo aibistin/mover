@@ -1,0 +1,67 @@
+
+[% IF input_month_form.month_of_year %]
+
+       [% IF c.form.has_error %]
+          
+            [% date = input_month_form.field_id -%]
+          <!--<div class="error">Input Error</div>-->
+     
+         [% IF c.form.invalid(date, 'LENGTH') %]
+            [% help_text = 'The month number seems too large' %]
+           [% field_status = 'error' %]
+         [% END %]
+         
+  
+         
+     
+      [% ELSIF c.form.success(date) %]
+         [% IF c.request.params.submit_day  == '1' %]
+            [% field_status = 'success' %]
+            [%# help_text = 'Good Date' %]
+          [% END %]
+      [% END %]
+        
+     
+
+   <form class="form-horizontal well mini" method="post"  action="[% input_month_form.form_action %]" id="[% input_month_form.form_id %]">
+      <!--<fieldset>-->
+        <!-- <legend>Legend text</legend>-->
+      <!-- Add data-toggle="buttons-radio" for radio style toggling on btn-group -->
+      <div class="control-group  [% field_status %]"   title="[% input_month_form.title -%]" >
+        <label class="control-label" for="[% input_month_form.field_id %]"> [% input_month_form.label %] </label>
+        <div class="controls">
+
+         <div class="row-fluid">
+          <div class="btn-group" data-toggle="buttons-radio">
+            <button class="btn btn-inverse" id="[% input_month_form.field_id %]" name="[% input_month_form.field_id %]"   value="1" >Jan</button>
+            <button class="btn btn-inverse" id="[% input_month_form.field_id %]" name="[% input_month_form.field_id %]"   value="2" >Feb</button>
+            <button class="btn btn-inverse" id="[% input_month_form.field_id %]" name="[% input_month_form.field_id %]"   value="3" >Mar</button>
+            <button class="btn btn-inverse" id="[% input_month_form.field_id %]" name="[% input_month_form.field_id %]"   value="4" >Apr</button>
+            <button class="btn btn-inverse" id="[% input_month_form.field_id %]" name="[% input_month_form.field_id %]"   value="5" >May</button>
+            <button class="btn btn-inverse" id="[% input_month_form.field_id %]" name="[% input_month_form.field_id %]"   value="6" >Jun</button>
+           </div>
+
+          <ul  class="nav nav-list"><li class="divider"></li></ul>
+
+            <div class="btn-group" data-toggle="buttons-radio">           
+              <button class="btn btn-inverse" id="[% input_month_form.field_id %]" name="[% input_month_form.field_id %]"   value="7" >Jul</button>
+              <button class="btn btn-inverse" id="[% input_month_form.field_id %]" name="[% input_month_form.field_id %]"   value="8" >Aug</button>
+              <button class="btn btn-inverse" id="[% input_month_form.field_id %]" name="[% input_month_form.field_id %]"   value="9" >Sep</button>
+              <button class="btn btn-inverse" id="[% input_month_form.field_id %]" name="[% input_month_form.field_id %]"   value="10" >Oct</button>
+              <button class="btn btn-inverse" id="[% input_month_form.field_id %]" name="[% input_month_form.field_id %]"   value="11" >Nov</button>
+              <button class="btn btn-inverse" id="[% input_month_form.field_id %]" name="[% input_month_form.field_id %]"   value="12" >Dec</button>
+             </div>
+            </div>
+           <!-- /btn-grp -->
+          <div>
+          [% IF help_text %]
+               <span class="help-inline">[% help_text %]</span>
+           [% END %]   
+           </div>
+       </div> <!-- /controls -->
+      </div> <!-- /control-group -->
+      <!--</fieldset>-->
+   </form>
+
+
+[% END %]

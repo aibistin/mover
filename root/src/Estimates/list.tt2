@@ -1,0 +1,122 @@
+[%# USE Dumper %] 
+ [%#Dumper.dump_html(c.stash.estimate) %]
+[% # Body of Estimate List. -%]
+
+[% META title = 'Scheduled Estimates' -%]
+
+  
+<div class="container-fluid">
+ [% IF c.user_exists %]
+
+
+  <div class="row-fluid">
+    <header class="jumbotron subhead">
+      <div class="row-fluid">
+        <div class="span6">
+          <h3>[% sub_heading %] <em class="lead">[% time_period %]</em> </h3>
+        </div>
+        <div class="span6">
+          [%#  <!-- Miniforms --> %]
+          [% INCLUDE tab_enclosed_forms.tt2 %]
+        </div> <!-- /span6 -->
+      </div> <!-- /row-fluid -->
+    </header> <!-- /jumbo -->
+  </div><!-- /row-fluid -->  
+
+  [% IF estimate_count %]
+    <table class="table table-striped table-bordered table-condensed">
+      <thead>
+      <tr>
+       <th>ID</th>
+       <th>Estimate Date And Time</th>
+        <th>Last Name</th>
+         <th>First Name</th>
+          <th>Address</th><th>Address (cont)</th>
+           <th>City</th>
+            <th>State</th>
+             <th>Zip</th>
+              <th>Primary Phone</th>
+               <!--<th>Second Phone</th>-->
+                 <th>Estimator</th>
+                  <th>Status</th>
+                    <th>Details</th>
+      </tr>
+      </thead>
+      <tbody>
+      [% WHILE (estimate = resultset.next) %]
+      <tr>
+       <td>[%- estimate.id %]</td>
+       <td>[% estimate.estimate_date_datetime.day_abbr %] [% estimate.estimate_date_datetime.mdy('/') %] at
+            [% estimate.estimate_time_datetime.strftime("%I:%M %p") %]</td>
+        <td>[%- estimate.customer.last_name FILTER  ucfirst%]</td>
+         <td>[%- estimate.customer.first_name FILTER  ucfirst %]</td>
+          <td>[%- estimate.customer.address_1 %]</td>
+           <td>[%- estimate.customer.address_2 %]</td>
+            <td>[%- estimate.customer.city FILTER  ucfirst%]</td>
+             <td>[%- estimate.customer.state FILTER  upper %]</td>
+              <td>[%- estimate.customer.zip %]</td>
+               <td>[%- estimate.customer.phone_1 %]</td>
+                <td>[%- estimate.estimator.alias or estimate.estimator.full_name or "none" FILTER  ucfirst %] </td>
+                  <td>[%- estimate.status || "w/a" %]</td>
+                    <td><a class="btn btn-info btn-mini" href="[% c.uri_for(c.controller.action_for('display_estimate_details'),[estimate.id]) %]">Details <i class="icon-info-sign icon-white"></i></a></td>
+      </tr>
+      
+        [%# End While Loop %]
+      [% END %]
+      </tbody>
+      </table>
+    
+      <p class="lead"> [%  found_msg ||  estimate_count _ ' estimates scheduled.' %] </p>
+ 
+           
+           
+  [% ELSIF estimate_count  == 0 %]
+    
+     <div class="row-fluid">
+      <p class="lead"> [% found_msg || 'No estimates found this time.' -%] </p>
+      <!--<p class="lead"> [% found_msg || 'No estimates scheduled for this time period.' %] </p>-->
+     </div>
+        
+         
+       
+  [% END %] [%# End (if estimates_count )%]
+  
+  <div class="row-fluid">  <hr class="soften">  </div><!--/row-->
+  
+    <div class="row-fluid">
+       [%# For Next Week or Previous Day/Week/Month Links%]
+        <ul class="pager">
+          [% IF prev %]
+            <li class="previous">
+              <a href="[% prev -%]">&larr; [% prev_label %]</a>
+            </li>
+          [% END %]
+          [% IF next %]
+            <li class="next">
+             <a href="[% next -%]">[% next_label %] &rarr;</a>
+            </li>
+          [% END %]
+        </ul>
+    </div> <!-- End Fluid -->
+   
+ [% ELSE %]
+    <div class="row-fluid">
+     <p> You are not logged in. Please log in to access estimate data.
+    </div> <!-- End Row Fluid -->
+ [% END %]
+ 
+</div><!--/.fluid-container-->   
+      
+ <!--  Client Side Form Validators  -->
+<!-- JQUERY  Validate -->
+<!-- //http://jquery.bassistance.de/validate/demo/ -->
+
+<div class="row-fluid"> 
+ [% validation_js -%]
+ [% datepicker_js -%]
+ [% date_validation_js -%]
+ <!--<script type="text/javascript" src="[% c.uri_for('/') %]static/jquery/js/jquery_bassistance_customer_id_form_valid.js"></script>-->
+ <!--<script type="text/javascript" src="[% c.uri_for('/') %]static/jquery/js/jquery_bassistance_first_name_form_valid.js"></script>-->
+ <!--<script type="text/javascript" src="[% c.uri_for('/') %]static/jquery/js/jquery_bassistance_last_name_form_valid.js"></script>-->
+ <!--<script type="text/javascript" src="[% c.uri_for('/') %]static/jquery/js/jquery_bassistance_customer_phone_valid.js"></script>-->
+</div>

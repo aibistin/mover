@@ -1,0 +1,36 @@
+ [%# USE Dumper %] 
+  [%# Dumper.dump_html(c.stash.new_heading) %]
+  
+ [% IF updating == '1'  %]
+    [% META title = 'Update An Estimate' %]
+    <h4>[% new_heading or "Update This Scheduled Estimate" %]</h4>
+    
+ [% ELSE %]
+    
+   [% META title = 'Schedule An Estimate' %]
+   <h4>[% new_heading or "Enter Customer Details And Schedule An Estimate" %]</h4>
+ [% END %]
+ 
+
+<div class="container-fluid"> 
+ [% IF c.user_exists %]
+ 
+
+   <!--<div class="row-fluid">-->
+     <!--<h6> [% new_heading or "Enter the information" %] </h6>-->
+   <!--</div> <!-- / row-fluid -->
+   
+   <div class="row-fluid">
+     [% form -%]
+   </div> <!-- / row-fluid -->
+
+
+ 
+ [% ELSE %]
+     <p> You are not logged in. Please log in to create customer record.</p> 
+ [% END %]
+ 
+</div><!-- /container-fluid -->  
+
+
+

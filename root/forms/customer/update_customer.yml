@@ -1,0 +1,553 @@
+#indicator is the field that is used to test for form submission
+indicator: submit
+id: custForm
+auto_id: '%n'
+#auto_constraint_class: required
+render_processed_value: true
+auto_error_class: '%n'
+output_processors:
+    - Indent
+attributes:
+    class: form-horizontal well
+    
+   
+elements:
+#------------------------   Names  ------------------------------# 
+    - type: Block
+      tag: fieldset
+      attributes:
+        class:  row-fluid span12 
+         
+      elements:  
+      - type: Block
+        tag: legend
+        content_xml: Customer Name
+        
+    # Customer Title (First Name Prefix)
+      - type: Text
+        name: prefix
+        label: Prefix.
+        placeholder: Mr. Mrs. Miss etc.
+        container_attributes:
+          class: element span2
+          title: Title
+          filter:
+            - Whitespace
+            - HTMLScrubber
+        attributes:
+          autofocus:
+          class: span10
+        constraints:
+          - type: Length
+            min:   0
+            max:   8
+            message:   Must be between 1 and 8 characters
+       
+     # Customer First Name
+      - type: Text
+        name: first_name
+        #id: first_name
+        label: First Name
+        placeholder: First name
+        container_attributes:
+          title: First Name
+          class: element span3
+        attributes:
+          class: 
+          class:  span11
+          ##allowBlank: 0
+        filter:
+          - Whitespace
+          - HTMLScrubber
+        constraints:
+          - type: Required
+            message: Please enter a first name
+          - type: Length
+            min:   2
+            max:   20
+            message: Must be between 2 and 20 characters
+
+     
+    # Customer Last Name
+      - type: Text
+        name: last_name
+        #id: last_name
+        label: Last Name
+        container_attributes:
+          title: Last Name
+          class: element span3
+        placeholder: Last name
+        attributes:
+          #class: required
+          class:  span11 
+        filter:
+          - Whitespace
+          - HTMLScrubber
+        #auto_constraint_class: required
+        constraints:
+          - type: Required
+            message: Please enter a last name
+          - type: Length
+            min:   2
+            max:   30
+            message:   Must be between 2 and 30 characters
+
+        
+    # Customer Suffix (Name Suffix)
+      - type: Text
+        name: suffix
+        label: Sfx.
+        placeholder: Sr. Jr. III etc.
+        container_attributes:
+          title: Sr. Jr. II III XXVII etc.
+          class: element span2
+        attributes:
+           class: span10
+        filter:
+            - Whitespace
+            - HTMLScrubber
+        constraints:
+          - type: Length
+            min:   0
+            max:   15
+            message:   Must be between 1 and 15 characters
+            
+      - type: Block
+        content_xml: <hr class="soften">   
+      
+    #------------------------    Address  ------------------------------# 
+    - type: Block
+      tag: fieldset
+      attributes:
+        class:  row-fluid
+         
+      elements:  
+      - type: Block
+        tag: legend
+        content_xml: Customer Address           
+   
+      #Street address
+      - type: Text
+        name: address_1
+        #id: address_1
+        label: Address 1
+        placeholder: Building/House number and street
+        container_attributes:
+          title: Street address
+          class: element span6
+        attributes:
+          class: span12
+          #allowBlank: 0
+        filter:
+          - HTMLScrubber
+        constraints:
+          - Required
+            #message: Enter the street address
+          - type: Length
+            min:   2
+            max:   30
+            message:   Must be between 2 and 30 characters
+ 
+    # Customer address 2
+      - type: Text
+        name: address_2
+        #id: address_2
+        label: Address 2
+        placeholder: Apartment number etc.
+        container_attributes:
+          class: element span6
+          title: apartment number etc.
+        attributes:
+          class: span12
+        filter:
+            - Whitespace
+            - HTMLScrubber
+        constraints:
+          - type: Length
+            max:   30
+            message:   Must be between less than 30 characters
+            
+             
+    #------------------------    City State and Zip  -------------------------# 
+      - type: Block
+        tag: fieldset
+        attributes:
+          class:  row-fluid
+    #  elements:
+ 
+    # Customer city
+      - type: Text
+        name: city
+        #id:   city
+        label: City
+        value: 'New York'
+        placeholder: City
+        container_attributes:
+          class: element span12
+          title: city
+        attributes:
+          class: 
+          class: span2
+        filter:
+          - type: Regex
+          # Will replace the city-state-zip with city
+            match: ^(\w.*)-(\w.+)-(\d*)$
+            replace: $1
+            eval: 1
+          #- type: Callback
+            #callback: "MyValid::city_stripper"
+            #callback: "mover::Controller::Estimates::MyValid::city_stripper"
+          #- +mover::View::HTML::FormFu::Filter::MyFilter::city_stripper
+        constraints:
+          - Required
+            #message: Enter a city
+          - type: Length
+            min:   2
+            max:   30
+            message:   Must be between 1 and 30 characters
+              
+      #
+      #- type: Block
+      #  content_xml: <class="row-fluid">      
+      #
+        
+      
+    # Customer state
+      - type: Text
+        name: state
+        #id: state
+        label: State
+        #id: state
+        value: NY
+        container_attributes:
+          class: element span12
+          title: state
+        attributes:
+          #class: required
+          class: span2
+        filter:
+            - Whitespace
+            - HTMLScrubber
+        constraints:
+          - Required
+            #message: Enter a state
+          - type: Length
+            max:   2
+            max:   2
+            message:   Must be 2 characters in length
+              
+      #- type: Block
+      #  content_xml: <class="row-fluid">      
+      #
+              
+         
+    # Customer zip
+      - type: Text
+        name: zip
+        #id: zip
+        label: Zip Code
+        placeholder: Zip Code
+        container_attributes:
+          class: element span12
+          title: zip code
+        attributes:
+          class: span2
+        filter:
+            - Whitespace
+            - HTMLScrubber
+        constraints:
+          - type: Regex
+            common:
+              - zip
+              - US
+              - { '-extended': [allow] }
+          - type: Length
+            max:   14
+            message:   Must be less than 14 characters
+  
+      - type: Block
+        content_xml: <hr class="soften">      
+    #------------------------    Phone   -------------------------#
+    - type: Block
+      tag: fieldset
+      attributes:
+        class: row-fluid
+         
+      elements:  
+      - type: Block
+        tag: legend
+        content_xml: Contact Information
+        
+      
+    
+    # Customer phone 1
+      - type:   Text
+        name:   phone_1
+        #id:   phone_1
+        label:  Phone 1
+        placeholder: Primary phone number
+        container_attributes:
+          class:  element span3
+          title:  Primary Phone Number
+        attributes:
+          class: span12
+          class: 
+        filter:
+            - Whitespace
+            - NonNumeric
+        constraints:
+          - Required
+            #message: Enter at least one phone number
+          - type: Length
+            min: 7
+            max: 14
+            message:  Must be less than 14 characters
+
+    # Customer phone 2
+      - type:   Text
+        name:   phone_2
+        #id:   phone_2
+        label:  Phone 2
+        placeholder: Alternate phone number
+        container_attributes:
+          class: element span3 
+          title: Secondary Number
+        attributes:
+          class: span11
+        filter:
+            - Whitespace
+            - NonNumeric
+        constraints:
+          - type: Length
+            min: 7
+            max: 14
+            message:  Must be less than 14 characters
+
+    # Customer phone 3
+      - type:   Text
+        name:   phone_3
+        label:  Phone 3
+        placeholder: Just in case number
+        container_attributes:
+         class: element span3
+         title: Teritary Number
+        attributes:
+          class: span11
+        filter:
+            - Whitespace
+            - NonNumeric
+        constraints:
+          - type: Length
+            min: 7
+            max: 14
+            message:  Must be less than 14 characters
+      
+      - type: Block
+        content_xml: <hr class="soften">      
+      
+         
+    #------------------------    Email  -------------------------# 
+     
+
+      - type: Block
+        content_xml: <class="row-fluid">       
+         
+      - type: Block
+        tag: div       
+        content_xml: <hr class="soften"> 
+       
+# Customer primary email address
+      - type:    Text
+        name:  email_1
+        #id:    email_1
+        label:   Email 1
+        placeholder: Best email address
+        add_attributes:
+          class: 
+        container_attributes:
+          class: element span5
+          title: Primary Email Address
+        attributes:
+          class: span10
+        filter:
+            - Whitespace
+            - HTMLScrubber
+        constraints:
+          - type: Email
+          - type: Length
+            max: 40
+            message:  Must be less than 40 characters
+  
+        
+# Customer secondary email address
+      - type:    Text
+        name:    email_2
+        #id:      email_2
+        label:   Email 2
+        placeholder: Alternate email address
+        container_attributes:
+          class: element span5
+        attributes:
+          class: span10
+          title: Secondary Email Address
+        filter:
+            - Whitespace
+            - HTMLScrubber
+        constraints:
+          - type: Email
+          - type: Length
+            max: 40
+            message:  Must be less than 40 characters
+        
+      - type: Block
+        tag: div       
+        content_xml:  <div class="span12"><hr class="soften"></div>
+
+    #------------------------   Additional Data  -------------------------#
+    - type: Block
+      tag: fieldset
+      attributes:
+        class: row-fluid
+         
+      elements:  
+ 
+    # Repeat customer
+      - type: Radiogroup
+        name: repeat
+        #id:  repeat_cust
+        value:  3
+        label: Repeat Customer
+        container_attributes:
+          class: element span8
+          title: Have they moved with us before
+        #placeholder: Have they moved with us before
+        attributes:
+          class: span11
+        constraints:
+          - type: Integer
+            message: Numbers only
+        options:
+         - [ 1, 'Yes' ]
+         - [ 2, 'No'  ]
+         - [ 3, 'Maybe' ]
+         
+         
+      - type: Block
+        tag: div       
+        content_xml: <hr class="soften">
+       
+    #------------------------    Who Recommended us -------------------------# 
+    - type: Block
+      tag: fieldset
+      attributes:
+        class: row-fluid
+         
+      elements:  
+      - type: Block
+        tag: legend
+        content_xml: Recommended By
+        
+    # Customer recommended by
+      - type: Text
+        name: recommended_by
+        #id: recommended_by
+        #label: Recommended by
+        placeholder: Who recommended us?
+        container_attributes:
+          class: element span12
+          title: Who recommended this customer to us
+        attributes:
+          class: span4
+        filter:
+          #- Whitespace
+          - HTMLScrubber
+          - type: Callback
+            callback: "MyValid::profanity_stripper"
+        constraints:
+          - type: Length
+            max: 20
+            message:  A little two wordy
+            
+            
+      - type: Block
+        content_xml: <hr class="soften"> 
+        
+     
+    #------------------------    Comments  -------------------------# 
+    - type: Block
+      tag: fieldset
+      attributes:
+        class: row-fluid
+         
+      elements:  
+      - type: Block
+        tag: legend
+        content_xml: Additional Comments
+        
+    # More Comments
+      - type: Textarea
+        name: comments
+        #id: comments
+        #label: Comments
+        container_attributes:
+          class: element span12
+          title: Any extra information that may be helpful
+        attributes:
+          class: span6
+        placeholder: Additional information
+        filter:
+          - type: Callback
+            callback: "MyValid::profanity_stripper"
+        constraints:
+          - type: Length
+            max: 200
+            message:  Must be less than 200 characters
+    
+ 
+    #------------------------    Submit  -------------------------# 
+    - type: Block
+      tag: fieldset
+      attributes:
+        class:  row-fluid
+         
+      elements:  
+      - type: Block
+        tag: legend
+        content_xml: <hr class="soften">
+        
+ 
+     #The submit button
+      - type: Submit
+        name: submit
+        #id: submit
+        value: Add Customer
+        container_attributes:
+          class: span2
+          title: Confirm the updates that you have just made
+        attributes:
+          class: span11 btn btn-primary
+            
+    #The reset button
+      - type: Reset
+        name: reset
+        #id: submit
+        value: Reset Form 
+        container_attributes:
+          class: span2
+          title: Restore customer information to it's current status
+        attributes:
+          class: span11 btn btn-info span11
+          
+          
+          #class: icon-trash
+          
+#-----------------------------------------------  
+constraints:
+  - SingleValue
+  
+filters:
+    - LowerCase
+    - TrimEdges
+    - HTMLEscape
+        
+  

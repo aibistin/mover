@@ -1,0 +1,128 @@
+  [%# <!-- THIS IS THE MAIN ESTIMATES MENU  --> %]
+
+<!-- Main Menu Page -->
+[% META title = 'Estimates Menu' %]
+<div class="container">
+
+<!-- Masthead
+================================================== -->
+<div class="row-fluid">
+<header class="jumbotron masthead">
+    <p class="marketing-byline">So, What do You Want To Do?</p>
+    <hr class="soften" />
+</header>
+</div> <!-- /"row-fluid" -->
+
+
+ [% IF c.user_exists %]
+
+[%# <!-- Estimates Selection -->%]
+<div class="row-fluid">
+  
+  [%# <!-- Estimate Scheduler Selector Button -->
+%]
+  <div class="span4">
+    <div class="hero-unit">
+      <!-- Button -->
+      <p><a class="btn btn-large btn-primary menu-pop"
+            title="Schedule A Visual Estimate"
+            data-content="Gather customer information so as to schedule an on site
+            estimate. (Similar to scheduling an estimate in the estimate
+            book.)"
+            href="[%
+            c.uri_for(c.controller('Estimates').action_for('schedule_estimate'))
+            %]">Schedule A Visual Estimate  <i class="icon-eye-open icon-white"></i>
+      </a></p>
+    </div> <!-- /hero-unit -->
+  </div> <!-- /span4 -->
+      
+  [%# <!-- Phone Estimate Selector Button -->
+%]
+ <div class="span4">
+    <div class="hero-unit">
+      <!-- Button -->    
+      <p><a class="btn btn-large btn-primary  menu-pop"
+            title="Over The Phone Estimate"
+            data-content="Conduct standard phone interview estimate." 
+            href="[%
+            c.uri_for(c.controller('Estimates').action_for('schedule_estimate'))
+            %]">Complete A Phone Estimate  <i class="icon-bullhorn icon-white"></i></a></p>
+    </div> <!-- /hero-unit -->
+  </div> <!-- /span4 -->
+  
+  <div class="span4">
+    
+  
+  [%# <!-- List For This Week -->
+%]
+    <div class="hero-unit">
+   <!-- Button -->    
+    <p><a class="btn btn-large btn-primary menu-pop"
+          title="List For This Week"
+          data-content="View and or modify estimates scheduled for this week."
+          href="[%
+          c.uri_for(c.controller('Estimates').action_for('list_for_this_week'))
+          %]">List Estimates Scheduled For This Week  <i class="icon-tasks icon-white"></i></a></p>
+    </div> <!-- /hero-unit -->
+</div> <!-- /span4 -->
+  
+</div> <!-- /"row-fluid" -->
+
+
+
+[%# <!-- Estimates Selection Line 2 --> %]
+<div class="row-fluid">
+  
+  [%# <!-- Estimates By Estimator --> %]
+  <div class="span4">
+    <div class="hero-unit">
+      <!-- Button -->
+      <p><a class="btn btn-large btn-primary  menu-pop"
+            title="View Estimates By Estimator"
+            data-content="See and or modify scheduled estimates for any estimator."
+            href="[% c.uri_for(c.controller('EstimatesMenu').action_for('by_estimator')) %]">View Estimates By Estimator  <i class="icon-user icon-white"></i></a></p>
+    </div> <!-- /hero-unit -->
+  </div> <!-- /span4 -->
+
+  [%# <!-- View Estimates By Customer --> %]
+ <div class="span4">
+    <div class="hero-unit">
+      <!-- Button -->    
+      <p><a class="btn btn-large btn-primary  menu-pop"
+            title="View Estimates By Customer"
+            data-content="See and or modify scheduled estimates for any customer." 
+            href="[%
+            c.uri_for(c.controller('EstimatesMenu').action_for('by_customer'))
+            %]">View Estimates By Customer  <i class="icon-globe icon-white"></i></a></p>
+    </div> <!-- /hero-unit -->
+  </div> <!-- /span4 -->
+  
+  [%# <!--View Estimate By Date  --> %]
+  <div class="span4">
+    <div class="hero-unit">
+    <!-- Button -->    
+    <p><a class="btn btn-large btn-primary menu-pop"
+          title="Estimates By Date"
+          data-content="See and or modify estimate schedule for any date or date range."
+          href="[%
+          c.uri_for(c.controller('EstimatesMenu').action_for('by_date'))
+          %]">View Estimates By Date  <i class="icon-calendar icon-white"></i></a></p>
+    </div> <!-- /hero-unit -->
+  </div> <!-- /span4 -->
+  
+</div> <!-- /"row-fluid" -->
+
+
+
+
+
+
+[% ELSE %]
+     <p><em> You are not logged in. Please log in to access Estimates data.</em></p>
+ [% END %]
+ 
+
+
+
+</div> <!-- /container -->
+

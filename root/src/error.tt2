@@ -1,0 +1,60 @@
+
+
+
+<div class="container-fluid">
+
+
+ <div class="row-fluid">
+         [% IF error_noperms %]
+           <div class="lead">
+              <h3> [% error_noperms %] </h3>
+              <p> [% error_msg_1  %] </p>
+           </div>
+           [% IF internal_error_message  %]
+              <p> [% internal_error_message  %] </p>
+           [% END %]
+         [% END %]
+ </div> <!-- /row-fluid -->
+ 
+<div class="row-fluid">
+         [% IF error_404 %]
+           <div class="lead">
+              <h3> [% error_404 %] </h3>
+              <p> [% error_msg_1  %] </p>
+           </div>
+           [% IF internal_error_message  %]
+              <p> [% internal_error_message  %] </p>
+           [% END %]
+         [% END %]
+ </div> <!-- /row-fluid -->
+
+
+<div class="row-fluid">
+         [% IF error_other  %]
+           <div class="lead">
+              <h3> [% error_other %] </h3>
+              <p> [% error_msg_1  %] </p>
+           </div>
+           [% IF internal_error_message  %]
+              <p> [% internal_error_message  %] </p>
+           [% END %]
+         [% END %]
+ </div> <!-- /row-fluid -->
+
+
+<div class="row-fluid">
+
+ <!--Get out of here buttons. -->
+  <div class="span6">
+   <a class="btn" title="Go back to where you came from."
+   href="[% c.uri_for(c.controller) %]"><i class="icon-chevron-left"> Back</i> </a>
+  </div><!-- /span6 -->
+
+ <div class="span6">
+  <a class="btn" title="Go Home" href="[% c.uri_for(c.controller('intro').action_for('/index')) %]">Home <i class="icon-home"></i></a>
+ </div><!-- /span6 -->
+
+</div><!-- /row-fluid> -->
+ 
+    
+</div> <!-- /container-fluid -->

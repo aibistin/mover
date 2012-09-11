@@ -1,0 +1,102 @@
+<!-- Main Menu Page -->
+[% META title = 'Main Menu' %]
+<div class="container">
+
+[%# <!--  THIS IS THE MAIN MOVER MENU        --> %]
+<!-- Masthead
+================================================== -->
+ 
+<header class="jumbotron masthead">
+  <div class="marketing">
+      <p class="marketing-byline" >Where would you like to go? </p>
+      <hr class="soften">
+  </div> <!-- /marketing -->
+</header>
+
+ [% IF c.user_exists %]
+
+  
+   <div class="row-fluid">
+    
+    <div class="span4">
+      <div class="well">
+          <p><a class="btn btn-large btn-primary menu-pop"
+              title="Estimates"
+              data-content="Go to the estimates department to schedule estimates. Do 'over the phone' estimates. Modify existing estimates. See estimate statistics." 
+              href="[% c.uri_for('estimates_menu') %]">Estimates  <i class="icon-briefcase icon-white"></i></a></p>
+      </div> <!-- /well -->   
+    </div> <!-- /span4 -->
+    
+    <div class="span4">
+    <div class="well">
+         <p><a class="btn btn-large btn-primary menu-pop"
+             title="Dispatch"
+             data-content="Go to Dispatch to schedule jobs. See Job Details. Assign manpower, vehicles and eqipment to jobs.
+             Modify job details. See job statistics." 
+             href="#">Dispatch   <i class="icon-wrench icon-white"></i></a></p>
+     </div> <!-- /well --> 
+     </div> <!-- /span4 -->
+    
+    <div class="span4">
+      <div class="well">
+           <p><a class="btn btn-large btn-primary menu-pop"
+               title="Storage"
+               data-content="Go here for all storage and warehousing processing. See Storage Accounts. See warehouse In/Out activity.
+               Assign storage units to incoming jobs. See space availability. Using estimates and jobs data, compile projected space requirements.
+               Notify warehouse management of pending incoming and outgoing jobs.
+               Modify job details. See job statistics." 
+               href="#">Storage    <i class="icon-wrench icon-white"></i></a></p>
+      </div> <!-- /well --> 
+    </div> <!-- /span4 -->
+    
+  </div> <!-- /"row-fluid" -->
+  <div class="row-fluid">
+    
+    
+    <div class="span4">
+      <div class="well">
+            <p><a class="btn btn-large btn-primary menu-pop"
+                title="Equipment"
+                data-content="Go here to see all information about materials and equipment for moving jobs.
+                Track incoming orders and material sales. Using job schedule to help compile furure material and equipment requirements.
+                Record eqipment usage and locations." 
+                 href="#">Equipment  <i class="icon-wrench icon-white"></i></a></p>
+        </div> <!-- /well -->
+    </div> <!-- /span4 -->
+
+    <div class="span4">
+      <div class="well">
+            <p><a class="btn btn-large btn-primary menu-pop"
+                title="Fleet"
+                data-content="Go here to see all information about trucks and transport machinery.
+                Vin numbers, registration numbers, capacity etc. Notify when insurance and registration etc is due.
+                Create fleet maintainence schedule. Record all maintainence and vehicle usage." 
+                href="#">Fleet  <i class="icon-wrench icon-white"></i></a></p>
+        </div> <!-- /well -->
+    </div> <!-- /span4 -->
+    
+
+    <div class="span4">
+      <div class="well">
+            <p><a class="btn btn-large btn-primary menu-pop"
+                title="Admin"
+                data-content="Generic area that covers human resources and accounting.
+                This will be split up int appropriate departments in the future. "
+                href="#">Admin  <i class="icon-wrench icon-white"></i></a></p>
+        </div> <!-- /well -->
+    </div> <!-- /span4 -->    
+
+      
+  </div> <!-- /"row-fluid" -->
+  
+  
+  <div class="row-fluid">
+                <hr class="soften">
+								<br /><br /><br />
+  </div> <!-- /row-fluid -->
+
+[% ELSE %]
+     <p><em class="strong"> You are not logged in. Please log in to access this site data.</em></p>
+ [% END %]
+ 
+</div> <!-- /container -->

@@ -1,0 +1,283 @@
+#indicator is the field that is used to test for form submission
+indicator: submit
+id: estByDateForm
+auto_id: '%n'
+#auto_constraint_class: required
+render_processed_value: true
+auto_error_class: '%n'
+
+output_processors:
+    - Indent
+attributes:
+    class: form-inline well
+    
+   
+elements:
+    #------------------------    Date and Time  -------------------------# 
+         
+     # Find Estimates By Particular Day
+    - type: Radiogroup
+      name: day
+      #value:  3
+      label: Which Day
+      container_attributes:
+        #class: dp90 ml2
+        title: Which day
+        disabled: disabled
+      attributes:
+        #class: dp90
+        default_empty_value:
+      constraints:
+        - type: Integer
+          message: Numbers only
+      options:
+       - [ 1, 'Monday' ]
+       - [ 2, 'Tuesday'  ]
+       - [ 3, 'Wednesday' ]
+       - [ 4, 'Thursday' ]
+       - [ 5, 'Friday' ]
+       - [ 6, 'Saturday' ]
+       - [ 7, 'Sunday' ]
+
+       
+    - type: Block
+      tag: fieldset
+      attributes:
+        class: row-fluid
+        
+    #- type: Block
+    #  content_xml: <hr class="soften">
+ 
+    # Find Estimates By Particular Week
+    - type: Radiogroup
+      name: week
+      label: Which Week
+      container_attributes:
+        #class: dp90 ml2
+        title: Which Week
+        disabled: disabled
+      attributes:
+        #class: dp90
+      #constraints:
+      #  - type: Integer
+      #    message: Numbers only
+      options:
+       - [  0, 'This Week' ]
+       - [  +1, 'Next Week'  ]
+       - [  -1, 'Last Week' ]
+     
+    #
+    - type: Block
+      tag: fieldset
+      attributes:
+        class:  row-fluid
+        
+      elements:  
+      - type: Block
+        tag: legend
+        content_xml: Which Month
+   
+    # Find Estimates By Particular Month
+    - type: Select
+      name: month
+      #value:  1
+      #label: Pick A Month
+      container_attributes:
+        class: element
+        title: List scheduled Estimates For This Month
+      attributes:
+        #class: dp30
+        disabled: disabled
+      constraints:
+        - type: Integer
+          message: Numbers only
+      options:
+         - [0,'-Month-']
+      #------
+         - [ 1, 'Janurary' ]
+         - [ 2, 'Feburary' ]
+         - [ 3, 'March' ]
+         - [ 4, 'April' ]
+         - [ 5, 'May' ]  
+         - [ 6, 'June' ]
+         - [ 7, 'July' ]
+         - [ 8, 'August' ]
+         - [ 9, 'September' ]
+         - [ 10, 'October' ]
+         - [ 11, 'November' ]
+         - [ 12, 'December' ]
+
+    - type: Block
+      tag: fieldset
+      attributes:
+        class:  row-fluid
+         
+      elements:  
+      - type: Block
+        tag: legend
+        content_xml: Which Date
+       
+        
+# Uses the JQuery UI calendar
+# Estimates for particular date
+    - type: Text
+      name: schedule_date
+      #label: Schedule Date
+      placeholder: 'yyyy-mm-dd'
+      container_attributes:
+        class: element
+        title: List scheduled Estimates For This Date
+      attributes:
+      filter:
+        - Whitespace
+        - HTMLScrubber
+        - type: Callback
+          callback: "mover::Controller::Estimates::date_stripper"
+      constraints:
+        # - Required
+        - type: Callback
+          #callback: "mover::Controller::Estimates::is_date_valid"
+      inflators:
+      - type: DateTime
+        parser: 
+          strptime:  '%Y-%m-%d'
+        strptime:
+          pattern: '%Y-%m-%d'
+        message: 'In format yyyy-mm-dd'
+      deflator:
+      - type: Strftime
+        strftime: '%Y-%m-%d'
+ 
+ 
+ 
+    - type: Block
+      tag: fieldset
+      attributes:
+        class: row-fluid
+
+      elements:
+      - type: Block
+        tag: legend
+        content_xml: Between Dates
+   
+    # Uses the JQuery UI calendar
+    # Estimates for a Date Range
+    # Starting date
+      - type: Text
+        name: starting_date
+        label: Starting Date
+        ##id: estimate_date
+        placeholder: 'yyyy-mm-dd'
+        container_attributes:
+          class:  span2 element
+          title: List scheduled Estimates Starting on This Date
+        attributes:
+          #class: dp90
+          disabled: disabled
+          #class: required
+        filter:
+          - Whitespace
+          - HTMLScrubber
+          - type: Callback
+            callback: "mover::Controller::Estimates::date_stripper"
+        constraints:
+          # - Required
+          - type: Callback
+            #callback: "mover::Controller::Estimates::is_date_valid"
+        inflators:
+        - type: DateTime
+          parser: 
+            strptime:  '%Y-%m-%d'
+          strptime:
+            pattern: '%Y-%m-%d'
+          message: 'In format yyyy-mm-dd'
+        deflator:
+        - type: Strftime
+          strftime: '%Y-%m-%d'
+        
+    # Uses the JQuery UI calendar
+    # Estimates for a Date Range
+    # Ending Date
+      - type: Text
+        name: ending_date
+        label: Ending Date
+        #id: estimate_date
+        placeholder: 'yyyy-mm-dd'
+        container_attributes:
+          class: offset4 element
+          title: Ending At This Date
+        attributes:
+          #class: dp90
+          disabled: disabled
+          #class: required
+        filter:
+          - Whitespace
+          - HTMLScrubber
+          - type: Callback
+            callback: "mover::Controller::Estimates::date_stripper"
+        constraints:
+          ## - Required
+          - type: Callback
+            #callback: "mover::Controller::Estimates::is_date_valid"
+        inflators:
+        - type: DateTime
+          parser: 
+            strptime:  '%Y-%m-%d'
+          strptime:
+            pattern: '%Y-%m-%d'
+          message: 'In format yyyy-mm-dd'
+        deflator:
+        - type: Strftime
+          strftime: '%Y-%m-%d'
+               
+          
+    
+
+    #------------------------    Submit  -------------------------#
+    
+    
+
+    - type: Block
+      tag: fieldset
+      attributes:
+        class: row-fluid
+    
+      elements:
+        
+      - type: Block
+        tag: legend
+        content_xml: Select
+    
+     #The submit button
+      - type: Submit
+        name: submit
+        value: Submit
+        container_attributes:
+          class: span4
+        attributes:
+          class:  btn btn-primary btn-medium
+           
+   #The reset button
+      - type: Reset
+        name: reset
+        value: Reset
+        container_attributes:
+          class: offset4
+        attributes:
+          class:  btn btn-inverse btn-medium 
+        #
+    
+    #- type: ContentButton
+    #  name: list
+    #  content: <a href="http://localhost:3000/estimates/schedule_estimate"></a>
+    #  field_type: Submit
+#-----------------------------------------------  
+constraints:
+  - SingleValue
+  
+filters:
+    - LowerCase
+    - TrimEdges
+    - HTMLEscape
+        
+  

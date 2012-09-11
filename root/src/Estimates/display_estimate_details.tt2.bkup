@@ -1,0 +1,147 @@
+[% META title = 'Estimate Detail' %]
+
+[%# USE Dumper %] 
+ [%#Dumper.dump_html(c.stash.estimate) %]
+[% # Body of Estimate Display. -%]
+   
+<!--<style>
+  .main{width:90%;}
+/*.main{width:80em;}*/
+ .bg1{background-color:#FFFFF0; }      /*Ivory*/
+ .bg2{background-color:#F8F8FF; }    /*GhostWhite*/
+ .bg3{background-color:#E0FFFF; }   /*Light Cyan*/
+ .bg4{background-color:#ADD8E6; }   /*Light blue*/
+ .bg5{background-color:#00BFFF; }    /*Deep Sky Blue*/
+ .bg6{background-color:#F8F8FF; }    /*Tomato*/
+ .hg1{ height:5em;}
+ .hg2{ height:40em;}
+ .hg3{ height:20em;}
+ .hg4{ height:60em;}
+ .hg5{ height:50em;}
+ .hg6{ height:60em;}
+/* h2{ display:none;} */
+ </style>
+-->
+<div class="fluid ">
+<div class="dp100 rc fr clearfix">      <!--Outer grid area for list 100% fixed-->
+ 
+ [% IF c.user_exists %]
+ 
+ [%# Estimate Result set %]
+ <!--[%(estimate = c.stash.object) %]-->
+[%# <!--Estimate Heading--> %]
+<div class="dp100 clearfix">
+<div class="dp95 bg4"><h4>Estimate Detail For [%- estimate.customer.full_name %]</h4></div>
+<div class="clear"></div>
+</div> <!-- End Clearfix -->
+
+<div class="dp100 tl clearfix">
+<div class="dp100 tl clearfix">
+<div class="clear"></div>
+</div> <!-- End Clearfix -->
+<div class="dp100 tl clearfix">
+<div class="dp100">[%- estimate.customer.full_name %]
+
+[%# <!--Repeat Customer--> %]
+[%- repeater = estimate.customer.repeat %]
+[% SWITCH repeater %]
+    [%   CASE '1' %]
+         , who is a repeat customer</div>
+    [%   CASE '2' %]   
+         , who is a new customer</div>
+    [%   CASE %]              
+          , who may be a new or a repeat customer</div>
+    [% END %]
+
+</div> <!-- End Clearfix -->
+<div class="dp100 tl clearfix">
+<div class="dp30 caffe" >Residing at:</div>
+</div> <!-- End Clearfix -->
+[%# <!--Address--> %]
+<div class="dp100 tl clearfix">
+<div class="dp30 ml5">[%- estimate.customer.address_1 %]</div>
+</div> <!-- End Clearfix -->
+<div class="dp100 tl clearfix">
+<div class="dp30 ml5">[%- estimate.customer.address_2 || 'No Apt. Number etc.' %]</div>
+<div class="dp100 tl clearfix">
+<div class="dp30 ml5">[%-estimate.customer.city FILTER ucfirst %]</div>
+</div> <!-- End Clearfix -->
+<div class="dp100 tl clearfix">
+<div class="dp30 ml5">[%- estimate.customer.state FILTER upper%] [% estimate.customer.zip%]</div>
+</div><!-- End Clearfix -->
+<div class="dp100 tl clearfix">
+<div class="dp30 caffe">Can be contacted by:</div>
+</div> <!-- End Clearfix -->
+[%# <!--Phone and Email--> %]
+<div class="dp100 tl clearfix">
+<div class="dp30 ml5">Phone: [%- estimate.customer.phone_1%]</div><div class="dp30">[%- estimate.customer.phone_2%]</div>
+<div class="dp30 ml5"> [%- estimate.customer.phone_3%]</div>
+</div><!-- End Clearfix -->
+<div class="dp100 tl clearfix">
+<div class="dp45  ml5">Email: [%- estimate.customer.email_1  || "(none)" %]</div><div class="dp45">[%- estimate.customer.email_2%]</div>
+</div><!-- End Clearfix -->
+
+[%# <!--Recommended By--> %]
+<div class="dp100 tl clearfix">
+<div class="dp30 caffe">Recommended by:</div>
+</div> <!-- End Clearfix -->
+<div class="dp100 tl clearfix">
+<div class="dp30 ml5">[%- estimate.customer.recommended_by || "(none)" %]</div>
+</div><!-- End Clearfix -->
+
+[%# <!--Estimator--> %]
+<div class="dp100 tl clearfix">
+<div class="dp30 caffe">Estimator:</div>
+</div> <!-- End Clearfix -->
+<div class="dp100 tl clearfix">
+<div class="dp30 ml5">[%- estimate.estimator.alias || 'w/a' %]</div>
+</div><!-- End Clearfix -->
+
+[%# <!--EStimate Date--> %]
+<div class="dp100 tl clearfix">
+<div class="dp30 caffe">Scheduled For:</div>
+</div> <!-- End Clearfix -->
+<div class="dp100 tl clearfix">
+<div class="dp20 ml5">[%- estimate.estimate_date_datetime.mdy || 'w/a' %]</div>
+<div class="dp20">[%- estimate.estimate_time_datetime.strftime("%I:%M %p") || 'w/a' %]</div>
+</div><!-- End Clearfix -->
+
+[%# <!--Comments--> %]
+<div class="dp100 tl clearfix">
+<div class="dp30 caffe">Comments:</div>
+</div> <!-- End Clearfix -->
+<div class="dp100 tl clearfix">
+<div class="dp20 ml5">[%- estimate.comments  || "(none)" %]</div>
+</div><!-- End Clearfix -->
+
+<div class="dp100 tl clearfix">
+ <div class="clear"></div>
+ </div><!-- End Clearfix -->
+ <div class="dp100 tl clearfix">
+<div class="dp50 caffe">Created By:</div>
+<div class="dp40 caffe">Updated By:</div>
+</div> <!-- End Clearfix -->
+ [%# <!--Creator and updator--> %]
+ <div class="dp100 tl clearfix">
+<div class="dp45 ml5">[%- estimate.created_by.full_name || estimate.created_by.alias  %] on [%- estimate.created_datetime.mdy('/') %] at [% estimate.created_datetime.strftime("%I:%M %p") %]</div>
+<!--<div class="dp30">on [%- estimate.estimate_date_datetime.mdy('/') %] at [% estimate.estimate_time_datetime.strftime("%I:%M %p") %]</div>-->
+<div class="dp30">[%- estimate.updated_by.full_name || estimate.updated_by.alias  %] on [%- estimate.updated_datetime.mdy('/') %] at [% estimate.updated_datetime.strftime("%I:%M %p") %]</div>
+<!--<div class="dp15">on [%- estimate.estimate_date_datetime.mdy('/') %] at [% estimate.estimate_time_datetime.strftime("%I:%M %p") %]</div>-->
+</div><!-- End Clearfix -->
+<div class="dp100 tl hg1 clearfix">
+ <div class="clear"></div>
+     <div class="dp100 tc">
+     <!-- Create New Estimate -->
+    <p><a class="lipstick" href="[% c.uri_for(c.controller.action_for('schedule_estimate')) %]">Schedule A New Estimate</a></p>
+     </div>
+</div><!-- End Clearfix -->
+
+
+    
+ [% ELSE %]
+     <p> You are not logged in. Please log in to access estimate data.
+ [% END %]
+ 
+ </div><!-- End class="clearfix" -->
+ </div><!-- End class="fluid" --> 
+ 

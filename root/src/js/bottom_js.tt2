@@ -1,0 +1,12 @@
+[% IF c.user_exists %]
+
+<!-- Include jQ and JS scripts here -->
+
+ <div class="row-fluid">
+     [% FOREACH js IN js_array %]
+       [% js %]
+     [% END %]
+ </div> <!-- /row-fluid -->
+
+
+[% END %]

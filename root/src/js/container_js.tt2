@@ -1,0 +1,13 @@
+[%#  Include JS or JQery that cannot go in the bottom of the wrapper. %]
+[% IF c.user_exists %]
+
+<!-- Include jQ and JS scripts here -->
+
+ <div class="row-fluid">
+     [% FOREACH js IN container_js_array %]
+       [% js %]
+     [% END %]
+ </div> <!-- /row-fluid -->
+
+
+[% END %]

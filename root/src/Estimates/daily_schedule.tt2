@@ -1,0 +1,121 @@
+[%# USE Dumper %] 
+ [%#Dumper.dump_html(c.stash.estimate) %]
+[%# Body of Estimate List. -%]
+
+[% META title = 'Scheduled Estimates' -%]
+
+ [% IF c.user_exists %]
+   
+   
+<div class="container-fluid">
+  <div class="row-fluid">
+    
+    <header class="jumbotron subhead">
+      <div class="row-fluid">
+        <!--<div class="span6">-->
+        <div class="span6">
+        <h3>[% sub_heading %] <em class="lead">[% time_period %]</em> </h3>
+        </div>
+           
+        <div class="span6">
+          [%#  <!-- Miniforms --> %]
+          [% INCLUDE tab_enclosed_forms.tt2 %]
+        </div> <!-- /span6 -->
+      </div>  <!-- /row-fluid -->
+    </header> <!-- /jumbo -->
+  </div> <!-- /row-fluid -->
+   
+  [%# USE Dumper %] 
+ [%# Dumper.dump_html(c.form) %]
+ 
+ 
+ 
+   <div class="row-fluid">
+    
+    [%# Display each estimate in a table row %]
+     [%# Result set is estimates %]
+     [% while_count = 1 %]
+     [% WHILE (estimate = resultset.next) %]
+    
+     <!--For Each Fourth iteration  add a new line-->  
+     [% IF ((while_count MOD 4 == 0) && (while_count > 3)) %]
+               <div class="row-fluid"> 
+     [% END %]
+      
+      
+        <div class="span3">
+         <h4> [%- estimate.estimate_time_datetime.strftime("%I:%M %p") %]</h4>
+         <h5> [%- estimate.customer.last_name FILTER ucfirst %]</h5>
+         <address>
+         <strong>[%- estimate.customer.full_name %]</strong> <br>
+         <abbr title="Address" class="initialism">A: </abbr>[%- estimate.customer.address_1 %],  [%-estimate.customer.city FILTER ucfirst %] <br>
+         <abbr title="Phone" class="initialism">P: </abbr>[%- estimate.customer.phone_1  %] <br>
+         <abbr title="Estimator">Est: </abbr>[%- estimate.estimator.full_name or estimate.estimator.alias or "none" FILTER  ucfirst %] <br>
+         </address>
+        
+                
+        <!-- Button -->    
+         <p><a class="btn" href="[% c.uri_for(c.controller.action_for('display_estimate_details'),[estimate.id]) %]"><abbr title="View all details for this estimate" class="initialism">View details &raquo;</abbr></a></p>
+        </div><!--/span-->
+    <!--Close the div created after each Fourth iteration -->   
+    [% IF ((while_count MOD 4 == 0) && (while_count > 3))  %]
+               </div> <!--/row-fluid-->
+                <div class="row-fluid">  <hr />  </div>
+     [% END %]
+     
+     [% while_count = (while_count + 1)%]
+     
+   [%# End While Loop %]
+   [% END %]
+   
+   [%# Need One More Closing Div at end of loop %]
+   [% IF ((while_count MOD 4 == 0) && (while_count > 3))  %]
+               </div> <!--/row-fluid-->
+     [% END %]
+  
+  </div><!--/row-fluid -->
+
+  
+ <div class="row-fluid">  <hr />  </div>
+ 
+ [% IF estimate_count >= 0 %]
+   [%# Prints the Estimate Count %]
+    <div class="row-fluid">
+      <em class="offset2 small">[% found_msg %] </em>
+    </div> <!-- /row-fluid -->
+ [% END %]
+  
+ <div class="row-fluid">
+  
+  [%# For Next Week or Previous Day/Week/Month Links%]
+  <ul class="pager">
+    [% IF prev %]
+      <li class="previous">
+        <a href="[% prev -%]">&larr; [% prev_label %]</a>
+      </li>
+    [% END %]
+    [% IF next %]
+      <li class="next">
+       <a href="[% next -%]">[% next_label %] &rarr;</a>
+      </li>
+    [% END %]
+  </ul>
+    
+  </div> <!-- End Fluid -->
+
+
+  
+ [% ELSE %]
+   <div class="row-fluid">
+     <p> You are not logged in. Please log in to access estimate data.</p>
+    </div> <!-- End Row Fluid -->
+ [% END %]
+ 
+ 
+ </div> <!--/.fluid-container-->
+ 
+ 
+ 
+ 
+      
+   

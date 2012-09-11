@@ -1,0 +1,398 @@
+#indicator is the field that is used to test for form submission
+indicator: submit
+#action: create_fu
+id: sc_form
+
+auto_fieldset:
+  legend: Schedule Estimate
+
+# Start listing the form elements
+elements:
+    # The first element will be a text field for the title
+    #- type: Text
+    #  name: title
+    #  label: Title
+    #  value: Enter an estimate appointment here
+    #  # This is an optional 'mouse over' title pop-up
+    #  attributes:
+    #    title: Enter a estimate appointment here
+    
+   
+    # Customer Prefix (First Name Prefix)
+    - type: Text
+      name: prefix
+      label: Title.
+      placeholder: Mr. Mrs. Miss etc.
+      attributes:
+        title: Mr, Mrs, Miss, Sir, etc.
+        autofocus:
+      constraints:
+        - type:  Length
+          min:   0
+          max:   15
+          message:   Must be between 1 and 15 characters
+      
+          
+     # Customer First Name
+    - type: Text
+      name: first_name
+      label: First Name
+      placeholder: First name
+      attributes:
+        title: Using 'residence' is useless
+      constraints:
+        - Required
+        - type:   Length
+          min:   1
+          max:   20
+          message:   Must be between 1 and 20 characters
+            
+    # Customer Last Name
+    - type: Text
+      name: last_name
+      label: Last Name
+      placeholder: Last name
+      attributes:
+        title: Customer last name
+      constraints:
+        - Required
+        - type:   Length
+          min:   1
+          max:   30
+          message:   Must be between 1 and 30 characters
+          
+    # Customer Suffix (Name Suffix)
+    - type: Text
+      name: suffix
+      label: Sfx.
+      placeholder: Sr. Jr. III etc.
+      attributes:
+        title: Sr. Jr. II III XXVII etc.
+      constraints:
+        - type:   Length
+          min:   0
+          max:   15
+          message:   Must be between 1 and 15 characters
+    
+        
+    # Customer address 1
+    - type: Text
+      name: address_1
+      label: Address 1
+      placeholder: Building/House number and street
+      attributes:
+        title: Street address
+      constraints:
+        - Required
+        - type:   Length
+          min:   1
+          max:   30
+          message:   Must be between 1 and 30 characters
+         
+    # Customer address 2
+    - type: Text
+      name: address_2
+      label: Address 2
+      placeholder: Apartment number etc.
+      attributes:
+        title: apartment number etc.
+      constraints:
+        - type:   Length
+          max:   30
+          message:   Must be between less than 30 characters
+        
+    # Customer city
+    - type: Text
+      name: city
+      label: City
+      value: 'New York'
+      placeholder: City
+      attributes:
+        title: city
+      constraints:
+        - Required
+        - type:  Length
+          min:   2
+          max:   30
+          message:   Must be between 1 and 30 characters
+#option value='New York'
+#option value='Brooklyn'
+#option value='Bronx'
+#option value='Greenwich'
+#option value='Ballygofaster'
+
+    
+    # Customer state
+    - type: Select
+      name: state
+      label: State
+      options:
+       - [ 'ny', 'NY' ]
+       - [ 'nj', 'NJ' ]
+       - [ 'ct', 'CT' ]
+       - [ 'pa', 'PA' ]
+       - [ 'ma', 'MA' ]
+       - [ 'vt', 'VT' ]
+      attributes:
+        title: state code
+      #constraints:
+      #  - type:   Length
+      #    min:   2
+      #    max:   2
+      #    message:   Must be 2 character state code
+        
+    # Customer zip
+    - type: Text
+      name: zip
+      label: Zip Code
+      placeholder: Zip Code
+      attributes:
+        title: zip code
+      constraints:
+        - type:  Length
+          max:   10
+          message:   Must be less than 10 characters
+        
+    # Customer recommended by
+    - type: Text
+      name: recommended_by
+      label: Recommended by
+      placeholder: Who recommended us?
+      attributes:
+        title: Who recommended this customer
+        
+    # Customer phone 1
+    - type:   Text
+      name:   phone_1
+      label:  Phone 1
+      attributes:
+       title:  Primary Phone Number
+       placeholder: Best phone number
+      filter:
+          - TrimEdges
+          - HTMLEscape
+      constraints:
+        - Required
+        - type: Length
+          max: 14
+          message:  Must be less than 14 characters
+          
+    # Customer phone 2
+    - type:   Text
+      name:   phone_2
+      label:  Phone 2
+      placeholder: Alternate phone number
+      attributes:
+       title:  Secondary Number
+      filter:
+          - TrimEdges
+          - HTMLEscape
+      constraints:
+        - type: Length
+          max: 14
+          message:  Must be less than 14 characters
+          
+    # Customer phone 3
+    - type:   Text
+      name:   phone_3
+      label:  Phone 3
+      placeholder: Just in case number
+      attributes:
+       title:  Teritary Number
+      filter:
+          - TrimEdges
+          - HTMLEscape
+      constraints:
+        - type: Length
+          max: 14
+          message:  Must be less than 14 characters
+    
+# Customer primary email address
+    - type:    Text
+      name:    email_1
+      label:   Email 1
+      placeholder: Best email address
+      filter:
+          - TrimEdges
+          - HTMLEscape
+      constraints:
+        - type: Email
+        - type: Length
+          max: 40
+          message:  Must be less than 40 characters
+      attributes:
+        title: Primary Email Address
+        
+    
+# Customer secondary email address
+    - type:    Text
+      name:    email_2
+      label:   Email 2
+      placeholder: Alternate email address
+      filter:
+          - TrimEdges
+          - HTMLEscape
+      constraints:
+        - type: Email
+        - type: Length
+          max: 40
+          message:  Must be less than 40 characters
+      attributes:
+        title: secondary Email Address
+
+        
+    # Repeat customer
+    - type: Radiogroup
+      name: repeat_cust
+      label: Repeat Customer
+      #placeholder: Have they moved with us before
+      constraints:
+        - type: Length
+          max: 30
+      attributes:
+        title: Have they moved with us before
+      options:
+       - [ '1', 'Yes' ]
+       - [ '2', 'No'  ]
+       - [ '3', 'Dunno' ]
+   
+    
+    # Estimate schedule day
+    #- type:    Date
+    #  name:    estimate_date
+    #  label:   Schedule Date
+    #  filter:
+    #      - TrimEdges
+    #      - HTMLEscape
+    #  constraints:
+    #      - type: DateTime
+    #        parser: &PARSER
+    #          strptime: '%d-%m-%Y'
+    #  inflators:
+    #      - type: DateTime
+    #        parser: *PARSER
+    #  attributes:
+    #    title: Estimate day
+        
+        
+    #    
+    ##Estimate schedule day/time
+    ##HTML::FormFu::Element::DateTime
+    #- type:    DateTime
+    #  name:    estimate_date
+    #  label:   Schedule Date
+    #  filter:
+    #      - TrimEdges
+    #      - HTMLEscape
+    #  constraints:
+    #      - type: DateTime
+    #        parser: &PARSER
+    #        strftime: '%d-%m-%Y %H:%M'
+    #        field_order: ['day', 'month', 'year', 'hour', 'minute']
+    #        #strptime: '%d-%m-%Y'
+    #  inflators:
+    #      - type: DateTime
+    #        parser: *PARSER
+    #  attributes:
+    #    title: Estimate day
+    
+        
+    #- type: Date
+    #    name: birthdate
+    #    label: 'Birthdate:'
+    #    day:
+    #      prefix: "- Day -"
+    #    month:
+    #      prefix: "- Month -"
+    #    year:
+    #      prefix: "- Year -"
+    #      less: 70
+    #      plus: 0
+    #    auto_inflate: 1
+    
+     
+      # HTML::FormFu::ExtJS::Element::Date
+      #Ext.form.field.Date
+    #- type: Date
+    #  name: estimate_date
+    #  label: 'Schedule Date:'
+    #  attributes:
+    #    handler: Ext.picker.Date
+   
+    
+   ## Estimate date
+   ##HTML::FormFu::Element::DateTime
+    #- type: DateTime
+    #  #default_natural: 'now'
+    #  #default_datetime_args:
+    #  #  set_time_zone: 'America/Eastern'
+    #  name: estimate_date
+    #  label: 'Schedule Date:
+    #  #javascript: src/js/calendar/tcal.js
+    #  day:
+    #    prefix: "- Day -"
+    #  month:
+    #    prefix: "- Month -"
+    #  year:
+    #    prefix: "- Year -"
+    #    less: 2
+    #    plus: 5
+    #  hour:
+    #    prefix: "- Hour -"
+    #  minute:
+    #    prefix: "- Minute -"
+    #  auto_inflate: 1
+    #  
+      
+    # Estimate Time
+   #HTML::FormFu::Element::DateTime
+    #- type: DateTime
+    #  #default_natural: 'now'
+    #  #default_datetime_args:
+    #  #  set_time_zone: 'America/Eastern'
+    #  name: estimate_time
+    #  label: 'Schedule Time:'
+    #  field_order: ['hour', 'minute']
+    #  day:
+    #    prefix: "- Day -"
+    #  month:
+    #    prefix: "- Month -"
+    #  year:
+    #    prefix: "- Year -"
+    #    less: 2
+    #    plus: 5
+    #  hour:
+    #    prefix: "- Hour -"
+    #  minute:
+    #    prefix: "- Minute -"
+    #  auto_inflate: 1
+      
+     
+   # Estimate Time
+   #HTML::FormFu::Element::DateTime
+    #- type: DateTime
+    #  default_natural: 'now'
+    #  #default_datetime_args:
+    #  #  set_time_zone: 'America/Eastern'
+    #  name: estimate_time
+    #  label: 'Schedule Time:'
+    #  hour:
+    #    prefix: "- Hour -"
+    #  minute:
+    #    prefix: "- Minute -"
+    #  auto_inflate: 1
+      
+    # Estimator
+    - type: Select
+      name: estimator
+      label: Estimator
+      placeholder: Who will do this estimate?
+      attributes:
+        title: Who will do this estimate
+          
+      
+      #
+    # The submit button
+    - type: Submit
+      name: submit
+      value: Submit

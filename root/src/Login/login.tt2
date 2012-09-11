@@ -1,0 +1,56 @@
+[% META title = 'User Login' %]
+
+<div class="container-fluid">
+<div class="row-fluid">
+     <br /><br />
+</div> <!-- /row-fluid -->
+
+<div class="row-fluid">
+
+								
+[% IF c.user_exists %]
+	[% META title = 'Logout' %]
+<header class="jumbotron subhead">
+	<h2>[% sub_heading || Logout %]</h2>
+				
+</header>
+ <p class="lead"> Please Note: You are already logged in as
+	[% c.user.username %] </p>
+ <p> You can <a href="[% c.uri_for('/logout') %]">logout</a> here </p>
+
+
+[% ELSE %]
+	[% META title = 'Login' %]							
+<header class="jumbotron subhead">
+	<h2>[% sub_heading || 'Log In' %]</h2>
+</header>
+
+<!-- Login form -->
+<div id="login">
+	<form class="well form-inline" method="post" action="[% c.uri_for('/login') %]" />
+
+		 <input type="text" class="input-small"
+         placeholder="Username" label="Username" title="Username"
+         name="username"  id="username" />
+
+		 <input type="password"  class="input-small"
+         placeholder="Password"  label="Password" title="Password"
+         name="password" id="password" />
+
+		 <!--<button type="submit" class="btn">Log In</button>-->
+		 <input type="submit" name="submit" value="Sign In" class="btn btn-primary" />
+
+	</form>
+</div>
+
+[% END %]
+
+
+</div> <!-- /row-fluid -->
+
+	
+<div class="row-fluid">
+	<br /><br /><br />
+</div> <!-- /row-fluid -->
+</div> <!-- /container-fluid -->
+

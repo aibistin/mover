@@ -1,0 +1,199 @@
+<!-- Main Menu Page -->
+[% META title = 'Introduction To Moving Management'%]
+<!-- <div class="container"> -->
+
+[%# <!--  THIS IS THE INTRODUCTION PAGE   --> %]
+<!-- Masthead
+================================================== -->
+ 
+<div class="row-fluid">
+    <header class="jumbotron masthead">
+    <div class="marketing">
+        <h1 class="strong">Moving Company Management System
+        <small>  Beta Version</small></h1>
+    </header>
+        <hr class="soften" />
+</div> <!-- /row-fluid -->
+
+
+[% IF c.user_exists %]
+
+[%# <!--  Logged In Users Don't need detailed introduction to the site.   --> %]
+<div class="row-fluid">
+    <div class="hero-unit">
+        <div class="row-fluid">
+          <div class="span5">
+            <p><a class="btn btn-primary btn-large"
+            href="[%  c.uri_for('/menu') %]"  ><strong>Main Menu
+            &raquo;</strong></a></p>
+          </div> <!-- /span5 -->
+          <div class="span5">
+            <p><a class="btn btn-primary btn-large"  href="[%
+            c.uri_for('/logout') %]"><strong>Logout &raquo;</strong></a></p>
+          </div> <!-- /span5 -->
+        </div> <!-- /row-fluid -->
+    </div> <!-- End Hero Unit -->
+</div> <!-- /row-fluid -->
+
+[% ELSE %]
+
+[%# <!--  Un-logged In users can get detailed description of this site.   --> %]
+
+    <div class="hero-unit">
+        <div class="row-fluid">
+            <h3>
+            This web based application will be a central location for a
+            moving company to manage Customers, Estimates, Jobs, Resources and
+            any other information that managers may need to improve productivity. 
+            This will be a one stop shop for providing informative statistics
+            across company departments. Management can use this information to
+            better prepare and plan future company business activities. You will be able to identify areas of success as well as
+            areas that need improving. 
+            </h3>
+        </div> <!-- /row-fluid -->
+        <div class="row-fluid">
+         <br /> 
+          <p><a class="btn btn-primary btn-large"  href="[%
+          c.uri_for('/login') %]"   ><strong>Enter &raquo;</strong></a></p>
+        </div> <!-- /row-fluid -->
+    </div> <!-- End Hero Unit -->
+
+
+[%# <!-- Accordion to show or hide demos.   --> %]
+<div class="accordion" id="introAccordion">
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle lead" data-toggle="collapse" data-parent="#introAccordion" href="#collapseOne">
+                What it does
+            </a>
+       </div>
+       <div id="collapseOne" class="accordion-body collapse in">
+            <div class="accordion-inner">
+            [%# <!-- Inside accordion Body.   --> %]
+
+ <div class="row-fluid">
+     <div class="span3">
+        <h3>Estimates</h3>
+         <p>Schedule estimates. Complete "Over the phone" estimates.
+         View and Modify estimate details.Provide dispatch with confirmed job
+         schedule</p>
+     </div> <!-- End Span 4 -->
+
+     <div class="span3">
+        <h3>Customers</h3>
+         <p> View customer details and history.Understand 
+         customer requirements. Classify customer type.
+         </p>
+     </div> <!-- End Span 4 -->
+
+     <div class="span3">
+        <h3>Dispatch</h3>
+         <p> Schedule jobs based on information from sales department.
+         Provide truck, crew, and material reqirements to dispatcher.  
+         View job status and statistics. 
+          </p>
+     </div> <!-- End Span 4 -->
+
+     <div class="span3">
+        <h3>Storage</h3>
+         <p> Provide storage usage and availability. Schedule incoming and
+         outgoing storage jobs. Track storage accounts. Interact with existing
+         billing syetem. 
+         </p>
+     </div> <!-- End Span 4 -->
+
+ </div> <!-- /row-fluid -->
+ <div class="row-fluid">
+
+     <div class="span3">
+        <h3>Equipment</h3>
+         <p> 
+         Track material and equipment usage. Plan material requirements based
+         on job schedule. Track equipment suppliers and deliveries.Provide
+         management and dispatch with necessary equipment information for planning
+         upcoming jobs. 
+          </p>
+     </div> <!-- End Span 4 -->
+
+     <div class="span3">
+        <h3>Fleet</h3>
+         <p> Record truck and vehicle information. Schedule vehicle
+         maintenance. Create notifications for insurance and registration
+         expiration. Provide truck capacities and availability to dispach
+         system.
+          </p>
+     </div> <!-- End Span 4 -->
+
+     <div class="span3">
+        <h3>Admin</h3>
+         <p>Provide accounting, sales, planning and job statistics. Central
+         locaion for human resources.
+         </p>
+     </div> <!-- End Span 4 -->
+
+            </div> <!-- /accordion inner -->
+       </div> <!-- /accordion body -->
+   </div> <!-- /accordion group-->
+
+
+ </div> <!-- /row-fluid -->
+
+ <div class="row-fluid">
+
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle lead" data-toggle="collapse" data-parent="#introAccordion" href="#collapseTwo">
+                Demo Screen Shots (Coming soon...)</a>
+       </div>
+       <div id="collapseTwo" class="accordion-body collapse">
+            <div class="accordion-inner">
+            [%# <!-- Inside accordion Body.   --> %]
+
+
+    [%# <!--  Carousel.   --> %]
+    <div class="span10">
+        <h2>Samples</h2>
+        <p>Look at sample screens.</p>
+        <div id="introCarousel" class="carousel slide">
+            <div class="carousel-inner">
+                <div class="item active">
+                    <img src="static/images/k_m_look_at_mutt_nblp.jpg" alt="">
+                    <div class="carousel-caption">
+                        <h4>First Demo</h4>
+                        <p> Demo one info.</p>
+                    </div>
+                </div>
+                <div class="item">
+                    <img src="static/images/t_and_l_mechanics.jpg" alt="">
+                    <div class="carousel-caption">
+                        <h4>Second Demo</h4>
+                        <p>Demo 2 info. </p>
+                    </div>
+                </div>
+                <div class="item">
+                    <img src="static/images/catalyst_logo.png" alt="">
+                    <div class="carousel-caption">
+                        <h4>Third Demo</h4>
+                        <p>Demo 3 info.</p>
+                    </div>
+                </div>
+            </div> <!-- /carousel-inner -->
+            <a class="left carousel-control" href="#introCarousel" data-slide="prev">&lsaquo;</a>
+            <a class="right carousel-control" href="#introCarousel" data-slide="next">&rsaquo;</a>
+        </div> <!-- /carousel slide -->
+    </div> <!-- /span10 -->
+
+</div> <!-- /row-fluid -->
+
+
+            </div> <!-- /accordion inner -->
+       </div> <!-- /accordion body -->
+   </div> <!-- /accordion group-->
+</div> <!-- /accordion -->
+
+[% END %]
+
+
+
+<!-- </div> <!-- /container -->
+

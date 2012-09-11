@@ -1,0 +1,56 @@
+
+[% IF input_date_range_form.day_of_week %]
+
+       [% IF c.form.has_error %]
+          
+            [% date = input_day_of_week_form.field_id -%]
+          <!--<div class="error">Input Error</div>-->
+     
+         [% IF c.form.invalid(date, 'LENGTH') %]
+            [% help_text = 'The day appears too long' %]
+           [% field_status = 'error' %]
+         [% END %]
+         
+         [% IF c.form.invalid(date, 'DATETIME_STRPTIME' ) %]
+            [% help_text = 'Day Should be from 1 to 7' %]
+           [% field_status = 'error' %]
+         [% END %]
+         
+     
+      [% ELSIF c.form.success(date) %]
+         [% IF c.request.params.submit_day  == '1' %]
+            [% field_status = 'success' %]
+            [%# help_text = 'Good Date' %]
+          [% END %]
+      [% END %]
+        
+     
+
+   <form class="form-horizontal well small" method="post"  action="[% input_day_of_week_form.form_action %]" id="[% input_day_of_week_form.form_id %]">
+      <!--<fieldset>-->
+        <!-- <legend>Legend text</legend>-->
+      <!-- Add data-toggle="buttons-radio" for radio style toggling on btn-group -->
+      <div class="control-group  [% field_status %]"   title="[% input_day_of_week_form.title -%]" >
+        <label class="control-label" for="[% input_day_of_week_form.field_id %]"> [% input_day_of_week_form.label %] </label>
+        <div class="controls">
+          <div class="btn-group" data-toggle="buttons-radio">
+            <button class="btn btn-inverse" id="[% input_day_of_week_form.field_id %]" name="[% input_day_of_week_form.field_id %]" value="1" >Mon</button>
+            <button class="btn btn-inverse" id="[% input_day_of_week_form.field_id %]" name="[% input_day_of_week_form.field_id %]"  value="2" >Tue</button>
+            <button class="btn btn-inverse" id="[% input_day_of_week_form.field_id %]" name="[% input_day_of_week_form.field_id %]"  value="3" >Wed</button>
+            <button class="btn btn-inverse" id="[% input_day_of_week_form.field_id %]" name="[% input_day_of_week_form.field_id %]"  value="4" >Thur</button>
+            <button class="btn btn-inverse"  id="[% input_day_of_week_form.field_id %]" name="[% input_day_of_week_form.field_id %]"  value="5" >Fri</button>
+            <button class="btn btn-inverse" id="[% input_day_of_week_form.field_id %]" name="[% input_day_of_week_form.field_id %]" value="6" >Sat</button>
+            <button class="btn btn-inverse"  id="[% input_day_of_week_form.field_id %]" name="[% input_day_of_week_form.field_id %]" value="7" >Sun</button>
+          </div> <!-- /btn-grp -->
+          <div>
+          [% IF help_text %]
+               <span class="help-inline">[% help_text %]</span>
+           [% END %]   
+           </div>
+       </div> <!-- /controls -->
+      </div> <!-- /control-group -->
+      <!--</fieldset>-->
+   </form>
+
+
+[% END %]

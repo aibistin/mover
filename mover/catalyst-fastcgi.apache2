@@ -1,0 +1,22 @@
+# vim: set filetype=apache
+<VirtualHost *:80>
+
+    ServerName mover.localhost
+    ServerAlias www.mover.localhost
+
+    CustomLog "|/usr/bin/cronolog /home/austin/perl/mover/log/apache2-mover.localhost-%Y-%m.access.log -S /home/austin/perl/mover/log/apache2-mover.localhost.access.log" combined
+    ErrorLog "|/usr/bin/cronolog /home/austin/perl/mover/log/apache2-mover.localhost-%Y-%m.error.log -S /home/austin/perl/mover/log/apache2-mover.localhost.error.log"
+
+    FastCgiExternalServer /tmp/mover.fcgi -socket /tmp/mover.socket
+
+    Alias / /tmp/mover.fcgi/
+
+
+     <Directory "/home/austin/perl/mover/root">
+         Options Indexes FollowSymLinks
+         AllowOverride All
+         Order allow,deny
+         Allow from all
+     </Directory>
+
+</VirtualHost>

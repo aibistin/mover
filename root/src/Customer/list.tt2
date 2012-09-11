@@ -1,0 +1,82 @@
+[%# USE Dumper %] 
+ [%#Dumper.dump_html(c.stash.estimate) %]
+[% # Body of Estimate List. -%]
+
+[% META title = 'Scheduled Estimates' -%]
+
+ <div class="fluid ">
+<div class="dp100 clearfix">      <!--Outer grid area for list 100% fixed-->
+  
+    
+    
+    
+    [% # Note That the '-' at the beginning or end of TT code  -%]
+    [% # "chomps" the whitespace/newline at that end of the    -%]
+    [% # output (use View Source in browser to see the effect) -%]
+    
+    [% # Table of Estimate Details -%]
+    
+    [% IF c.user_exists %]
+        <div class="dp 95 bg2 h1 byline">[% sub_heading %] </div>
+        
+        <table>
+        <tr><th>Estimate Date And Time </th><th>Customer Name </th><th>Address</th><th>Primary Phone</th><th>Recommended By </th><th>Estimator</th><th>Action</th></tr>
+        
+        <div class="class="clear hg1"></div>  
+        [% # Display each estimate in a table row %]
+        [%# Result set is estimates %]
+        [% WHILE (estimate = resultset.next) %]
+        
+         <tr class="dp 95 bg2">
+            
+            <td>[% estimate.estimate_date_datetime.day_name %] [% estimate.estimate_date_datetime.mdy('/') %] at
+            [% estimate.estimate_time_datetime.strftime("%I:%M %p") %]</td>
+            <td>[%- estimate.customer.full_name %]</td>
+            <td>[%- estimate.customer.address_1 %], [%- estimate.customer.address_2 %], [%-estimate.customer.city FILTER ucfirst %], [%- estimate.customer.state FILTER upper
+            %], [%- estimate.customer.zip %]</td>
+            <td>[%- estimate.customer.phone_1  %] </td>
+            <td> [%- estimate.customer.recommended_by FILTER ucfirst %] </td>
+            <td> [%- estimate.estimator.alias or estimate.estimator.full_name or "none" FILTER  ucfirst %] </td>
+            
+            <td><a href="[% c.uri_for(c.controller.action_for('display_estimate_details'),[estimate.id]) %]">More...</a></td>
+            <td><a href="[% c.uri_for(c.controller.action_for('update_estimate'),[estimate.id]) %]">Update</a></td>
+            <td><a href="[% c.uri_for(c.controller.action_for('delete'),[estimate.id]) %]">Delete</a></td>
+                      
+            </tr>
+             <tr class="dp95 bg1 hgqrtr"><td></td></tr>
+           
+            
+            
+        [% END -%]
+        
+       
+        </table>
+       <!--  <a href=[% create_item %]>Schedule New Estimate </a>  -->
+    
+    <!-- Create New Estimate -->
+     <div class="dp 95">
+        <p><a href="[% c.uri_for(c.controller.action_for('schedule_estimate')) %]">Schedule A New Estimate</a></p>
+     </div>
+    
+    [%# For Next Week or Previous Week Links%]
+    <div class="dp95 clearfix">
+    
+    [% IF prev %]
+    <div class="dp45 tl hg1">
+        <a class="btn btn-primary btn-medium" href="[% prev -%]">&laquo; [% prev_label %]</a></div>
+   
+   [% END %]
+    
+    [% IF next %]
+        <div class="dp45 tr hg1">
+        <a class="btn btn-primary btn-medium" href="[% next -%]">[% next_label %] &raquo;</a></div>
+        [% END %]
+    </div> <!-- End dp95 clearfix -->
+    
+    
+ [% ELSE %]
+     <p> You are not logged in. Please log in to access estimate data.
+ [% END %]
+ 
+ </div><!-- End Clearfix Class -->  
+ </div><!-- End Fluid Class -->  

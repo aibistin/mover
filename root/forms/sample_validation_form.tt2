@@ -1,0 +1,11 @@
+<form class="well" method="POST" action="/process">
+<div class="element[% IF c.form.missing('name') or c.form.invalid('name') %] error[% END %]">
+    <label>Name</label>
+<input id="name" name="name" type="text" value="[% c.form.valid('name') %]">
+      [% IF c.form.missing('name') %]
+        <span class="message">this field is required</span>
+      [% ELSIF c.form.invalid('name') %]
+        <span class="message">this field is invalid</span>
+      [% END %]
+  </div>
+</form>

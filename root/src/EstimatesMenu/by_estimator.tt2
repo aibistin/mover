@@ -1,0 +1,129 @@
+
+[% META title = 'Find Estimates By Estimator' %]
+[%# <!-- Menu For All Estimator Type  Queries -->  %]
+<div class="container">
+[%# USE Dumper %] 
+  [%#Dumper.dump_html(c) %]
+
+   
+
+
+[% IF c.user_exists %]
+
+ <div class="row-fluid">
+   <h6 class="lead">Find scheduled estimates by estimator.</h6>
+   <!-- Find Estimate By EstimatorForm -->
+   <div id="estimator_id_form" >
+    	<form class="well form-inline"  method="post" action="[% c.uri_for(c.controller('EstimatesMenu').action_for('by_estimator')) %]" >
+           <div class="control-group">
+              <label class="control-label" for="estimator_id">Select From List Of Estimators</label>
+              <div class="controls">
+                 <select  name="estimator_id" id="estimator_id" 
+                        title="Select From List Of Estimators" >
+                        <!-- size="2" -->
+
+                     <option value="" SELECTED disabled="disabled" >   - Estimators -    </option>
+                  <!--  <option value="" SELECTED READONLY >     Estimators       </option>  -->
+                    [%# Actual Estimators First %]
+                    [% FOREACH estimator = estimators %]
+                        <option value="[%estimator.id%]" > [% estimator.first_name _ '  ' _ estimator.last_name %] </option>
+                    [% END %]
+                    <!-- <option value="" READONLY>   - All Employees -   </option>  -->
+                    <option value="" disabled="disabled" >  - All Employees -    </option>
+                    [%# Staff who can do estimates. %]
+                    [% FOREACH cando = admin %]
+                        <option value="[%cando.id%]" > [% cando.first_name _ '  ' _ cando.last_name %] </option>
+                    [% END %]
+                 </select>
+		         <input type="submit" name="submit" value="Find Estimates" class="btn-medium btn-primary" />
+             </div> <!--/controls -->
+          </div> <!--/control-group -->
+		</form>
+   </div>  <!--End Select Estimators estimator_id  -->
+ </div> <!--/row-fluid> -->
+			
+ <div class="row-fluid">
+    <div id="search_name_form">
+    	<form class="well form-inline" method="post" action="[% c.uri_for(c.controller('EstimatesMenu').action_for('by_estimator')) %]" >
+            <label class="control-label" for="employee_name" >Find schedule by employee: </label>
+            [%# <!-- Employee First and last name.(s)--> %]
+            <input  id="employee_name" type="text"
+                    name="employee_name" maxlength="50"
+                    placeholder="Enter an employee name"
+            >
+            <!-- In different text field -->	
+            <input type="hidden" id="employee_id" name="employee_id" />
+                <input type="submit" name="submit" value="Find Estimates"
+                class="btn-medium btn-primary" />
+        </form>
+   </div> <!-- End Search buySimilar Names Form -->
+ </div> <!--/row-fluid> -->
+
+                   <!--  maxlength="50" size="30" -->
+ 			
+
+
+ <div class="row-fluid">
+ <!-- Go Back -->
+    <ul class="pager">
+        <li class="previous">
+        <a href="[% c.uri_for(c.controller('menu').action_for('estimates_menu')) %]">&larr; Return To Estimate Menu</a>
+        </li>
+        <li class="next">
+        <a href="[%
+        c.uri_for(c.controller('Estimates').action_for('schedule_estimate')) %]">Schedule New Estimate &rarr;</a>
+        </li>
+    </ul>
+ </div> <!--/row-fluid> -->
+      
+[% ELSE %]
+  <div class="row-fluid">
+		<p class="lead">You need to login to use access estimate data</p>
+    <!-- Go Back -->
+        <ul class="pager">
+            <li class="previous">
+            <a href="[% c.uri_for(c.controller('Intro').action_for('/')) %]">Home Page &rarr;</a>
+            </li>
+            <li class="next">
+                <a href="[% c.uri_for(c.controller('Login').action_for('/')) %]">&larr; Login </a>
+            </li>
+        </ul>
+    </div> <!--/row-fluid> -->
+[% END %]
+
+
+</div><!-- /container-->
+
+
+<div>
+[%# <!--  Include template containing Employee full Names list JS --> %]
+[% IF c.user_exists %]
+    [% INCLUDE Employee/employee_names_js.tt2 %]
+[% END %]
+</div>
+
+<script type="text/javascript">
+
+//$( function(){
+//
+//    function log( message ) {
+//        $( "<div/>" ).text( message ).prependTo( "#employee_name" );
+//        $( "#employee_name" ).scrollTop( 0 );
+//    }
+//
+//        $( "#employee_name" ).autocomplete({
+//            source: [% employee_full_names %],
+//            minLength: 1,
+//            //appendTo: "#employee_name"
+//            select: function( event, ui ) {
+//            log( ui.item ?
+//        ui.item.value :
+//        this.value );
+//        }
+//    });
+//});
+</script>
+</div>
+
+
+

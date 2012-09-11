@@ -1,0 +1,34 @@
+[%# <!-- Mini Form Selection Buttons Rvealed By Bootstrap Tabs --> %]
+ [% IF using_miniforms == 1 %]
+           <div class="tabbable  tabs-top"> <!-- Only required for left/right tabs -->
+             <ul class="nav nav-tabs">
+               [% IF input_one_date_form.input_date %]
+               <li [% tab_class_od %]><a data-toggle="tab" data-target="#mini_form_1"> Select Another Date</a></li>
+               [% END %]
+               [% IF input_date_range_form.input_date_range %]
+               <li [% tab_class_dr %]><a data-toggle="tab" data-target="#mini_form_2"> Select A Date Range</a></li>
+             [% END %]
+              [% IF input_day_of_week_form.day_of_week %]
+               <li [% tab_class_dow %]><a data-toggle="tab" data-target="#mini_form_3">Select A Day </a></li>
+               [% END %]
+              [% IF input_month_form.month_of_year %]
+               <li [% tab_class_mm %]><a data-toggle="tab" data-target="#mini_form_4">Select A Month</a></li>
+               [% END %]
+             </ul>
+             <div class="tab-content">
+               <div class="tab-pane [% tab_active_flag_od %]"   id="mini_form_1">
+                [% IF input_one_date_form.input_date %] [% INCLUDE $input_one_date_form.mini_form_one_date %]  [% END %]
+               </div>
+               <div class="tab-pane [% tab_active_flag_dr %]"   id="mini_form_2">
+                [% IF input_date_range_form.mini_form_date_range %] [% INCLUDE $input_date_range_form.mini_form_date_range %] [% END %]
+               </div>
+               <div class="tab-pane [% tab_active_flag_dow %]" id="mini_form_3">
+                 [% IF input_day_of_week_form .day_of_week %] [% INCLUDE $input_day_of_week_form .mini_form_day_of_week %]  [% END %]
+               </div>
+               <div class="tab-pane [% tab_active_flag_mm %]"    id="mini_form_4">
+                [% IF input_month_form.month_of_year %] [% INCLUDE $input_month_form.mini_form_month %]  [% END %]
+               </div>
+             </div>
+           </div>
+        </div>
+  [% END %]

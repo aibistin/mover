@@ -1,0 +1,28 @@
+ [%# USE Dumper %] 
+  [%# Dumper.dump_html(c.stash.new_heading) %]
+  
+ [% IF updating == '1'  %]
+    [% META title = 'Update An Estimate' %]
+    
+ [% ELSE %]
+    
+   [% META title = 'Schedule An Estimate' %]
+ [% END %]
+ 
+ <div  class="fluid tl">
+ <div class="dp100 clearfix">      <!--Outer grid area  100% fixed--> 
+  
+  <!--<div class="dp90 tc byline "><h6>Enter Customer Details And Schedule An Estimate</h></div >-->
+  <div class="dp90 tc byline "><h6>[% new_heading or "Enter Customer Details And Schedule An Estimate" %]</h></div >
+  <div class="clear"></div>
+ </div> <!--End Clearfix-->
+ 
+<div class="dp100 clearfix">
+    
+<div class="dp90 content_xml: class="clear">   [% form %]   </div>  
+
+<div class="dp100 clearfix"> 
+    <p><a href="[% c.uri_for(c.controller.action_for('list')) %]">Return to estimate list</a></p>
+</div>
+ </div>  <!-- End dp100 clearfix -->
+   </div><!-- End fluid class -->
