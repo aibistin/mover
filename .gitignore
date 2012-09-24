@@ -36,6 +36,7 @@ Thumbs.db
 *-bkp
 *-docs
 *.old
+*.swp
 .metadata/
 #------- Specific to the App::ForExample Fastcgi Setup Scripts
 *.apache2
