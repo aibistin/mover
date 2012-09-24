@@ -299,7 +299,7 @@ __PACKAGE__->belongs_to(
 #################################################################################
 use Log::Log4perl qw(:easy);
 use Regexp::Common qw(time);
-use lib '/home/austin/perl/Validation';
+#use lib '/home/austin/perl/Validation';
 use MyDate;
 
 #------- Constant types
@@ -387,7 +387,7 @@ sub move_time_datetime {
 }
 
 =head2 created_datetime
-   Convert the move date to datetime format
+   Convert the Estimate created date to datetime format
    Stored in UTC time zone. Display in Local Time Zone
 =cut
 
@@ -401,7 +401,7 @@ sub created_datetime {
 }
 
 =head2 updated_datetime
-   Convert the move date to datetime format
+   Convert the Estimate Updated date to datetime format
    Stored in UTC time zone. Display in Local Time Zone
 =cut
 

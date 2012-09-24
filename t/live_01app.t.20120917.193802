@@ -1,0 +1,694 @@
+#!/usr/bin/env perl
+
+#-------------------------------------------------------------------------------
+#  Use Mechanize to test my mover app
+#  Tests The Log Out And Log In Actions
+#-------------------------------------------------------------------------------
+use Modern::Perl 2010;
+use autodie;
+
+#use strict;
+#use warnings;
+
+use Data::Dumper;
+use Log::Log4perl;
+
+use Try::Tiny;
+use Test::More;
+
+diag<<EOF
+
+*******************************WARNING*****************************
+The APP_TEST environment variable is not set. Please run this test
+script with the APP_TEST variable set to one (e.g. APP_TEST=1 prove –l
+ensure that the authentication component of the application is tested
+properly.
+EOF
+if !$ENV{APP_TEST};
+
+plan skip_all => 'Set APP_TEST for the tests to run fully' if !$ENV{APP_TEST};
+
+BEGIN { use_ok( "Test::WWW::Mechanize::Catalyst" => "mover" ) }
+
+#SKIP: {
+#    skip "Set APP_TEST for the tests to run fully", 
+#    skip_all if !$ENV{APP_TEST};
+#}:
+#-------------------------------------------------------------------------------
+#  Set Up Logging
+#-------------------------------------------------------------------------------
+my $LOG_CONFIG_FILE = '/home/austin/perl/log.conf';
+
+Log::Log4perl->init($LOG_CONFIG_FILE);
+my $log = Log::Log4perl->get_logger("Test::Mech");
+
+#-------------------------------------------------------------------------------
+#  Constant Types
+#-------------------------------------------------------------------------------
+my $TRUE  = 1;
+my $FALSE = 0;
+
+my $ADMIN_1  = 'admin';
+my $REG_USER = 'helper01';
+
+my $TEST_HTML      = $FALSE;
+my $TEST_LINKS     = $TRUE;
+my $TEST_REDIRECTS = $TRUE;
+my $TEST_LOGIN     = $TRUE;
+my $TEST_FORMS     = $TRUE;
+my $URL            = 'url';
+my $FORM           = 'form';
+
+my $APACHE_LOCAL = "http://mover.localhost";
+my $MY_HOST = $APACHE_LOCAL;
+
+
+my %test_list_h = (
+    test_html      => $FALSE,
+    test_links     => $TRUE,
+    test_redirects => $TRUE,
+    test_login     => $TRUE,
+    test_forms     => $TRUE,
+);
+
+#-------------------------------------------------------------------------------
+# Create two 'user agents' to simulate two different users ($ADMIN_1' & $REG_USER')
+#-------------------------------------------------------------------------------
+my $admin_user = Test::WWW::Mechanize::Catalyst->new;
+my $basic_user = Test::WWW::Mechanize::Catalyst->new;
+
+#------ Allow Redirects
+$admin_user->requests_redirectable( [qw/ GET HEAD POST /] );
+$basic_user->requests_redirectable( [qw/ GET HEAD POST /] );
+
+#-------------------------------------------------------------------------------
+#my %user_h = (
+# user_agent => $admin_user,
+# user_id   => $admin,
+# user_pwd  => 'Mover-101',
+# user_nick_name => 'Superuser',
+# test_list      => \%test_list_h,
+#);
+
+my $user_list = [
+    {
+        user_agent     => $basic_user,
+        user_id        => 'helper01',
+        user_pwd       => 'Helper-101',
+        user_nick_name => 'Peon',
+        login_type     => $FORM,
+        test_list      => \%test_list_h,
+    },
+
+    {
+        user_agent     => $admin_user,
+        user_id        => 'admin',
+        user_pwd       => 'Mover-101',
+        user_nick_name => 'Superuser',
+        login_type     => $FORM,
+        test_list      => \%test_list_h,
+    }
+];
+
+#-------------------------------------------------------------------------------
+#  Remember to test access to pages when NOT logged in
+#-------------------------------------------------------------------------------
+
+#-------------------------------------------------------------------------------
+# Second arg = optional description of test (will be displayed for failed tests)
+# Note that in test scripts you send everything to 'http://localhost'
+#-------------------------------------------------------------------------------
+#$_->get_ok( "http://localhost/", "Get Opening Web Page" )
+
+$_->{user_agent}->get_ok( $MY_HOST,  "Get Opening Web Page.
+    For FastCgi version on My Localhost" ) for @$user_list;
+
+#$_->{user_agent}->get_ok( "/", "Get Opening Web Page" ) for @$user_list;
+
+#------ Make User Id and Password Available
+#$_->{user_agent}->set_visible( $_->{user_id},  $_->{user_pwd}) for @$user_list;
+
+#-------------------------------------------------------------------------------
+#        Test Intro Page
+#-------------------------------------------------------------------------------
+$user_list = test_intro_page($user_list);
+
+#-------------------------------------------------------------------------------
+#    Test Login Page
+#-------------------------------------------------------------------------------
+
+$_->{user_agent}->get_ok( $MY_HOST.'/login',
+    "Intro page - Click on Enter button  -> Get Login Page for $_->{user_id}" )
+  for @$user_list;
+
+$user_list = test_login_page_login($user_list);
+
+#------ Set the user credentials 
+$_->{user_agent}->credentials( $_->{user_id}, $_->{user_pwd} ) for @$user_list;
+$_->{user_agent}->set_visible( $_->{user_id},  $_->{user_pwd}) for @$user_list;
+
+#------ See if these users are really logged in
+$user_list = test_if_logged_in($user_list);
+
+#-------------------------------------------------------------------------------
+# Go back to the login page and it should show that we are already logged in
+#-------------------------------------------------------------------------------
+#------ Set the user credentials 
+$_->{user_agent}->credentials( $_->{user_id}, $_->{user_pwd} ) for @$user_list;
+$_->{user_agent}->set_visible( $_->{user_id},  $_->{user_pwd}) for @$user_list;
+
+$user_list = test_login_page_after_login($user_list);
+
+#-------------------------------------------------------------------------------
+# 'Click' the 'Logout' link (see also 'text_regex' and 'url_regex' options)
+# Returns user to the Introduction Page
+# User remains logged out after the test.
+#-------------------------------------------------------------------------------
+
+#------ Set the user credentials 
+$_->{user_agent}->credentials( $_->{user_id}, $_->{user_pwd} ) for @$user_list;
+$_->{user_agent}->set_visible( $_->{user_id},  $_->{user_pwd}) for @$user_list;
+
+$user_list = test_logout($user_list);
+
+#-------------------------------------------------------------------------------
+# Log back in and Test Login Page again
+#-------------------------------------------------------------------------------
+
+#------ Set the user credentials 
+$_->{user_agent}->credentials( $_->{user_id}, $_->{user_pwd} ) for @$user_list;
+$_->{user_agent}->set_visible( $_->{user_id},  $_->{user_pwd}) for @$user_list;
+
+$_->{user_agent}->get_ok( '/login',
+    "Intro page - Click on Enter button  -> Get Login Page for $_->{user_id}" )
+  for @$user_list;
+
+
+#------ Set the user credentials 
+$_->{user_agent}->credentials( $_->{user_id}, $_->{user_pwd} ) for @$user_list;
+$_->{user_agent}->set_visible( $_->{user_id},  $_->{user_pwd}) for @$user_list;
+
+$user_list = test_login_page_login($user_list);
+
+
+#------ Set the user credentials 
+$_->{user_agent}->credentials( $_->{user_id}, $_->{user_pwd} ) for @$user_list;
+$_->{user_agent}->set_visible( $_->{user_id},  $_->{user_pwd}) for @$user_list;
+
+# See if these users are really logged in
+$user_list = test_if_logged_in($user_list);
+
+#-------------------------------------------------------------------------------
+# Test The Main Menu Page
+# Should be Redirected to Main Menu after Login
+#-------------------------------------------------------------------------------
+
+$_->{user_agent}->get_ok(
+    "/menu", "Login Page - Go to Main Menu for
+    $_->{user_id} "
+) for @$user_list;
+
+
+#------ Set the user credentials 
+$_->{user_agent}->credentials( $_->{user_id}, $_->{user_pwd} ) for @$user_list;
+$_->{user_agent}->set_visible( $_->{user_id},  $_->{user_pwd}) for @$user_list;
+ 
+$user_list = test_main_menu($user_list);
+
+#-------------------------------------------------------------------------------
+#  Test Estimates Menu Page
+# Test the links to Estimates Menu Page,  then go there
+#-------------------------------------------------------------------------------
+
+
+#------ Set the user credentials 
+$_->{user_agent}->credentials( $_->{user_id}, $_->{user_pwd} ) for @$user_list;
+$_->{user_agent}->set_visible( $_->{user_id},  $_->{user_pwd}) for @$user_list;
+
+$user_list = test_access_to_estimates_menu_go($user_list);
+
+
+#------ Set the user credentials 
+$_->{user_agent}->credentials( $_->{user_id}, $_->{user_pwd} ) for @$user_list;
+$_->{user_agent}->set_visible( $_->{user_id},  $_->{user_pwd}) for @$user_list;
+
+$user_list = test_estimates_menu($user_list);
+
+#-------------------------------------------------------------------------------
+done_testing;
+
+1;
+
+#-------------------------------------------------------------------------------
+#  Functions
+#-------------------------------------------------------------------------------
+
+#-------------------------------------------------------------------------------
+#        Test Intro Page
+#  Testing the Intro Page Before Log In
+#-------------------------------------------------------------------------------
+sub test_intro_page {
+    my ($users) = @_;
+
+    #------ Test First User only
+    my $user = $users->[0];
+    $user->{user_agent}->title_is( "Introduction To Moving Management",
+        "Intro - Check for page title $user->{user_id}" );
+
+    $user->{user_agent}->content_contains( "Moving Company Management System",
+        "Intro - Check Page Heading $user->{user_id}" );
+
+    $user->{user_agent}->content_contains(
+        "What it does",
+        "Intro - Brief descripion of what this applicaion does $user->{user_id}"
+    );
+
+    $user->{user_agent}->page_links_ok(
+        "Intro - Check all links on the Intro
+        page $user->{user_id}"
+    );
+
+    $user->{user_agent}->content_contains(
+        "/login\">Sign In</a>",
+"Intro - Check for 'Sign In' menu item From Top Toolbar Menu $user->{user_id}"
+    );
+    $user->{user_agent}->content_like(
+        qr/(\/login).+Enter /,
+        "Intro - Check for 'Enter' Button with a login link. $user->{user_id}"
+    );
+
+    #------ Checks the HTML on the Intro Page
+    if ( $user->{test_list}->{test_html} ) {
+        $user->{user_agent}
+          ->html_lint_ok("Intro - HTML validity check. $user->{user_id}");
+    }
+
+    #------ Check Link to Login Page
+    $user->{user_agent}->follow_link_ok( { text_regex => qr/enter/i },
+        "Inro Page - Enter -> Link check to Login Page $user->{user_id}" );
+
+    return $users;
+}
+
+#-------------------------------------------------------------------------------
+#  Test Login Page and Login
+#  Can Log in using the Login Form or using URL Params
+# Users will be logged in after this test
+#-------------------------------------------------------------------------------
+sub test_login_page_login {
+    my ($users) = @_;
+    #
+    #    $log->debug( "Check Login Page - Users Type ." . ref($users) );
+    #    for my $waster (@$users) {
+    #        $log->debug("Check Login Page - Users Id .$waster->{user_id}.");
+    #    }
+
+    $_->{user_agent}->title_is(
+        "Login", "Login - Check for login page title
+        $_->{user_id}"
+    ) for @$users;
+
+    $_->{user_agent}->content_contains(
+        "Log In", "Login - Login Form Heading
+         $_->{user_id}"
+    ) for @$users;
+
+    #Checks the HTML on the Login Page
+    if ( $users->[0]->{test_list}->{test_html} ) {
+        $users->[0]->{user_agent}->html_lint_ok(
+            "Login - HTML on Login page -
+            $users->[0]->{user_id}"
+        );
+    }
+
+    #------ log in with form or with parms in URL
+
+    for my $user (@$users) {
+
+        #------ Turn On Redirects
+        $user->{user_agent}->requests_redirectable( [qw/ GET HEAD POST /] );
+
+        # Login Using the Login Form
+        if ( $user->{login_type} eq $FORM ) {
+            $user->{user_agent}->submit_form_ok(
+                {
+                    fields => {
+                        username => $user->{user_id},
+                        password => $user->{user_pwd},
+                    }
+                },
+                "Login- Submit Login Form for $user->{user_id}"
+            );
+        }
+        else {
+            #------ log in using URL instead of a form
+            $user->{user_agent}->get_ok(
+"http://localhost/login?username=$user->{user_id}&password=$user->{user_pwd}",
+                "Login $user->{user_id} using URL"
+            );
+        }
+
+        #------- Turn Off Redirects
+#        $user->{user_agent}->requests_redirectable( [] );
+    }
+
+    $_->{user_agent}->credentials( $_->{user_id}, $_->{user_pwd} ) for @$users;
+
+    #------ Test if the Username Password were rejected.
+    $_->{user_agent}->content_lacks( "Bad username or password",
+        "Logged In - $_->{user_id} Username and password were accepted." )
+      for @$users;
+
+    #------ Go to Main Menu Page - I cant get it to redirect
+    $_->{user_agent}->get_ok( $MY_HOST.'/menu',
+"Login page - Manually REdirect to Main Menu After Login for $_->{user_id}"
+    ) for @$user_list;
+
+    #------ Test if redirected from Login Page
+    $_->{user_agent}->content_lacks(
+        "Log In",
+"Logged In - $_->{user_id} Redirected from Login Page for $_->{user_id}."
+    ) for @$users;
+
+    $_->{user_agent}->title_unlike(
+        qr/Login(.*)/, "Logged In - Redirected
+    from Login Page for $_->{user_id}"
+    ) for @$users;
+    return $users;
+}
+
+#-------------------------------------------------------------------------------
+# Log out and log back in again. Test actions and results.
+#
+# Users will be logged in after this test.
+#-------------------------------------------------------------------------------
+sub test_logout_and_log_in_again {
+    my ($users) = @_;
+
+    $users = test_login_page_after_login($users);
+
+    # First user will do for the rest of these tests
+    my $user = $users->[0];
+
+    $_->{user_agent}->get_ok( "/logout", "Logout -> Back to Inro Page" )
+      for @$users;
+
+    #------ Intro Page Should Be Displayed after Logout
+    $users = test_intro_page($users);
+
+    #------ Go to Login Page
+    $_->{user_agent}->get_ok( $MY_HOST.'/login',
+        "Intro Page - Click on Enter -> Get Login Page. $_->{user_id}" )
+      for @$users;
+
+    #Check Login Page again.Pass Parameers in URl this time
+    # Log In
+    $users = test_login_page_login($users);
+
+    # See if these users are really logged in
+    $users =     test_if_logged_in($users);
+
+    return $users;
+}
+
+#-------------------------------------------------------------------------------
+#  Test The Main Mover Menu
+#  User Must be logged in to test this
+#-------------------------------------------------------------------------------
+sub test_main_menu {
+    my ($users) = @_;
+
+    # See if these users are really logged in
+    $users = test_if_logged_in($users);
+
+    for my $u (@$users) {
+
+        $u->{user_agent}->title_like(
+            qr/Main Menu/, "Main Menu - Main Menu Title
+            $u->{user_id}"
+        );
+
+        $u->{user_agent}->content_like(
+            qr/Main Menu/, "Main Menu - Main
+            Menu Heading $u->{user_id}"
+        );
+    }
+
+    #------- The first User in the list is enough for this test
+    my $user = $users->[0];
+
+    # Check For Menu Button Types
+    $user->{user_agent}->content_contains(
+        "Estimates", "Main Menu -
+            Estimates Button $user->{user_id}"
+    );
+
+    $user->{user_agent}->content_contains(
+        "Customers", "Main Menu -
+            Customers Button $user->{user_id}"
+    );
+
+    $user->{user_agent}->content_contains(
+        "Dispatch", "Main Menu - Dispatch
+            Button $user->{user_id}"
+    );
+
+    $user->{user_agent}->content_contains(
+        "Storage", "Main Menu - Storage
+            Button $user->{user_id}"
+    );
+
+    $user->{user_agent}->content_contains(
+        "Fleet", "Main Menu - Fleet Button
+            $user->{user_id}"
+    );
+
+    $user->{user_agent}->content_contains(
+        "Equipment", "Main Menu -
+            Equipment Button $user->{user_id}"
+    );
+
+    $user->{user_agent}->content_contains(
+        "Admin", "Main Menu - Admin Button
+            $user->{user_id}"
+    );
+
+    #Checks the HTML on the Main Menu Page
+    if ( $user->{test_list}->{test_html} ) {
+
+        $user->{user_agent}
+          ->html_lint_ok("Main Menu - HTML on Main Menu Page $user->{user_id}");
+
+    }
+
+    #------ Check All followable Links on Main menu Page
+    my @menu_links = $user->{user_agent}->followable_links();
+
+    $user->{user_agent}->links_ok(
+        \@menu_links, "Main Menu - Check all FOLLOWABLE links on Main Menu
+    Page. $user->{user_id}"
+    );
+
+    #------ Just check the Important Menu Links
+    @menu_links = qw(/menu/estimates_menu /menu/customers_menu );
+    $user->{user_agent}->links_ok(
+        \@menu_links, "Main Menu - Check Main Menu links
+            $user->{user_id}"
+    );
+
+    $user->{user_agent}->page_links_ok(
+        "Check ALL links on the Main Menu Page
+            $user->{user_id}"
+    );
+
+    return $users;
+}
+
+#-------------------------------------------------------------------------------
+# Check Access to Estimates Menu
+# Test the links to the Estimates Menu Page
+# Then go to the Estimates Menu
+#-------------------------------------------------------------------------------
+sub test_access_to_estimates_menu_go {
+    my ($users) = @_;
+
+    for my $user (@$users) {
+
+        #------- Turn Off Redirects
+#        $user->{user_agent}->requests_redirectable( [] );
+        $user->{user_agent}->requests_redirectable( [qw/ GET HEAD POST / ] );
+       
+        #------ Check Link to Estimates Menu Page
+        $user->{user_agent}->follow_link_ok(
+            { name_regex => qr/estimates_menu/i }, "From Main Menu - Follow Link to
+            Estimates Menu Page for $user->{user_id}"
+        );
+
+        #------ Go to Estimates Menu Page
+        $user->{user_agent}->get_ok(
+            $MY_HOST.'/estimates/estimates_menu', "From Main Menu - Go to Estimates Menu Page $user->{user_id}"
+        );
+
+    }
+    return $users;
+}
+
+#-------------------------------------------------------------------------------
+#  Test Estimates Menu Page
+#-------------------------------------------------------------------------------
+sub test_estimates_menu {
+    my ($users) = @_;
+
+    for my $user (@$users) {
+
+        #------ Check Link to Estimates Menu Page
+        $user->{user_agent}
+          ->title_is( "Estimates Menu", "Estimates Menu Title" );
+
+        $users = test_if_logged_in($users);
+        
+        $user->{user_agent}->content_contains(
+            "Estimates Department", "Estimates Menu - Estimates Menu
+    Heading"
+        );
+
+        $user->{user_agent}->content_contains(
+            "Schedule, Modify And View Estimates",
+            "Estimates Menu - Estimates Menu
+    Sub Heading"
+        );
+
+        #Checks the HTML on the Estimates Menu Page
+        if ( $user->{test_list}->{test_html} ) {
+            $user->{user_agent}->html_lint_ok("HTML on Estimates Menu Page");
+        }
+
+
+        $user->{user_agent}->content_contains(
+            "Schedule A Visual Estimate",
+"Estimates Menu - $user->{user_id} should have a Schedule A Visual Estimate Link"
+        );
+        $user->{user_agent}->content_contains(
+            "Complete A Phone Estimate",
+"Estimates Menu - $user->{user_id} should have a Schedule A Complete A Phone Estimate Link"
+        );
+
+    #    "$user->{user_id}' should NOT have a create link");
+        $user->{user_agent}->content_contains(
+            "List Estimates Scheduled For This Week</a>",
+"Estimates Menu - $user->{user_id} should have a link to see estimates for this week"
+        );
+
+        #------ Check All followable Links on Estimates menu Page
+        my @est_menu_links = $user->{user_agent}->followable_links();
+        $user->{user_agent}->links_ok( \@est_menu_links,
+"Estimates Menu - Check all FOLLOWABLE links on Estimates Menu Page.$user->{user_id}"
+        );
+
+        $user->{user_agent}->page_links_ok(
+            "Estimates Menu - Check ALL links on the Estimates Menu Page
+    $user->{user_id}"
+        );
+
+    }
+    return $users;
+}
+
+#-------------------------------------------------------------------------------`
+# Go back to the login page and it should show that we are already logged in
+#  Test Login Page After user logs in.
+# Users remain logged in after this test.
+#-------------------------------------------------------------------------------
+sub test_login_page_after_login {
+    my ($users) = @_;
+
+    $_->{user_agent}->get_ok(
+        "/login", "Login Page When Logged In - Return to Login Page. $_->{user_id}"
+    ) for @$users;
+
+    # First user will do for the rest of these tests
+    my $user = $users->[0];
+
+    $user->{user_agent}->title_is(
+        "Login",
+        "Login Page When Logged In - Check that we have returned to login page
+    $user->{user_id}"
+    );
+    $user->{user_agent}->content_like( qr/Please Note/i,
+        "Login Page When Logged In - Check we ARE logged in $user->{user_id}" );
+
+    #------ Test the HTML on the Already Login Page
+    if ( $user->{test_list}->{test_html} ) {
+        $user->{user_agent}->html_lint_ok(
+            "Login Page When Logged In - HTML on Already Logged In Page");
+    }
+
+  #------ Test the 'Logout' link (see also 'text_regex' and 'url_regex' options)
+    $user->{user_agent}->requests_redirectable( [qw/ GET HEAD POST / ] );
+
+    $user->{user_agent}->follow_link_ok(
+        { url_regex => qr/logout/i },
+"Login Page - Logout Link Working From Already Logged In Page $user->{user_id}"
+    );
+
+    return $users;
+}
+
+#-------------------------------------------------------------------------------
+#  Check If List of Users are Logged In
+#  Passed a list of users
+#  Users will remain logged in after this test
+#-------------------------------------------------------------------------------
+sub test_if_logged_in {
+    my ($users) = @_;
+
+    $_->{user_agent}->content_like(
+        qr/$_->{user_id}/,
+"Logged In - $_->{user_id} should have his/her User ID: $_->{user_id} on the page."
+    ) for @$users;
+
+    #------ Chek Logout Link for first user in list
+    $_->{user_agent}->content_like( qr/logout/i,
+        "Logged In - $_->{user_id} has a logout link if logged in." ) for
+    @$users;
+
+    # Test logout link
+#    $_->requests_redirectable( [qw/ GET HEAD POST /] );
+    $_->{user_agent}->follow_link_ok(
+        { url_regex => qr/logout/i },
+        "Logged In - Logout Link Working after just logging in $_->{user_id}"
+    ) for @$users;
+    
+    return $users;
+}
+
+#-------------------------------------------------------------------------------
+#  Test Logout
+# Users will remain logged out after this test.
+#-------------------------------------------------------------------------------
+sub test_logout {
+    my ($users) = @_;
+
+    #------ Test for the first user in list and some tests using all users
+    #       in list.
+    my $user = $users->[0];
+    $user->{user_agent}->follow_link_ok( { url_regex => qr/logout/i },
+        "Logout - Link Working From Already Logged In Page $user->{user_id}" );
+
+    $_->{user_agent}->get_ok(
+        "/logout", "Logout -  Redirects Back to Intro Page.
+    $_->{user_id}"
+    ) for @$users;
+
+    $_->{user_agent}->title_is(
+        "Introduction To Moving Management",
+        "Logout - Redirect back to intro Page
+    after Logout $_->{user_id}"
+    ) for @$users;
+
+    $user->{user_agent}->content_contains( "Introduction To Moving Management",
+        "Logout - At Intro Page For Non Logged In User $user->{user_id}" );
+
+    return $users;
+}
+

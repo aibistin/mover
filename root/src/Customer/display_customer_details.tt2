@@ -107,7 +107,7 @@
   <address>
    <strong><em>Estimate History:</em></strong><br>
     <div class="lighter-text">
-     [% IF estimate_history.count > 0 %]
+     [% IF estimate_history.count  %]
         <address>
         <h6>[% customer.full_name %] had [% estimate_history.count %] estimate[% IF estimate_history.count > 1 -%]s[% END %] previously: </h6>
         [% WHILE ( est_history = estimate_history.next ) %]
@@ -118,7 +118,7 @@
      [% ELSE%]
        <em> No estimate information available for this customer. </em>
      [% END %]
-   </div><!-- /lighter-text -->
+   </div><!-- lighter-text -->
   </address>
 
  </div><!-- /span12 -->

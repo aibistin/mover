@@ -31,9 +31,9 @@ elements:
         container_attributes:
           class: element span1
           title: Title
-          filter:
-            - Whitespace
-            - HTMLScrubber
+        filter:
+          - Whitespace
+          - HTMLScrubber
         attributes:
           autofocus:
           class: span12
@@ -113,7 +113,7 @@ elements:
             message:   Must be between 1 and 15 characters
             
       - type: Block
-        content_xml: <hr />   
+        content_xml: <hr class="soften" />   
       
     #------------------------    Address  ------------------------------# 
     - type: Block
@@ -266,7 +266,7 @@ elements:
             message:   Must be less than 14 characters
   
       - type: Block
-        content_xml: <hr />      
+        content_xml: <hr class="soften" />      
     #------------------------    Phone   -------------------------#
     - type: Block
       tag: fieldset
@@ -343,18 +343,18 @@ elements:
             message:  Must be less than 14 characters
       
       - type: Block
-        content_xml: <hr />      
+        content_xml: <hr class="soften" />      
       
          
     #------------------------    Email  -------------------------# 
-     
+      - type: Block
+        tag: div
+        attributes:
+          class: row-fluid 
 
       - type: Block
-        content_xml: <class="row-fluid ">       
-         
-      - type: Block
         tag: div       
-        content_xml: <hr /> 
+        content_xml: <hr class="soften" /> 
        
 # Customer primary email address
       - type:    Text
@@ -401,7 +401,7 @@ elements:
         
       - type: Block
         tag: div       
-        content_xml:  <div class="span12"><hr /></div>
+        content_xml:  <div class="span12"><hr class="soften" /></div>
 
 
 
@@ -438,7 +438,7 @@ elements:
          - [ 3, 'Maybe' ]
          
       - type: Block
-        content_xml: <hr />
+        content_xml: <hr class="soften" />
         
     #------------------------    Who Recommended us -------------------------# 
     - type: Block
@@ -474,7 +474,7 @@ elements:
             
             
       - type: Block
-        content_xml: <hr />
+        content_xml: <hr class="soften" />
         
   #------------------------    Date and Time  -------------------------# 
 
@@ -654,7 +654,7 @@ elements:
           - ['05:45','5:45am']
             
       - type: Block
-        content_xml: <hr /> 
+        content_xml: <hr class="soften" /> 
     #  
     #------------------------    Estimator  -------------------------# 
 
@@ -691,7 +691,7 @@ elements:
             message:  Must be less than 20 characters
             
       - type: Block
-        content_xml: <hr />   
+        content_xml: <hr class="soften" />   
     #------------------------    Comments  -------------------------# 
     - type: Block
       tag: fieldset
@@ -705,6 +705,7 @@ elements:
         
     # More Comments
       - type: Textarea
+        placeholder: Additional information
         name: comments
         #id: comments
         #label: Comments
@@ -713,7 +714,6 @@ elements:
           title: Any extra information that may be helpful
         attributes:
           class: span6
-        placeholder: Additional information
         filter:
           - type: Callback
             callback: "MyValid::profanity_stripper"
@@ -722,9 +722,15 @@ elements:
             max: 200
             message:  Must be less than 200 characters
             
-      - type: Block
-        content_xml: <hr />    
+#    - type: Block
+#      content_xml: <hr class="soften" />    
  
+    - type: Block
+      tag: div
+      attributes:
+        class: row-fluid
+      content_xml: <hr class="soften" />    
+         
     #------------------------    Submit  -------------------------# 
     - type: Block
       tag: fieldset
@@ -734,7 +740,7 @@ elements:
       elements:  
       - type: Block
         tag: legend
-        content_xml: <hr />
+        content_xml: Save Your Changes
         
  
      #The submit button

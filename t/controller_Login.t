@@ -8,7 +8,7 @@ use mover::Controller::Login;
 
 
 #------ Login
-$req = request('/login');
+my $req = request('/login');
 ok( $req->is_success, 'Login Request should succeed' );
 #ok( request('/login')->is_success, 'Request should succeed' );
 done_testing();

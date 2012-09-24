@@ -27,14 +27,14 @@
 
 <!-- Login form -->
 <div id="login">
-	<form class="well form-inline" method="post" action="[% c.uri_for('/login') %]" />
+	<form class="well form-inline" id="login" method="post" action="[% c.uri_for('/login') %]" >
 
 		 <input type="text" class="input-small"
-         placeholder="Username" label="Username" title="Username"
+         placeholder="Username" title="Username"
          name="username"  id="username" />
 
 		 <input type="password"  class="input-small"
-         placeholder="Password"  label="Password" title="Password"
+         placeholder="Password" title="Password"
          name="password" id="password" />
 
 		 <!--<button type="submit" class="btn">Log In</button>-->

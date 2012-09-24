@@ -2,7 +2,7 @@
   [%# Dumper.dump_html(c.stash.form) %]
   
  [% IF updating == '1'  %]
-    [% META title = 'Edit Customer Details' %]
+    [% META title = 'Customer Entry' %]
     
  [% ELSE %]
     

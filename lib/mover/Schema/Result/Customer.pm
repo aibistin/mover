@@ -313,9 +313,18 @@ __PACKAGE__->belongs_to(
 #################################################################################
 #####                       WORKSPACE BEGINS                                 ####
 #################################################################################
-use lib '/home/austin/perl/Validation';
+use Log::Log4perl qw(:easy);
+use Regexp::Common qw(time);
+#use lib '/home/austin/perl/Validation';
 use MyValid;
 use MyDate;
+
+#------- Constant types
+
+#todo Get list of valid time zone strings.
+my $LOCAL_TZ   = 'America/New_York';
+my $DEFAULT_TZ = 'UTC';
+
 
 #-------
 #
@@ -417,34 +426,35 @@ sub display_name {
 #######################################################################
 #------ Date Times
 #######################################################################
-#
-# format created date time
-#
 
 =head2 created_datetime
-   Convert the move date to datetime
+   Convert the Customer created date to datetime format
+   Stored in UTC time zone. Display in Local Time Zone
 =cut
 
 sub created_datetime {
     my ($self) = @_;
     return undef if ( not defined $self->created );
-    return MyDate->format_date_time( $self->created );
+
+    return ( MyDate->format_date_time_tz( $self->created, $DEFAULT_TZ ) )
+      ->set_time_zone($LOCAL_TZ);
     undef;
 }
 
 =head2 updated_datetime
-   Format the updated date
+   Convert the Customer Updated date to datetime format
+   Stored in UTC time zone. Display in Local Time Zone
 =cut
 
-#
-# format updated date time
-#
 sub updated_datetime {
     my ($self) = @_;
     return undef if ( not defined $self->updated );
-    return MyDate->format_date_time( $self->updated );
+
+    return ( MyDate->format_date_time_tz( $self->updated, $DEFAULT_TZ ) )
+      ->set_time_zone($LOCAL_TZ);
     undef;
 }
+
 
 #-------------------------------------------------------------------------------
 #  Permissions

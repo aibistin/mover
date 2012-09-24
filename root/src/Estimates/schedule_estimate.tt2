@@ -15,11 +15,6 @@
 <div class="container-fluid"> 
  [% IF c.user_exists %]
  
-
-   <!--<div class="row-fluid">-->
-     <!--<h6> [% new_heading or "Enter the information" %] </h6>-->
-   <!--</div> <!-- / row-fluid -->
-   
    <div class="row-fluid">
      [% form -%]
    </div> <!-- / row-fluid -->

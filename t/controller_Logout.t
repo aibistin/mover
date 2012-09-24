@@ -6,7 +6,7 @@ use Test::More;
 use Catalyst::Test 'mover';
 use mover::Controller::Logout;
 
-$req = request('/logout');
+my $req = request('/logout');
 ok( $req->is_redirect, 'Logout Request should succeed' );
 
 #ok( request('/logout')->is_success, 'Request should succeed' );

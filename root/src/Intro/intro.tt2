@@ -1,6 +1,5 @@
 <!-- Main Menu Page -->
 [% META title = 'Introduction To Moving Management'%]
-<!-- <div class="container"> -->
 
 [%# <!--  THIS IS THE INTRODUCTION PAGE   --> %]
 <!-- Masthead
@@ -8,11 +7,12 @@
  
 <div class="row-fluid">
     <header class="jumbotron masthead">
-    <div class="marketing">
-        <h1 class="strong">Moving Company Management System
-        <small>  Beta Version</small></h1>
+        <div class="marketing">
+            <h1 class="strong">Moving Company Management System
+            <small>  Beta Version</small></h1>
+        </div>
     </header>
-        <hr class="soften" />
+    <hr class="soften" />
 </div> <!-- /row-fluid -->
 
 
@@ -195,5 +195,4 @@
 
 
 
-<!-- </div> <!-- /container -->
 
