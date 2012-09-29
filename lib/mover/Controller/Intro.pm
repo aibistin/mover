@@ -3,7 +3,7 @@ use Moose;
 use namespace::autoclean;
 
 # My additions
-use Log::Log4perl qw(:easy);
+#use Log::Log4perl qw(:easy);
 
 BEGIN { extends 'Catalyst::Controller'; }
 
@@ -22,16 +22,18 @@ Catalyst Controller.
 =head2 index
 
 =cut
+
 #
 #sub index : Path : Args(0) {
 #    my ( $self, $c ) = @_;
 #
-#    DEBUG "Got to introduction index page.";
+#    $c->log->debug( "Got to introduction index page.";
 #    $c->stash( template => 'Intro/intro.tt2' );
 #
 #    #    $c->response->body('Matched mover::Controller::Intro in Intro.');
 #}
 #
+
 =head2  intro_banner_page
  
 Introduction to this application. Users can log in from here. 
@@ -42,7 +44,8 @@ Non Users can see what it is all about.
 #sub intro_banner_page : Path('intro_banner_page') {
 sub index : Path : Args(0) {
     my ( $self, $c ) = @_;
-    DEBUG "Got to introduction banner page.";
+    $c->log->debug("Got to introduction banner page.");
+    $c->stash->{app_page} = 'intro';
     $c->stash( template => 'Intro/intro.tt2' );
 }
 

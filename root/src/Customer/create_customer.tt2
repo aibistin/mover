@@ -2,11 +2,11 @@
   [%# Dumper.dump_html(c.stash.form) %]
   
  [% IF updating == '1'  %]
-    [% META title = 'Customer Entry' %]
+    [% META title = 'Update Customer' %]
     
  [% ELSE %]
     
-   [%# META title = 'Create A Customer Record' %]
+   [%# META title = 'New Customer' %]
  [% END %]
 
 

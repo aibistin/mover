@@ -313,9 +313,9 @@ __PACKAGE__->belongs_to(
 #################################################################################
 #####                       WORKSPACE BEGINS                                 ####
 #################################################################################
-use Log::Log4perl qw(:easy);
+#use Log::Log4perl qw(:easy);
 use Regexp::Common qw(time);
-#use lib '/home/austin/perl/Validation';
+use lib '../../Model/Valid';
 use MyValid;
 use MyDate;
 
@@ -324,7 +324,6 @@ use MyDate;
 #todo Get list of valid time zone strings.
 my $LOCAL_TZ   = 'America/New_York';
 my $DEFAULT_TZ = 'UTC';
-
 
 #-------
 #
@@ -454,7 +453,6 @@ sub updated_datetime {
       ->set_time_zone($LOCAL_TZ);
     undef;
 }
-
 
 #-------------------------------------------------------------------------------
 #  Permissions

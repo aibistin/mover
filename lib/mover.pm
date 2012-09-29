@@ -7,10 +7,7 @@ use Log::Log4perl::Catalyst;
 #use Log::Log4perl qw(:easy);
 
 # Set flags and add plugins for the application.
-#
-# Note that ORDERING IS IMPORTANT here as plugins are initialized in order,
-# therefore you almost certainly want to keep ConfigLoader at the head of the
-# list if you're using it.
+# Keep ConfigLoader at the head of the plugins.
 #
 #         -Debug: activates the debug mode for very useful log messages
 #   ConfigLoader: will load the configuration from a Config::General file in the
@@ -97,6 +94,7 @@ __PACKAGE__->config(
         #------ Set the location for TT files
         INCLUDE_PATH => [
             __PACKAGE__->path_to( 'root', 'src' ),
+            __PACKAGE__->path_to( 'root', 'src', 'Includes' ),
             __PACKAGE__->path_to( 'root', 'forms', 'miniforms' ),
         ],
     },
@@ -113,6 +111,9 @@ if ( $ENV{APP_TEST} ) {
           { file => __PACKAGE__->path_to('t/lib/mover_testing.conf') } );
 }
 __PACKAGE__->config( name => 'mover' );
+
+#----- Set Up Log4perl with configuration file
+__PACKAGE__->log(Log::Log4perl::Catalyst->new('log_mover.conf'));
 
 #
 #----- Configure SimpleDB Authentication

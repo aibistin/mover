@@ -52,7 +52,7 @@
                title="List Customer By Phone Number">Phone Number </a></li>
             <li class="divider"></li>
             <li><a href="[% c.uri_for('/customer/create_customer') %]" 
-              title="Create A New Customer">Create New Customer</a></li>
+              title="Create A New Customer">New Customer</a></li>
           </ul>
         </li>
         <!-- End Customer Dropdown -->
@@ -71,7 +71,7 @@
               title="List Jobs By First Name">First Name </a></li>
             <li class="divider"></li>
             <li><a href="[% c.uri_for('/jobs/create_jobs') %]" 
-              title="Create A New Job">Create New Job</a></li>
+              title="Create A New Job">New Job</a></li>
           </ul>
         </li>
         <!-- End Job Dropdown -->
@@ -80,7 +80,7 @@
        <!-- <li><a href="[% c.uri_for('/jobs/list')
         %]" title="List Customers">Jobs</a></li>
         <li><a href="[% c.uri_for('/jobs/create_job')
-        %]" title="Create A New Customer">Schedule New Job</a></li>-->
+        %]" title="Create A New Job">Schedule New Job</a></li>-->
         
         <!--<li class="divider"></li>-->
 

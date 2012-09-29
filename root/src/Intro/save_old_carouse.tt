@@ -1,0 +1,224 @@
+
+            [%# <!-- Inside accordion Body For Carousel.   --> %]
+            [%# <!--  Carousel Slideshow.   --> %]
+                <div class="span10">
+                    <div id="introCarousel" class="carousel slide">
+                        <div class="carousel-inner">
+                        [%#  <!-- *******Slideshow Images ***************  --> %]
+                            <div class="item active">
+                                <img class="img-polaroid" src="static/images/ScreenShots/main_menu_shot_1.png" alt="">
+                                <div class="carousel-caption">
+                                    <h4>Main Menu</h4>
+                                    <p>Chose where you want to go</p>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <img class="img-polaroid" src="static/images/ScreenShots/login_screenshot_1.png" alt="">
+                                <div class="carousel-caption">
+                                    <h4>Login Page</h4>
+                                    <p>Secure access to the data inside. Different levels
+                                    of access allow users to complete only the tasks that
+                                    they are authourized to complete</p>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <img class="img-polaroid" src="static/images/ScreenShots/estimates_menu_shot_1.png" alt="">
+                                <div class="carousel-caption">
+                                    <h4>Estimates Menu</h4>
+                                    <p>What actions would you like to complete with the
+                                    estimate data</p>
+                                </div>
+                            </div>
+                                
+                            <div class="item">
+                                <img class="img-polaroid" src="static/images/ScreenShots/estimates_menu_shot_2.png" alt="">
+                                <div class="carousel-caption">
+                                    <h4>Estimates Menu</h4>
+                                    <p>Schedule and estimate or view estimates by time
+                                    period,  by custome or by estimator</p>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <img class="img-polaroid" src="static/images/ScreenShots/estimates_menu_shot_03.png" alt="">
+                                <div class="carousel-caption">
+                                    <h4>Estimates Menu</h4>
+                                    <p>Brief description of where each button link will
+                                    take you</p>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <img class="img-polaroid" src="static/images/ScreenShots/estimates_schedule_shot_02.png" alt="">
+                                <div class="carousel-caption">
+                                    <h4>Schedule Estimate Form</h4>
+                                    <p>This is the form for scheduling an estimate</p>
+                                </div>
+                            </div>
+
+                            <div class="item">
+                                <img class="img-polaroid" src="static/images/ScreenShots/estimates_schedule_shot_3.png" alt="">
+                                <div class="carousel-caption">
+                                    <h4>Schedule Estimate Form</h4>
+                                    <p>More on this form....</p>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <img class="img-polaroid" src="static/images/ScreenShots/estimates_schedule_shot_4.png" alt="">
+                                <div class="carousel-caption">
+                                    <h4>Schedule Estimate Form</h4>
+                                    <p>More on this form....</p>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <img class="img-polaroid" src="static/images/ScreenShots/estimates_schedule_shot_05.png" alt="">
+                                <div class="carousel-caption">
+                                    <h4>Schedule Estimate Form</h4>
+                                    <p>Estimate has been scheduled</p>
+                                </div>
+                            </div>
+
+                            <div class="item">
+                                <img class="img-polaroid" src="static/images/ScreenShots/estimates_list_shot_02.png" alt="">
+                                <div class="carousel-caption">
+                                    <h4>Scheduled Estimates</h4>
+                                    <p>List of scheduled estimates</p>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <img class="img-polaroid" src="static/images/ScreenShots/estimates_list_month_02.png" alt="">
+                                <div class="carousel-caption">
+                                    <h4>Scheduled Estimates By Month</h4>
+                                    <p>Select a month to see all scheduled estimates for
+                                    that month</p>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <img class="img-polaroid" src="static/images/ScreenShots/estimates_month_shot_1.png" alt="">
+                                <div class="carousel-caption">
+                                    <h4>See estimates scheduled for a particular month</h4>
+                                    <p>See estimates scheduled for a particular month</p>
+                                </div>
+                            </div>
+                                
+                            <div class="item">
+                                <img class="img-polaroid" src="static/images/ScreenShots/estimates_month_shot_2.png" alt="">
+                                <div class="carousel-caption">
+                                    <h4>Scheduled Estimates By Month</h4>
+                                    <p>Select a month to see all scheduled estimates for
+                                    that month</p>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <img class="img-polaroid" src="static/images/ScreenShots/estimates_daterange_shot_01.png" alt="">
+                                <div class="carousel-caption">
+                                    <h4>Estimates within a date range</h4>
+                                    <p>Select any date range to see what estimates are
+                                    scheduled for this time period.</p>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <img class="img-polaroid" src="static/images/ScreenShots/estimates_estimator_shot_01.png" alt="">
+                                <div class="carousel-caption">
+                                    <h4>Estimates by estimator</h4>
+                                    <p>Choose an estimator to see what estimates are
+                                    scheduled for him/her</p>
+                                </div>
+                            </div>
+
+                            <div class="item">
+                                <img class="img-polaroid" src="static/images/ScreenShots/estimates_estimator_shot_02.png" alt="">
+                                <div class="carousel-caption">
+                                    <h4>Estimates by estimator</h4>
+                                    <p> Start typipng the estimator name and a list of
+                                    matching names appear for you to select.</p>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <img class="img-polaroid" src="static/images/ScreenShots/estimate_month_shot_3.png" alt="">
+                                <div class="carousel-caption">
+                                    <h4>Estimates for a particular month</h4>
+                                    <p> See estimates scheduled for a particular month</p>
+                                </div>
+                            </div>
+
+                            <div class="item">
+                                <img class="img-polaroid" src="static/images/ScreenShots/estimate_date_shot_1.png" alt="">
+                                <div class="carousel-caption">
+                                    <h4>Estimates by date</h4>
+                                    <p>Pick any date range to view the estimates scheduled
+                                    for that period</p>
+                                </div>
+                            </div>
+                            
+                            <div class="item">
+                                <img class="img-polaroid" src="static/images/ScreenShots/estimate_detail_shot_1.png" alt="">
+                                <div class="carousel-caption">
+                                    <h4>Estimate Deail</h4>
+                                    <p>Click on the 'Detail' button to reveal more
+                                    detailed information about an estimate</p>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <img class="img-polaroid" src="static/images/ScreenShots/estimate_detail_shot_2.png" alt="">
+                                <div class="carousel-caption">
+                                    <h4>Estimate Detail</h4>
+                                    <p>Estimate detail shows all relevant information
+                                    about the scheduled estimate including information
+                                    as to who created and or updated this information</p>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <img class="img-polaroid" src="static/images/ScreenShots/customer_entry_1.png" alt="">
+                                <div class="carousel-caption">
+                                    <h4>New Customer</h4>
+                                    <p>Form for entering new customer details</p>
+                                </div>
+                            </div>
+
+                            <div class="item">
+                                <img class="img-polaroid" src="static/images/ScreenShots/customer_detail_shot_01.png" alt="">
+                                <div class="carousel-caption">
+                                    <h4>Customer Details</h4>
+                                    <p>Moore information about this customer including any
+                                    estimates or jobs etc linked to this custome</p>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <img class="img-polaroid" src="static/images/ScreenShots/customer_find_shot_01.png" alt="">
+                                <div class="carousel-caption">
+                                    <h4>Find Customer</h4>
+                                    <p>Search for customers by entering the exact last
+                                    name or just a few letters. A list of names matching
+                                    the exact name or the consecutive letters will be
+                                    displayed</p>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <img class="img-polaroid" src="static/images/ScreenShots/customer_find_shot_02.png" alt="">
+                                <div class="carousel-caption">
+                                    <h4>Search Customer</h4>
+                                    <p> </p>
+                                </div>
+                            </div>
+
+                            <div class="item">
+                                <img class="img-polaroid" src="static/images/ScreenShots/customer_find_phone_shot_01.png" alt="">
+                                <div class="carousel-caption">
+                                    <h4>Find by phone number</h4>
+                                    <p>Find customers linked to a particular phone number</p>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <img class="img-polaroid" src="static/images/ScreenShots/customer_list_shot_01.png" alt="">
+                                <div class="carousel-caption">
+                                    <h4>Customer List</h4>
+                                    <p>List of customers. Click on the 'Details' button on
+                                    the right hand side to get more details about any
+                                    customer on this list</p>
+                                </div>
+                            </div>
+                            <!-- *******End Carousel Images ***************  -->
+                        </div> <!-- /carousel-inner -->
+                        <a class="left carousel-control" href="#introCarousel" data-slide="prev">&lsaquo;</a>
+                        <a class="right carousel-control" href="#introCarousel" data-slide="next">&rsaquo;</a>
+                    </div> <!-- /carousel slide -->
+                    </div> <!-- /span10" -->

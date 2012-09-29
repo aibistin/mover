@@ -1,7 +1,8 @@
 package mover::Controller::Root;
 use Moose;
 use namespace::autoclean;
-use Log::Log4perl qw(:easy);
+
+#use Log::Log4perl qw(:easy);
 use Data::Dumper;
 
 BEGIN { extends 'Catalyst::Controller' }
@@ -80,8 +81,8 @@ sub auto : Private {
 
   # Dump a log message to the development server debug output
   #        $c->log->debug('***Root::auto User not found, forwarding to /login');
-        DEBUG '*** Inside Root. No user logged in. Called from: '
-          . $c->request->path;
+        $c->log->debug( '*** Inside Root. No user logged in. Called from: '
+              . $c->request->path );
 
         # $c->response->redirect($c->uri_for('/login'));
         $c->response->redirect( $c->uri_for('/intro') );
@@ -96,16 +97,16 @@ sub auto : Private {
 
 =head2 default
 Standard 404 error page
-
 =cut
 
 sub default : Path {
     my ( $self, $c ) = @_;
-
-    #    $c->response->body(
-    #        '<h3>What are you doing here? Did you take a wrong turn?</h3>');
-    #    $c->response->status(404);
-
+   #
+   #        $c->response->body(
+   #            '<h3>What are you doing here? Did you take a wrong turn?</h3>');
+   #        $c->response->status(404);
+   #
+    $c->log->debug("*** Got to default Action in Root.pm");
     $c->stash(
         template  => 'error.tt2',
         error_404 => 'Looks like you took a wrong turn. Try using a map.',
@@ -131,6 +132,7 @@ sub default : Path {
 sub error_noperms : Chained('/') : PathPart('error_noperms') : Args(0) {
     my ( $self, $c ) = @_;
 
+    $c->log->debug("*** Got to error_noperms Action in Root.pm");
     $c->stash(
         template => 'error.tt2',
         error_noperms =>
@@ -145,6 +147,7 @@ sub error_noperms : Chained('/') : PathPart('error_noperms') : Args(0) {
 sub error_404 : Chained('/') : PathPart('error_404') : Args(0) {
     my ( $self, $c ) = @_;
 
+    $c->log->debug("*** Got to error_404 Action in Root.pm");
     $c->stash(
         template  => 'error.tt2',
         error_404 => 'Looks like you took a wrong turn. Try using a map.',
@@ -158,6 +161,7 @@ sub error_404 : Chained('/') : PathPart('error_404') : Args(0) {
 sub error_other : Chained('/') : PathPart('error_other') : Args(0) {
     my ( $self, $c ) = @_;
 
+    $c->log->debug("*** Got to error_other Action in Root.pm");
     $c->stash(
         template => 'error.tt2',
         error_other =>
@@ -170,20 +174,35 @@ Attempt to render a view, if needed.
 Will also handle errors. 
 =cut
 
+#sub end : ActionClass('RenderView') {};
 sub end : ActionClass('RenderView') {
     my ( $self, $c ) = @_;
     my ( $error_count, $error_messages_string );
     $error_count = scalar @{ $c->error };
-    if ($error_count) {
 
+    #----- If it is an unhandled Error
+    if ( $error_count && ( not defined $c->stash->{template} ) ) {
+
+        $c->log->warn(
+            "*** Got to error area in the end Action in Root.pm due
+            to $error_count errors."
+        );
         foreach my $err_msg ( @{ $c->error } ) {
             $error_messages_string .= $err_msg . "\n";
         }
 
+        $c->log->error(
+            "End action has no template defined. Will use errot.tt2
+            instead."
+        );
+        $c->log->error(
+            "Unhandled Error Is $error_messages_string. Will use errot.tt2
+            instead."
+        );
         $c->res->status(500);
-        $c->res->body('internal server error');
-        $c->clear_errors;
 
+        #------ Clear these old messages
+        $c->clear_errors;
         $c->stash(
             template               => 'error.tt2',
             internal_error_message => $error_messages_string,

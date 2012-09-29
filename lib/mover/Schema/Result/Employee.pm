@@ -591,6 +591,30 @@ sub first_last_name {
       . ucfirst( $self->last_name  // "Unknown" );
 }
 
+
+=head2 full_name_initcaps
+   Gets the employees full namer,  complete with
+   Prefix,   First,  MI, Last,  Suffix
+   Added Initcaps for completeness
+=cut
+
+sub full_name_initcaps {
+    my ($self) = @_;
+
+    #    return
+    my $full_name =
+      ( defined $self->prefix )
+      ? ucfirst $self->prefix . ' '
+      . ucfirst $self->first_name . ' '
+      . ucfirst $self->last_name
+      : ucfirst $self->first_name . ' ' . ucfirst $self->last_name;
+    return (
+        defined $self->suffix
+        ? $full_name . ' ' . ucfirst $self->suffix
+        : $full_name
+    );
+}
+
 #-------------------------------------------------------------------------------
 #   Matching Names
 #-------------------------------------------------------------------------------

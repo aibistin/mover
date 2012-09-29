@@ -2,7 +2,8 @@ package mover::Controller::Login;
 use Moose;
 use namespace::autoclean;
 use Data::Dumper;
-use Log::Log4perl qw(:easy);
+
+#use Log::Log4perl qw(:easy);
 
 #------
 use lib '/home/austin/perl/Validation';
@@ -59,8 +60,8 @@ sub index : Path : Args(0) {
 
         if ( $c->stash->{login_attempt_count} > $MAX_LOGIN_ATTEMPT ) {
 
-            DEBUG 'Too many login attempts : '
-              . $c->stash->{login_attempt_count};
+            $c->log->info( 'Too many login attempts : '
+                  . $c->stash->{login_attempt_count} );
             $c->stash->{login_attempt_count} = 0;
             $c->stash( error_msg => 'Too many attempts. You are fired! ' );
             $c->response->redirect( $c->uri_for('/intro') );
@@ -75,10 +76,10 @@ sub index : Path : Args(0) {
 
         $password = $c->form->valid('password');
 
-        DEBUG '*** Validated Username is : '
-          . ( $username or 'No valid username' );
-        DEBUG '*** Validated Password is : '
-          . ( $password or 'No valid password' );
+        $c->log->debug( '*** Validated Username is : '
+              . ( $username or 'No valid username' ) );
+        $c->log->debug( '*** Validated Password is : '
+              . ( $password or 'No valid password' ) );
 
         #------  Attempt to log the user in
         if (
@@ -95,7 +96,7 @@ sub index : Path : Args(0) {
           )
         {
 
-            DEBUG "We are in. Successful login.";
+            $c->log->debug("We are in. Successful login.");
             $c->stash->{login_attempt_count} = 0;
 
             # Then let them use the application
@@ -106,9 +107,23 @@ sub index : Path : Args(0) {
             return;
         }
         else {
-            DEBUG 'Invalid Username : ' . ( $username or 'No username' );
-            DEBUG 'Invalid Password : ' . ( $password or 'No password' );
+            $c->log->error(
+                'Invalid Username : ' . (
+                    $username
+                      or 'No
+                    username'
+                )
+            );
+            $c->log->error(
+                'Invalid Password : ' . (
+                    $password
+                      or 'No
+                    password'
+                )
+            );
             $c->stash( error_msg => "Bad username or password." );
+
+            #            $c->error("Bad username or password.");
         }
 
     }    # End Is form submitted
@@ -158,21 +173,21 @@ sub print_invalid_form_info {
 
     #------ Print Invalid Info To Debugger
     if ( $c->form->has_error ) {
-        DEBUG "*** Bad Login Username ... " if ( not $username );
-        DEBUG "*** Bad Login password ... " if ( not $password );
+        $c->log->debug("*** Bad Login Username ... ") if ( not $username );
+        $c->log->debug("*** Bad Login password ... ") if ( not $password );
 
         foreach my $key ( @{ $c->form->error() } ) {
             foreach my $type ( @{ $c->form->error($key) } ) {
-                DEBUG "Error invalid: $key - $type \n";
+                $c->log->warn("Error invalid: $key - $type \n");
             }
         }
         my $missings = $c->form->missing;
         foreach my $missing_data (@$missings) {
-            DEBUG "Missing $missing_data;";
+            $c->log->warn("Missing $missing_data;");
         }
         my $invalids = $c->form->invalid;
         foreach my $invalid_data (@$invalids) {
-            DEBUG "Invalid $invalid_data;";
+            $c->log->warn("Invalid $invalid_data;");
         }
     }
 

@@ -1,0 +1,14 @@
+
+[%# <!-- Sub heading for each department and Sub Nav Bar with Menu Choices --> %]
+<!-- <data-spy="scroll" data-target=".intro-page-sidebar"> -->
+
+<!-- Intro Page Side Nav Bar -->
+<div class="span2 intro-page-sidebar" >
+    <ul class="nav nav-list intro-page-sidenav">
+        <li><a href="#introduction"><i class="icon-chevron-right"></i> Introduction</a></li>
+        <li><a href="#whatItDoes"><i class="icon-chevron-right"></i> What it does </a></li>
+        <li><a href="#samples"><i class="icon-chevron-right"></i> Screenshots</a></li>
+    </ul>
+</div>
+[%# <!-- Make sure to close the following Div Tag in the including Page --> %]
+   <div class="span10 intro-page-sidebar">

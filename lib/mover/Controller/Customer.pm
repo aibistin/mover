@@ -5,8 +5,8 @@ use namespace::autoclean;
 #------ Additional
 use Data::Dumper;
 use base 'DBIx::Class::ResultSet';
-use Log::Log4perl qw(:easy);
-use lib '/home/austin/perl/Validation';
+#use Log::Log4perl qw(:easy);
+use lib '../Model/Valid/';
 use MyValid;
 
 #use lib '/home/austin/perl/MyDate';
@@ -37,6 +37,7 @@ my $FIRST_DAY_OF_WEEK   = 1;
 my $LAST_DAY_OF_WEEK    = 7;
 my $MAX_CUSTOMERS       = 10000;
 my $PHONE_NO_MAX_LENGTH = 20;
+my $ERROR               = $FALSE;
 my $ERROR_MESSAGE       = undef;
 my $i                   = 1;
 my %DAYS =
@@ -104,7 +105,7 @@ sub base : Chained('/') : PathPart('customer') : CaptureArgs(0) {
 
         resultset => $c->model('DB::Customer')
     );
-    DEBUG '*** INSIDE BASE customer METHOD : Got first Customer resultset ***';
+    $c->log->debug( '*** INSIDE BASE customer METHOD : Got first Customer resultset. ');
 
     # Load status messages
     $c->load_status_msgs;
@@ -117,14 +118,14 @@ sub base : Chained('/') : PathPart('customer') : CaptureArgs(0) {
 
 sub object : Chained('base') : PathPart('id') : CaptureArgs(1) {
     my ( $self, $c, $customer_id ) = @_;
-    DEBUG '*** Just INSIDE BASE Customer object METHOD ***';
-    DEBUG "*** The object id is: $customer_id ***";
+    $c->log->debug('*** Just INSIDE BASE Customer object METHOD ***');
+    $c->log->debug("*** The object id is: $customer_id ***");
 
     #------ Find the customer object and store it in the stash
     $c->stash->{object} = $c->stash->{resultset}->find($customer_id);
     $c->detach('/error_404') if !$c->stash->{object};
 
-    #    DEBUG('*** Customer Customer Object =  ***' . $c->stash->{object});
+    #    $c->log->debug(('*** Customer Customer Object =  ***') . $c->stash->{object});
 }
 
 #
@@ -140,7 +141,8 @@ sub object : Chained('base') : PathPart('id') : CaptureArgs(1) {
 sub list_created_by_employee : Chained('base') :
   PathPart('list_created_by_employee') : Args(1) {
     my ( $self, $c, $employee_id ) = @_;
-    DEBUG "*** INSIDE list_by_employee_id. Employee id is: $employee_id";
+    $c->log->debug("*** INSIDE list_by_employee_id. Employee id is:
+        $employee_id");
 
     # Ensure user has permission to see this resultset
     $c->detach('/error_noperms')
@@ -168,7 +170,8 @@ sub list_by_last_name : Chained('base') : PathPart('list_by_last_name') :
     my ( $self, $c ) = @_;
     my $l_name = $c->request->params->{last_name} || undef;
     my $valid = MyValid->new();
-    DEBUG "*** INSIDE Customer list_by_last_name. Last name is: $l_name";
+    $c->log->debug("*** INSIDE Customer list_by_last_name. Last name is:
+        $l_name");
 
     # Ensure user has permission to see this resultset
     $c->detach('/error_noperms')
@@ -179,8 +182,8 @@ sub list_by_last_name : Chained('base') : PathPart('list_by_last_name') :
         if (   $valid->is_length_ok( $l_name, $LAST_NAME_MAX_LENGTH )
             && $valid->is_it_a_name($l_name) )
         {
-            DEBUG
-              "*** INSIDE Customer list_by_last_name. Last name is: $l_name";
+            $c->log->debug(
+              "*** INSIDE Customer list_by_last_name. Last name is: $l_name");
             $c->stash->{resultset} =
               $c->stash->{resultset}
               ->search( { last_name => { 'like' => "%$l_name%" } } );
@@ -195,7 +198,7 @@ sub list_by_last_name : Chained('base') : PathPart('list_by_last_name') :
             $ERROR = $TRUE;
             $c->stash( last_name => $l_name );
             $c->stash( error_msg => $ERROR_MESSAGE );
-            DEBUG '*** Customer last name ' . $ERROR_MESSAGE;
+            $c->log->error('*** Customer last name ' . $ERROR_MESSAGE);
             $c->stash->{resultset}      = undef;
             $c->stash->{customer_count} = 0;
             $c->stash->{found_msg} =
@@ -256,7 +259,8 @@ sub list_by_first_name : Chained('base') : PathPart('list_by_first_name') :
     my ( $self, $c ) = @_;
     my $f_name = $c->request->params->{first_name} || undef;
     my $valid = MyValid->new();
-    DEBUG "*** INSIDE Customer list_by_first_name. First name is: $f_name";
+    $c->log->debug("*** INSIDE Customer list_by_first_name. First name is:
+        $f_name");
 
     # Ensure user has permission to see this resultset
     $c->detach('/error_noperms')
@@ -267,8 +271,9 @@ sub list_by_first_name : Chained('base') : PathPart('list_by_first_name') :
         if (   $valid->is_length_ok( $f_name, $FIRST_NAME_MAX_LENGTH )
             && $valid->is_it_a_name($f_name) )
         {
-            DEBUG
-              "*** INSIDE Customer list_by_first_name. First name is: $f_name";
+            $c->log->debug(
+              "*** INSIDE Customer list_by_first_name. First name is:
+              $f_name");
             $c->stash->{resultset} =
               $c->stash->{resultset}
               ->search( { first_name => { 'like' => "%$f_name%" } } );
@@ -284,7 +289,7 @@ sub list_by_first_name : Chained('base') : PathPart('list_by_first_name') :
             $ERROR = $TRUE;
             $c->stash( first_name => $f_name );
             $c->stash( error_msg  => $ERROR_MESSAGE );
-            DEBUG '*** Customer first name ' . $ERROR_MESSAGE;
+            $c->log->error('*** Customer first name ' . $ERROR_MESSAGE);
             $c->stash->{resultset}      = undef;
             $c->stash->{customer_count} = 0;
             $c->stash->{found_msg} =
@@ -343,8 +348,8 @@ sub list_by_customer_id : Chained('base') : PathPart('list_by_customer_id') :
     my ($form_action);
     my $customer_id = $c->request->params->{customer_id} || undef;
     my $valid = MyValid->new();
-    DEBUG
-      "*** INSIDE Customer list_by_customer_id. Customer id is: $customer_id";
+    $c->log->debug(
+      "*** INSIDE Customer list_by_customer_id. Customer id is: $customer_id");
 
     # Ensure user has permission to see this resultset
     $c->detach('/error_noperms')
@@ -355,8 +360,8 @@ sub list_by_customer_id : Chained('base') : PathPart('list_by_customer_id') :
         if (   $valid->is_it_numeric($customer_id)
             && $valid->is_it_between( $customer_id, 1, $MAX_CUSTOMERS ) )
         {
-            DEBUG
-              "*** INSIDE Customer list_by_customer_id. Id is: $customer_id";
+            $c->log->debug(
+              "*** INSIDE Customer list_by_customer_id. Id is: $customer_id");
             $c->stash->{resultset} =
               $c->stash->{resultset}->search( { 'me.id' => $customer_id } );
             $c->stash->{sub_heading} = "Found a customer with ID: $customer_id";
@@ -371,7 +376,7 @@ sub list_by_customer_id : Chained('base') : PathPart('list_by_customer_id') :
             $ERROR = $TRUE;
             $c->stash( customer_id => $customer_id );
             $c->stash( error_msg   => $ERROR_MESSAGE );
-            DEBUG '*** Customer customer Id ' . $ERROR_MESSAGE;
+            $c->log->error('*** Customer customer Id ' . $ERROR_MESSAGE);
             $c->stash->{resultset}      = undef;
             $c->stash->{customer_count} = 0;
             $c->stash->{found_msg} =
@@ -427,7 +432,7 @@ sub list_by_phone_no : Chained('base') : PathPart('list_by_phone_no') :
     my $phone_no = $c->request->params->{phone_no} || undef;
 
     #    my $valid = MyValid->new();
-    DEBUG "*** INSIDE Customer list_by_phone_no. phone Number is: $phone_no";
+    $c->log->debug("*** INSIDE Customer list_by_phone_no. phone Number is: $phone_no");
 
     # Ensure user has permission to see this resultset
     $c->detach('/error_noperms')
@@ -440,8 +445,8 @@ sub list_by_phone_no : Chained('base') : PathPart('list_by_phone_no') :
         {
             $phone_no =~ s/^\s+//;
             $phone_no =~ s/\s+$//;
-            DEBUG
-"*** INSIDE Customer list_by_phone_no. first_name # is: $phone_no";
+            $c->log->debug(
+"*** INSIDE Customer list_by_phone_no. Phone  # is: $phone_no");
 
             #------ Remove leading 1 from phone number
             if ( substr( $phone_no, 0, 1 ) == 1 ) {
@@ -449,9 +454,9 @@ sub list_by_phone_no : Chained('base') : PathPart('list_by_phone_no') :
             }
             $c->stash->{resultset} = $c->stash->{resultset}->search(
                 [
-                    { 'me.first_name_1' => $phone_no },
-                    { 'me.first_name_2' => $phone_no },
-                    { 'me.first_name_3' => $phone_no }
+                    { 'me.phone_1' => $phone_no },
+                    { 'me.phone_2' => $phone_no },
+                    { 'me.phone_3' => $phone_no }
                 ]
             );
             $c->stash->{customer_count} = $c->stash->{resultset}->count // 0;
@@ -471,7 +476,7 @@ sub list_by_phone_no : Chained('base') : PathPart('list_by_phone_no') :
             $ERROR = $TRUE;
             $c->stash( phone_no  => $phone_no );
             $c->stash( error_msg => $ERROR_MESSAGE );
-            DEBUG '*** Customer phone Number ' . $ERROR_MESSAGE;
+            $c->log->error('*** Customer phone Number ' . $ERROR_MESSAGE);
             $c->stash->{resultset}      = undef;
             $c->stash->{customer_count} = 0;
             $c->stash->{found_msg}      = "Enter a valid (US) Phone Number"
@@ -538,8 +543,8 @@ sub list_by_customer_name : Chained('base') :
     $c->detach('/error_noperms')
       unless $c->stash->{resultset}->viewing_permission( $c->user->get_object );
 
-    DEBUG
-      "*** INSIDE Customer list_by_customer_name. Name is: $first_last_name";
+    $c->log->debug(
+      "*** INSIDE Customer list_by_customer_name. Name is: $first_last_name");
     my @wanted_name = split( ' ', $first_last_name );
 
     #----- Get the customers
@@ -578,7 +583,7 @@ sub list_by_multiple_names : Chained('base') :
   PathPart('list_by_multiple_names') : Args(1) {
     my ( $self, $c, $names ) = @_;
     my @wanted_names = split( ' ', $names );
-    DEBUG " Searching for customer names " . Dumper(@wanted_names);
+    $c->log->debug(" Searching for customer names " . Dumper(@wanted_names));
 
     # Ensure user has permission to see this resultset
     $c->detach('/error_noperms')
@@ -625,7 +630,7 @@ sub list : Chained('base') : PathPart('list') : Args(0) {
     my ( $self, $c ) = @_;
 
     #    $DB::single = 1;    # For Debug
-    DEBUG "******  List customers method ******";
+    $c->log->debug("******  List customers method ******");
 
     # Ensure user has permission to see this resultset
     $c->detach('/error_noperms')
@@ -658,7 +663,8 @@ sub display_customer_details : Chained('object') :
   PathPart('display_customer_details') : Args(0) {
     my ( $self, $c ) = @_;
     my $customer_id = $c->stash->{object}->id;
-    DEBUG "*** INSIDE display_customer_details. Customer ID: " . $customer_id;
+    $c->log->debug("*** INSIDE display_customer_details. Customer ID: " .
+        $customer_id);
 
     # Does the customer have the premission to to see the Sustomer details.
     $c->detach('/error_noperms')
@@ -670,8 +676,8 @@ sub display_customer_details : Chained('object') :
     if ( ( $estimate_count = $est_history->count() ) > 0 ) {
         $c->stash->{estimate_history} = $est_history;
         $c->stash->{estimate_history_count} = $estimate_count // 0;
-        DEBUG
-          " Found $estimate_count Estimates for customer with ID: $customer_id";
+        $c->log->debug(
+          " Found $estimate_count Estimates for customer with ID: $customer_id");
     }
     else {
         $c->stash->{estimate_history} = 0;
@@ -680,8 +686,8 @@ sub display_customer_details : Chained('object') :
     #------ Print Updated By/Date only if it has been updated
     $c->stash->{updated} = DateTime->compare( $c->stash->{object}->created,
         $c->stash->{object}->updated );
-    DEBUG "*** Created Date." . $c->stash->{object}->created;
-    DEBUG "*** Updated Date." . $c->stash->{object}->updated;
+    $c->log->debug("*** Created Date." . $c->stash->{object}->created);
+    $c->log->debug("*** Updated Date." . $c->stash->{object}->updated);
     $c->stash->{template} = 'Customer/display_customer_details.tt2';
 }
 
@@ -793,7 +799,7 @@ sub create_customer : Chained('base') : PathPart('create_customer' ) : Args(0)
     }
     else {
 
-        #		DEBUG "Create customer form is: " . $c->stash->{form};
+        #		$c->log->debug("Create customer form is: " . $c->stash->{form};
     }
 
 #------ Add js to bottom template  (jQ Datepicker And Form Validation to JS array)
@@ -820,7 +826,7 @@ sub update_customer : Chained('object') : PathPart('update_customer') :
   Args(0) : FormConfig('customer/update_customer.yml') {
     my ( $self, $c ) = @_;
     my ( $customer_rs, $customer );
-    DEBUG "*** Just Inside Update Customer ***";
+    $c->log->debug("*** Just Inside Update Customer ***");
 
     # Uses 'Catalyst::Plugin::Authorization::Roles' to ensure this user
     # has permission to update a customer
@@ -875,7 +881,7 @@ sub update_customer : Chained('object') : PathPart('update_customer') :
         my $customer_id = $customer->id;
         my $full_name   = $customer->full_name();
 
-        DEBUG "Customer updated time zone is  ***" . DateTime->now();
+        $c->log->debug("Customer updated time zone is  ***" . DateTime->now());
 
         # Set a status message for the user & return to customers list
 
@@ -902,7 +908,7 @@ sub update_customer : Chained('object') : PathPart('update_customer') :
 
         #------ Populate the form with existing values from DB
         $form->model->default_values($customer_rs);
-        DEBUG " The New Submit Element is $submit_el";
+        $c->log->debug(" The New Submit Element is $submit_el");
     }
 
 #------ Add js to bottom template  (jQ Datepicker And Form Validation to JS array)
@@ -976,7 +982,7 @@ Set the error message.
 #    $name =~ s/\s+$//;
 #    return $name if ( $name =~ m/^[a-z]+$/i );
 #    $ERROR_MESSAGE = "This contains some non alpha stuff! $name";
-#    DEBUG "$name Failed the is_it_text test";
+#    $c->log->debug("$name Failed the is_it_text test");
 #    $FALSE;
 #}
 
@@ -997,7 +1003,7 @@ Set the error message.
 #    $name =~ s/\s+$//;
 #    return $name if ( $name =~ m/^[a-z'-]+$/i );
 #    $ERROR_MESSAGE = "This contains some non alpha stuff! $name";
-#    DEBUG "$name Failed the is_it_a_name test";
+#    $c->log->debug("$name Failed the is_it_a_name test");
 #    $FALSE;
 #}
 
@@ -1022,7 +1028,7 @@ Set the error message.
 #        && ( $names[0] =~ m/^[a-z]+$/i )
 #        && ( $names[1] =~ m/^[a-z]+$/i ) );
 #    $ERROR_MESSAGE = "This is not a real name! $first_last_name";
-#    DEBUG "$first_last_name Failed the is it two names test";
+#    $c->log->debug("$first_last_name Failed the is it two names test");
 #    $FALSE;
 #}
 
@@ -1038,7 +1044,7 @@ Set the error message.
 #    $id =~ s/\s+$//;
 #    return $id if ( $id =~ m/^\d+$/i );
 #    $ERROR_MESSAGE = "This is not a real number! $id";
-#    DEBUG "$id Failed the is_it_numeric test";
+#    $c->log->debug("$id Failed the is_it_numeric test");
 #    undef;
 #}
 #
@@ -1067,8 +1073,7 @@ sub is_it_between : Private {
         };
     }
     $ERROR_MESSAGE = "This is not within the range $first to  $second";
-    DEBUG "$value Failed the is_it_between test";
-    $FALSE;
+    return $FALSE;
 }
 
 =d2 is_length_ok
@@ -1087,7 +1092,7 @@ sub is_it_between : Private {
 #    #    my ($self, &$name, $max_length) = @_;
 #    return $TRUE if ( ( length $name ) <= $max_length );
 #    $ERROR_MESSAGE = "This name is too long!";
-#    DEBUG "$name Failed the is_length_ok test";
+#    $c->log->debug("$name Failed the is_length_ok test");
 #    $FALSE;
 #}
 #

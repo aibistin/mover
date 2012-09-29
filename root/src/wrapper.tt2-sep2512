@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">    
+<head><title>[% template.title or "Super Mover" %]</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Schedule Estimates">
+<meta name="author" content="austin kenny">
+
+
+
+
+<!--   ######################   Twitter Bootstrap Stuff ###########################################  -->
+
+<!--<link   href="[% c.uri_for('/') %]bootstrap/css/bootstrap.css" rel="stylesheet"  type="text/css" />-->
+<!--<script type="text/javascript" src="[% c.uri_for('/') %]bootstrap/js/bootstrap.min.js"></script>   Moved To bottom -->
+<!-- Bootswatch Bootstrap Simplex Theme-->
+<!--<link rel="stylesheet" href="[% c.uri_for('/') %]static/css/bootswatch_simplex_theme.css" />-->
+
+<link  href="[% c.uri_for('/') %]bootstrap/css/bootstrap-responsive.css" rel="stylesheet" />
+<link  href="[% c.uri_for('/') %]bootstrap/css/bootstrap.min.css"        rel="stylesheet" />
+<link  href="[% c.uri_for('/') %]bootstrap/css/docs.css"                 rel="stylesheet" />
+<link  href="[% c.uri_for('/') %]static/js/prettify/prettify.css"        rel="stylesheet" />
+<!--<link  href="[% c.uri_for('/')
+%]bootstrap/css/bootswatch_spacelab_theme.css" rel="stylesheet"/> -->
+<link  href="[% c.uri_for('/') %]bootstrap/css/bootswatch_cerulean_theme.css" rel="stylesheet" />
+
+<style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 20px;
+      }
+      /*.sidebar-nav {*/
+      /*  padding: 9px 0;*/
+      /*}*/
+</style>
+
+
+
+<!-- Local CSS-->
+<link rel="stylesheet" href="[% c.uri_for('/') %]static/css/main.css" />
+
+
+<!-- JQUERY  All (From Google) -->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<!--   Jquery Ui (Google)-->
+<script type="text/javascript" src=https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js></script>
+
+<!--   Jquery Ui -->
+<link type="text/css" href="[% c.uri_for('/') %]static/jquery/css/redmond/jquery-ui-1.8.18.custom.css" rel="Stylesheet" />
+
+<!-- Twitter Bootstrap Javascript -->
+<script type="text/javascript" src="[% c.uri_for('/') %]bootstrap/js/bootstrap.min.js"></script>
+
+
+<!-- JQUERY  All my copy but google copy may be  faster -->
+<!-- <script type="text/javascript" src="../static/jquery/jquery-1.7.1.js"></script>-->
+
+
+<!--   jquery tools -->
+<!--<script type="text/javascript" src="../static/jquery/jquery_tools/jquery.tools.min.js"></script>-->
+
+</head>
+
+[%# ********** BODY STARTS HERE ********** -%]
+<body data-spy="scroll" data-target=".subnav" data-offset="50">
+[%# Insert the page title -%]
+    
+  <h4>[%# template.title or site.title %]</h4>
+  
+[%# Top Navigation Bar -%]
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container-fluid">
+        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </a>
+        <a class="brand" href="#">Moving Co. Management System </a>
+        <div class="nav-collapse collapse">
+          <div class="btn-group pull-right">
+            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+              <i class="icon-user"></i>  [% c.user.username %]
+              <span class="caret"></span>
+            </a>
+            <!-- User Icon -->
+            <ul class="dropdown-menu">
+              [% IF c.user_exists %]
+                  <li> [% c.user.first_name %] [% c.user.last_name %] </li>
+                  <li> [% c.user.status %] user </li>
+                  <li class="divider"></li>
+                  <li><a href="[% c.uri_for('/logout') %]">Sign Out</a></li>
+              [% ELSE %]
+                  <li><a href="[% c.uri_for('/login') %]">Sign In</a></li>
+              [% END %]
+            </ul>
+          </div>
+          <ul class="nav">
+           <!--  <li class="active"><a href="[% c.uri_for('/menu') %]"> Home
+               <i class= "icon-home  icon-large"></i> </a></li> -->
+            <li class="active"><a href="[% c.uri_for('/intro') %]"> Home <i class= "icon-home  icon-large"></i> </a></li>
+              [% IF c.user_exists %]
+                <li><a href="[% c.uri_for('/menu') %]">Main Menu</a></li>
+                <li><a href="[% c.uri_for('/menu/estimates_menu') %]">Estimates Menu</a></li>
+                <!-- <li><a href="[% c.uri_for('/customer/list') %]">Customer
+                    List</a></li> -->
+              [% END %]
+            <!-- <li><a href="[% c.uri_for('/estimates/list') %]">List All
+                Scheduled</a></li> -->
+            <!-- <li><a href="#about">About</a></li> -->
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+</div> <!-- /navbar-fixed-top --> 
+
+<!--  MAIN DOCUMENT BODY -->
+
+<!-- ========================================== Header Area Above Sub nav Bar ========================================== -->
+<div class="container-fluid">
+  <div class="row-fluid">
+    [%# <!--  Include Sub Heading (Department Heading) and Sub Nav Bar with its Drop Down Menus --> %]
+    [% IF c.user_exists %]
+        [% INCLUDE sub_heading_and_sub_nav_bar.tt2 %]
+    [% END %]
+  </div> <!-- /row-fluid --> 
+
+  [%# Container For Template Data -%]
+ 
+  <div class="row-fluid">
+      [% content %]
+  </div> <!-- /row-fluid -->
+ 
+   
+  [%# MESSAGES GO HERE -%]
+  
+  <!--Message Area at bottom of content -->
+
+  <div class="row-fluid">
+   [% IF status_msg %]
+    <div class="span12 alert alert-success">
+      <p class="alert-heading offset1 ">[% status_msg %]</p>
+    </div>
+   [% END %]
+   [% IF error_msg %]
+    <div class="span12 alert alert-error">
+      <p class="alert-heading offset1 ">[% error_msg %]</p>
+    </div>
+   [% END %]
+  </div><!-- /row-fluid end message area -->
+     
+    <!-- </div>-->  <!-- /span12  Main Content Area-->
+     
+    [%#  <!--Footer--> -%]     
+    <footer> 
+        <div class="row-fluid">
+            <hr class="soften" />
+            <div class="offset5">
+               <small> [%-  footer  or "&copy; Austin Kenny 2012" %]</small>
+            </div>
+        </div> <!-- /row-fluid -->
+        <div class="row-fluid">
+            <small>Thanks To....</small>
+            <small>Perl
+                <a  target="_blank"  href="http://perl.org/">Perl</a>
+                <a  target="_blank"  href="http://cpan.org/">Cpan</a>
+                <a  target="_blank"
+                    href="http://www.catalystframework.org/">Catalyst</a></small>
+            <small>Made With
+                <a target="_blank" href="http://getbootstrap.com">Bootstrap.</a>
+                <a target="_blank" href="http://bootswatch.com">Bootswatch
+                    Themes.</a></small>
+        </div> <!-- /row-fluid -->
+        <div class="row-fluid">
+            <small>Javascript
+                <a target="_blank" href="http://jquery.com">Copyright 2012 jQuery
+                    Foundation and other contributors
+                    http://jquery.com/.</a>
+                <a target="_blank" href="http://bassistance.de/">Bassistance,  Jörn
+                    Zaefferer.</a></small>
+            <small>Icons From
+                <a  target="_blank"  href="http://glyphicons.com">Glyphicons
+                        Free.  </a> Licensed Under<a  target="_blank"
+                        href="http://creativecommons.org/licenses/by/3.0/deed.en">CC
+                        By 3.0</a> </small>
+        </div> <!-- /row-fluid -->
+    </footer>
+  
+
+</div> <!-- end container-fluid -->
+
+
+<!-- JQuery and JS Placed at the end of the document so the pages load faster -->
+
+<!-- For Sub Nav Bar 
+     <script type="text/javascript" src="[% c.uri_for('/') %]bootstrap/js/fix_bootstrap_subnav.js"></script>
+-->
+<!-- For Activating Bootstrap JQ -->
+<script type="text/javascript" src="[% c.uri_for('/') %]bootstrap/js/bootstrap_my_functions.js"></script>
+
+<!-- Jquery Form Validation Plugins  ( bassistance.de ) -->
+<script type="text/javascript" src="[% c.uri_for('/') %]static/jquery/jquery_validation/jquery.validate.min.js"></script>
+<script type="text/javascript"   src="[% c.uri_for('/') %]static/jquery/jquery_validation/additional-methods.min.js"></script>
+
+<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+
+
+<!--  JScript Jquery Ui Functions  (datepicker autofill etc ) -->
+<!--<script type="text/javascript" src="[% c.uri_for('/') %]static/jquery/js/jquery_ui_functions.js"></script>-->
+
+
+<!-- JS -->
+<div class="row-fluid">
+  [%# <!--  Include Template Which Handles Array Of JS scripts --> %]
+  [% IF bottom_js %]
+    [% INCLUDE $bottom_js %]
+  [% END %]
+
+</div> <!-- /row-fluid -->
+
+</body>
+</html>
+    
+    

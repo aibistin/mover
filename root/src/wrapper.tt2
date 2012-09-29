@@ -10,30 +10,22 @@
 
 
 <!--   ######################   Twitter Bootstrap Stuff ###########################################  -->
-
-<!--<link   href="[% c.uri_for('/') %]bootstrap/css/bootstrap.css" rel="stylesheet"  type="text/css" />-->
-<!--<script type="text/javascript" src="[% c.uri_for('/') %]bootstrap/js/bootstrap.min.js"></script>   Moved To bottom -->
-<!-- Bootswatch Bootstrap Simplex Theme-->
-<!--<link rel="stylesheet" href="[% c.uri_for('/') %]static/css/bootswatch_simplex_theme.css" />-->
-
 <link  href="[% c.uri_for('/') %]bootstrap/css/bootstrap-responsive.css" rel="stylesheet" />
 <link  href="[% c.uri_for('/') %]bootstrap/css/bootstrap.min.css"        rel="stylesheet" />
 <link  href="[% c.uri_for('/') %]bootstrap/css/docs.css"                 rel="stylesheet" />
 <link  href="[% c.uri_for('/') %]static/js/prettify/prettify.css"        rel="stylesheet" />
-<!--<link  href="[% c.uri_for('/') %]bootstrap/css/bootswatch_spacelab_theme.css" rel="stylesheet" />
---><link  href="[% c.uri_for('/') %]bootstrap/css/bootswatch_cerulean_theme.css" rel="stylesheet" />
+<!--<link  href="[% c.uri_for('/') %]bootstrap/css/bootswatch_spacelab_theme.css" rel="stylesheet"/> -->
+<link  href="[% c.uri_for('/') %]bootstrap/css/bootswatch_cerulean_theme.css" rel="stylesheet" />
 
 <style type="text/css">
       body {
-        padding-top: 60px;
-        padding-bottom: 20px;
+        padding-top: 40px;
+        padding-bottom: 10px;
       }
       /*.sidebar-nav {*/
       /*  padding: 9px 0;*/
       /*}*/
 </style>
-
-
 
 <!-- Local CSS-->
 <link rel="stylesheet" href="[% c.uri_for('/') %]static/css/main.css" />
@@ -61,7 +53,7 @@
 </head>
 
 [%# ********** BODY STARTS HERE ********** -%]
-<body data-spy="scroll" data-target=".subnav" data-offset="50">
+<body data-spy="scroll" data-target=".navbar">
 [%# Insert the page title -%]
     
   <h4>[%# template.title or site.title %]</h4>
@@ -69,7 +61,7 @@
 [%# Top Navigation Bar -%]
 <div class="navbar navbar-fixed-top">
     <div class="navbar-inner">
-      <div class="container-fluid">
+      <div class="row-fluid">
         <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
@@ -78,15 +70,18 @@
         <a class="brand" href="#">Moving Co. Management System </a>
         <div class="nav-collapse collapse">
           <div class="btn-group pull-right">
-            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#user">
               <i class="icon-user"></i>  [% c.user.username %]
               <span class="caret"></span>
             </a>
             <!-- User Icon -->
             <ul class="dropdown-menu">
               [% IF c.user_exists %]
-                  <li> [% c.user.first_name %] [% c.user.last_name %] </li>
-                  <li> [% c.user.status %] user </li>
+                  <li> <a href="#">Username: [% c.user.username %]</a> </li>
+                  <li><a href="#">Name: [% c.user.employee.full_name_initcaps %]</a></li>
+                  <li><a href="#">Status: [% c.user.employee.status.name %]</a></li>
+                  <li><a href="#">Email: [% c.user.email_address %] </a></li>
+                  <li><a href="#">Comments: [% c.user.comments %] </a></li>
                   <li class="divider"></li>
                   <li><a href="[% c.uri_for('/logout') %]">Sign Out</a></li>
               [% ELSE %]
@@ -94,19 +89,25 @@
               [% END %]
             </ul>
           </div>
+
           <ul class="nav">
-           <!--  <li class="active"><a href="[% c.uri_for('/menu') %]"> Home
-               <i class= "icon-home  icon-large"></i> </a></li> -->
-            <li class="active"><a href="[% c.uri_for('/intro') %]"> Home <i class= "icon-home  icon-large"></i> </a></li>
+              <!-- <li class="divider-vertical"></li> -->
+            <li class="active"><a href="[% c.uri_for('/intro') %]"> Home <i class= "icon-home icon-white icon-large"></i> </a></li>
               [% IF c.user_exists %]
                 <li><a href="[% c.uri_for('/menu') %]">Main Menu</a></li>
                 <li><a href="[% c.uri_for('/menu/estimates_menu') %]">Estimates Menu</a></li>
-                <!-- <li><a href="[% c.uri_for('/customer/list') %]">Customer
-                    List</a></li> -->
+              [% ELSE %]
+                  [% IF ( app_page  && app_page == 'intro') %]
+                    [%# ********** Intro Page Stuff ********** -%]
+                     <li><a href="#about">About</a></li> 
+                    <li><a href="#depts" data-toggle="collapse"
+                        data-target="#collapseOne" >What it does</a></li> 
+                    <li><a href="#shots" data-toggle="collapse"
+                        data-target="#collapseTwo">Screen Shots</a></li> 
+                    <li><a href="#enter" data-toggle="collapse"
+                        data-target="#collapseThree">Enter</a></li> 
+                 [% END %]
               [% END %]
-            <!-- <li><a href="[% c.uri_for('/estimates/list') %]">List All
-                Scheduled</a></li> -->
-            <!-- <li><a href="#about">About</a></li> -->
           </ul>
         </div><!--/.nav-collapse -->
       </div>
@@ -116,9 +117,10 @@
 <!--  MAIN DOCUMENT BODY -->
 
 <!-- ========================================== Header Area Above Sub nav Bar ========================================== -->
-<div class="container-fluid">
+<div class="row-fluid">
   <div class="row-fluid">
     [%# <!--  Include Sub Heading (Department Heading) and Sub Nav Bar with its Drop Down Menus --> %]
+    [%# <!--  if the User is logged in. ---> %]
     [% IF c.user_exists %]
         [% INCLUDE sub_heading_and_sub_nav_bar.tt2 %]
     [% END %]
@@ -126,9 +128,9 @@
 
   [%# Container For Template Data -%]
  
-  <div class="row-fluid">
+  <div class="container-fluid">
       [% content %]
-  </div> <!-- /row-fluid -->
+  </div> <!-- /container-fluid -->
  
    
   [%# MESSAGES GO HERE -%]
@@ -186,14 +188,11 @@
     </footer>
   
 
-</div> <!-- end container-fluid -->
+</div> <!-- end row-fluid -->
 
 
 <!-- JQuery and JS Placed at the end of the document so the pages load faster -->
 
-<!-- For Sub Nav Bar 
-     <script type="text/javascript" src="[% c.uri_for('/') %]bootstrap/js/fix_bootstrap_subnav.js"></script>
--->
 <!-- For Activating Bootstrap JQ -->
 <script type="text/javascript" src="[% c.uri_for('/') %]bootstrap/js/bootstrap_my_functions.js"></script>
 
@@ -203,11 +202,6 @@
 
 <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
 <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-
-
-<!--  JScript Jquery Ui Functions  (datepicker autofill etc ) -->
-<!--<script type="text/javascript" src="[% c.uri_for('/') %]static/jquery/js/jquery_ui_functions.js"></script>-->
-
 
 <!-- JS -->
 <div class="row-fluid">

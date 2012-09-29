@@ -297,9 +297,17 @@ __PACKAGE__->belongs_to(
 #################################################################################
 #####                       WORKSPACE BEGINS                                 ####
 #################################################################################
-use Log::Log4perl qw(:easy);
+#use Log::Log4perl qw(:easy);
+#-------------------------------------------------------------------------------
+#  Set Up Logging
+#-------------------------------------------------------------------------------
+#my $LOG_CONFIG_FILE = 'log_mover.conf';
+
+#Log::Log4perl->init($LOG_CONFIG_FILE);
+#my $log = Log::Log4perl->get_logger("Log::Mover");
+
 use Regexp::Common qw(time);
-#use lib '/home/austin/perl/Validation';
+use lib '../../Model/Valid/';
 use MyDate;
 
 #------- Constant types

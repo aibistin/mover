@@ -1,31 +1,21 @@
-<!-- Main Menu Page -->
+<!-- Introduction Page -->
 [% META title = 'Introduction To Moving Management'%]
 
 [%# <!--  THIS IS THE INTRODUCTION PAGE   --> %]
 <!-- Masthead
 ================================================== -->
- 
-<div class="row-fluid">
-    <header class="jumbotron masthead">
-        <div class="marketing">
-            <h1 class="strong">Moving Company Management System
-            <small>  Beta Version</small></h1>
-        </div>
-    </header>
-    <hr class="soften" />
-</div> <!-- /row-fluid -->
 
-
+[%# <!--  ############################################################   --> %]
+[%# <!--  Logged In Users Don't need detailed introduction to the site.   --> %]
+[%# <!--  ############################################################   --> %]
 [% IF c.user_exists %]
 
-[%# <!--  Logged In Users Don't need detailed introduction to the site.   --> %]
 <div class="row-fluid">
     <div class="hero-unit">
         <div class="row-fluid">
           <div class="span5">
             <p><a class="btn btn-primary btn-large"
-            href="[%  c.uri_for('/menu') %]"  ><strong>Main Menu
-            &raquo;</strong></a></p>
+            href="[%  c.uri_for('/menu') %]"  ><strong>Main Menu &raquo;</strong></a></p>
           </div> <!-- /span5 -->
           <div class="span5">
             <p><a class="btn btn-primary btn-large"  href="[%
@@ -35,162 +25,187 @@
     </div> <!-- End Hero Unit -->
 </div> <!-- /row-fluid -->
 
+[%# <!--  ############################################################   --> %]
+[%# <!--  Un-logged In users can get detailed description of this site.   --> %]
+[%# <!--  ############################################################   --> %]
 [% ELSE %]
 
-[%# <!--  Un-logged In users can get detailed description of this site.   --> %]
-
-    <div class="hero-unit">
-        <div class="row-fluid">
-            <h3>
-            This web based application will be a central location for a
-            moving company to manage Customers, Estimates, Jobs, Resources and
-            any other information that managers may need to improve productivity. 
-            This will be a one stop shop for providing informative statistics
-            across company departments. Management can use this information to
-            better prepare and plan future company business activities. You will be able to identify areas of success as well as
-            areas that need improving. 
-            </h3>
-        </div> <!-- /row-fluid -->
-        <div class="row-fluid">
-         <br /> 
-          <p><a class="btn btn-primary btn-large"  href="[%
-          c.uri_for('/login') %]"   ><strong>Enter &raquo;</strong></a></p>
-        </div> <!-- /row-fluid -->
+<div class="container-fluid">
+<!-- Accordion Intro Information Page
+================================================== -->
+[%#  <!-- ******  About this Web App Section ***************  --> %]
+  <div class="row-fluid" id="about" >
+    <div class="hero-unit" >
+      <div class="page-header">
+        <div class="marketing">
+          <h1>Moving Company Management System <small>Beta Version</small></h1>
+        </div>
+      </div>
+        <h2 class="text-info">
+            One cental location to manage your
+            <more-larger>customers</more-larger>, <more-larger>estimates</more-larger>, 
+            <more-larger>jobs</more-larger>, 
+            <more-larger>crews</more-larger>, <more-larger>fleet</more-larger>,
+            <more-larger>storage</more-larger>
+            and <more-larger>equipment</more-larger>.
+        </h2>
     </div> <!-- End Hero Unit -->
+  </div><!-- /row-fluid (/id about)-->
 
+  [%#  <!-- ****** Department Descriptions Section ***************  --> %]
+  <div class="accordion" id="introAccordion">
+    <div class="row-fluid" id="depts" >
+      <div class="accordion-group">
+        <div class="accordion-heading">
+           <a class="accordion-toggle lead" data-toggle="collapse" data-parent="#introAccordion" href="#collapseOne">
+            What it does &#9660; </a>
+        </div>
+        <div id="collapseOne" class="accordion-body collapse">
+          <div class="accordion-inner">
+           [%# <!-- Inside accordion Body.   --> %]
+            <div class="row-fluid">
+                <div class="span3">
+                    <h3>Estimates</h3>
+                        <p class="lead">Schedule estimates. Complete "Over the phone" estimates.
+                        View and Modify estimate details.Provide dispatch with confirmed job
+                        schedule</p>
+                </div> <!-- End Span 3 -->
 
-[%# <!-- Accordion to show or hide demos.   --> %]
-<div class="accordion" id="introAccordion">
+                <div class="span3">
+                    <h3>Customers</h3>
+                    <p class="lead"> View customer details and history.Understand 
+                    customer requirements. Classify customer type. See
+                    estimates, jobs, and storage data for any customer. 
+                    
+                    </p>
+                </div> <!-- End Span 3 -->
+
+                <div class="span3">
+                    <h3>Dispatch</h3>
+                    <p class="lead"> Schedule jobs automatically based on live data from Estimators. Provide truck, crew, and material reqirements to dispatcher.  
+                    View job status and statistics. 
+                    </p>
+                </div> <!-- End Span 3 -->
+
+                <div class="span3">
+                    <h3>Storage</h3>
+                    <p class="lead"> Provide storage capacity, availability
+                    and accessibility information. Schedule incoming and
+                    outgoing storage jobs. Track storage accounts. Interact with existing
+                    billing syetem. 
+                    </p>
+                </div> <!-- End Span 3 -->
+            </div> <!-- /row-fluid /first row of descriptions -->
+
+            <div class="row-fluid">
+                <div class="span3">
+                    <h3>Equipment</h3>
+                    <p class="lead"> 
+                    Track material and equipment usage. Plan material requirements based
+                    on job schedule. Track equipment suppliers and deliveries.Provide
+                    management and dispatch with necessary equipment
+                    information and availability for planning
+                    upcoming jobs. 
+                    </p>
+                </div> <!-- End Span 3 -->
+
+                <div class="span3">
+                    <h3>Fleet</h3>
+                    <p class="lead"> Record truck and vehicle information. Schedule vehicle
+                    maintenance. Create notifications for insurance and registration
+                    expiration. Provide truck capacities and availability to dispach
+                    system.
+                    </p>
+                </div> <!-- End Span 3 -->
+
+                <div class="span3">
+                    <h3>Admin</h3>
+                    <p class="lead">Provide accounting, sales, planning and job statistics. Central
+                    locaion for human resources.
+                    </p>
+                </div> <!-- End Span 3 -->
+            </div> <!-- /row-fluid /second row of descriptions -->
+
+       </div> <!-- /accordion inner -->
+     </div> <!-- /accordion body -->
+   </div> <!-- /accordion group-->
+ </div> <!-- /row-fluid (/id depts)-->
+
+  [%#  <!-- ****** Screen Shot Section ***************  --> %]
+  <div class="row-fluid" id="shots">
     <div class="accordion-group">
         <div class="accordion-heading">
-            <a class="accordion-toggle lead" data-toggle="collapse" data-parent="#introAccordion" href="#collapseOne">
-                What it does
-            </a>
-       </div>
-       <div id="collapseOne" class="accordion-body collapse in">
+            <a class="accordion-toggle lead" data-toggle="collapse"
+                data-parent="#introAccordion" href="#collapseTwo"> Demo Screen Shots &#9660; </a> 
+        </div>
+        <div id="collapseTwo" class="accordion-body collapse">
             <div class="accordion-inner">
-            [%# <!-- Inside accordion Body.   --> %]
+            [%# <!-- Inside accordion Body For Carousel.   --> %]
+            [%# <!--  Carousel Slideshow.   --> %]
+                <div class="span1">
+                </div>
+                <div class="span9">
+                    <div id="introCarousel" class="carousel slide">
+                        <div class="carousel-inner">
+                        [%#  <!-- *******Slideshow Images ***************  --> %]
+                            [%#  <!-- ******* Loop Through Screenshot Directory *******  --> %]
+                            [% USE shotDir = Directory('root/static/images/ScreenShots') %]
+                            [% FOREACH file = shotDir.files %]
+                                [% IF file.ext == 'png' %]
+                                   [%#  <!-- ******* First One Is Active  *******  --> %]
+                                   [% IF loop.first %]
+                                      <div class="active item">
+                                   [% ELSE %]
+                                      <div class="item">
+                                   [% END %]
+                                    <img class="img-rounded"
+                                    src="static/images/ScreenShots/[%
+                                    file.name -%]" alt="" />
+                                <!-- <div class="carousel-caption"> -->
+                                    <!--   <h4>Estimates Menu</h4> -->
+                                    <!--   <p>What actions would you like
+                                    to complete with the estimate data</p>
+                                    -->
+                                   <!--     </div> -->
+                                   </div>
+                               [% END %]
+                            [% END %]
+                            <!-- *******End Carousel Images ***************  -->
+                        </div> <!-- /carousel-inner -->
+                        <a class="left carousel-control" href="#introCarousel" data-slide="prev">&lsaquo;</a>
+                        <a class="right carousel-control" href="#introCarousel" data-slide="next">&rsaquo;</a>
+                    </div> <!-- /carousel slide -->
+                    </div> <!-- /span9" -->
+                </div> <!-- /accordion inner -->
+            </div> <!-- /accordion body -->
+        </div> <!-- /accordion group-->
+      </div> <!-- /row-fluid (/id shots))-->
 
- <div class="row-fluid">
-     <div class="span3">
-        <h3>Estimates</h3>
-         <p>Schedule estimates. Complete "Over the phone" estimates.
-         View and Modify estimate details.Provide dispatch with confirmed job
-         schedule</p>
-     </div> <!-- End Span 4 -->
-
-     <div class="span3">
-        <h3>Customers</h3>
-         <p> View customer details and history.Understand 
-         customer requirements. Classify customer type.
-         </p>
-     </div> <!-- End Span 4 -->
-
-     <div class="span3">
-        <h3>Dispatch</h3>
-         <p> Schedule jobs based on information from sales department.
-         Provide truck, crew, and material reqirements to dispatcher.  
-         View job status and statistics. 
-          </p>
-     </div> <!-- End Span 4 -->
-
-     <div class="span3">
-        <h3>Storage</h3>
-         <p> Provide storage usage and availability. Schedule incoming and
-         outgoing storage jobs. Track storage accounts. Interact with existing
-         billing syetem. 
-         </p>
-     </div> <!-- End Span 4 -->
-
- </div> <!-- /row-fluid -->
- <div class="row-fluid">
-
-     <div class="span3">
-        <h3>Equipment</h3>
-         <p> 
-         Track material and equipment usage. Plan material requirements based
-         on job schedule. Track equipment suppliers and deliveries.Provide
-         management and dispatch with necessary equipment information for planning
-         upcoming jobs. 
-          </p>
-     </div> <!-- End Span 4 -->
-
-     <div class="span3">
-        <h3>Fleet</h3>
-         <p> Record truck and vehicle information. Schedule vehicle
-         maintenance. Create notifications for insurance and registration
-         expiration. Provide truck capacities and availability to dispach
-         system.
-          </p>
-     </div> <!-- End Span 4 -->
-
-     <div class="span3">
-        <h3>Admin</h3>
-         <p>Provide accounting, sales, planning and job statistics. Central
-         locaion for human resources.
-         </p>
-     </div> <!-- End Span 4 -->
-
-            </div> <!-- /accordion inner -->
-       </div> <!-- /accordion body -->
-   </div> <!-- /accordion group-->
-
-
- </div> <!-- /row-fluid -->
-
- <div class="row-fluid">
-
+  [%#  <!-- ****** Enter Section ***************  --> %]
+  <div class="row-fluid" id="enter">
     <div class="accordion-group">
         <div class="accordion-heading">
-            <a class="accordion-toggle lead" data-toggle="collapse" data-parent="#introAccordion" href="#collapseTwo">
-                Demo Screen Shots (Coming soon...)</a>
-       </div>
-       <div id="collapseTwo" class="accordion-body collapse">
-            <div class="accordion-inner">
-            [%# <!-- Inside accordion Body.   --> %]
-
-
-    [%# <!--  Carousel.   --> %]
-    <div class="span10">
-        <h2>Samples</h2>
-        <p>Look at sample screens.</p>
-        <div id="introCarousel" class="carousel slide">
-            <div class="carousel-inner">
-                <div class="item active">
-                    <img src="static/images/k_m_look_at_mutt_nblp.jpg" alt="">
-                    <div class="carousel-caption">
-                        <h4>First Demo</h4>
-                        <p> Demo one info.</p>
-                    </div>
-                </div>
-                <div class="item">
-                    <img src="static/images/t_and_l_mechanics.jpg" alt="">
-                    <div class="carousel-caption">
-                        <h4>Second Demo</h4>
-                        <p>Demo 2 info. </p>
-                    </div>
-                </div>
-                <div class="item">
-                    <img src="static/images/catalyst_logo.png" alt="">
-                    <div class="carousel-caption">
-                        <h4>Third Demo</h4>
-                        <p>Demo 3 info.</p>
-                    </div>
-                </div>
-            </div> <!-- /carousel-inner -->
-            <a class="left carousel-control" href="#introCarousel" data-slide="prev">&lsaquo;</a>
-            <a class="right carousel-control" href="#introCarousel" data-slide="next">&rsaquo;</a>
-        </div> <!-- /carousel slide -->
-    </div> <!-- /span10 -->
-
-</div> <!-- /row-fluid -->
-
-
-            </div> <!-- /accordion inner -->
+            <a class="accordion-toggle lead" data-toggle="collapse"
+                data-parent="#introAccordion" href="#collapseThree"> Enter &#9660; </a> 
+        </div>
+        <div id="collapseThree" class="accordion-body collapse">
+           <div class="accordion-inner">
+             <div class="hero-unit" >
+               <div class="page-header">
+                 <p class="text-info"> You need a User Id and a Password to Login </p>
+                 <p><a class="btn btn-primary btn-large"  href="[% c.uri_for('/login') %]" ><strong>Enter &raquo;</strong></a></p>
+                 <p class="text-info"> To find out more, contact the developer
+                 at Email: aibistin.cionnaith@gmail.com</p>
+               </div>
+            </div>
+         </div> <!-- /accordion inner -->
        </div> <!-- /accordion body -->
-   </div> <!-- /accordion group-->
-</div> <!-- /accordion -->
+    </div> <!-- /accordion group-->
+  </div> <!-- /row-fluid (/id enter))-->
 
+   </div> <!-- /accordion introAccordion-->
+
+</div> <!-- /"container-fluid" -->
 [% END %]
 
 

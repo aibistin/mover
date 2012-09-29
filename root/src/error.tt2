@@ -47,7 +47,7 @@
  <!--Get out of here buttons. -->
   <div class="span6">
    <a class="btn" title="Go back to where you came from."
-   href="[% c.uri_for(c.controller) %]"><i class="icon-chevron-left"> Back</i> </a>
+   href="[% c.uri_for(c.controller) %]"><i class="icon-chevron-left"> </i> Back</a>
   </div><!-- /span6 -->
 
  <div class="span6">

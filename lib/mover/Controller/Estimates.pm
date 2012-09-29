@@ -2,8 +2,9 @@ package mover::Controller::Estimates;
 use Moose;
 use namespace::autoclean;
 use Data::Dumper;
-use Log::Log4perl qw(:easy);
-use lib '/home/austin/perl/Validation';
+
+#use Log::Log4perl qw(:easy);
+use lib '../Model/Valid/';
 use MyValid;
 use MyDate;
 
@@ -80,7 +81,8 @@ sub base : Chained('/') : PathPart('estimates') : CaptureArgs(0) {
     $c->stash(
         resultset => $c->model('DB::Customer')->related_resultset('estimates')
     );
-    DEBUG '*** INSIDE BASE estimates METHOD : Got first Estimate resultset ***';
+    $c->log->debug(
+        '*** INSIDE BASE estimates METHOD : Got first Estimate resultset ***');
 
     # Load status messages
     $c->load_status_msgs;
@@ -93,21 +95,22 @@ sub base : Chained('/') : PathPart('estimates') : CaptureArgs(0) {
 
 sub object : Chained('base') : PathPart('id') : CaptureArgs(1) {
     my ( $self, $c, $estimate_id ) = @_;
-    DEBUG '*** Just INSIDE BASE object METHOD ***';
-    DEBUG "*** The object id is: $estimate_id ***";
+    $c->log->debug('*** Just INSIDE BASE object METHOD ***');
+    $c->log->debug("*** The object id is: $estimate_id ***");
 
     #------ Find the estimate object and store it in the stash
     $c->stash->{object} = $c->stash->{resultset}->find($estimate_id);
 
-  #    $c->stash->{resultset}->find({estimate.id => $estimate_id});
-  #     DEBUG "*** The object for this id is: ***". Dumper $c->stash->{object} ;
-  # Make sure the lookup was successful.  You would probably
-  # want to do something like this in a real app:
+#    $c->stash->{resultset}->find({estimate.id => $estimate_id});
+#     $c->log->debug( "*** The object for this id is: ***". Dumper $c->stash->{object} ;
+# Make sure the lookup was successful.  You would probably
+# want to do something like this in a real app:
     $c->detach('/error_404') if !$c->stash->{object};
 
     #
     #    die "Estimate $id not found!" if !$c->stash->{object};
-    DEBUG( '*** Estimate Customer Object =  ***' . $c->stash->{object} );
+    $c->log->debug(
+        ( '*** Estimate Customer Object =  ***' . $c->stash->{object} ) );
 }
 
 #------ List Estimates Sorted by date
@@ -121,7 +124,7 @@ sub list : Chained('base') : PathPart('list') : Args(0) {
     my ( $self, $c ) = @_;
 
     #    $DB::single = 1;    # For Debug
-    DEBUG "******  List estimates method ******";
+    $c->log->debug("******  List estimates method ******");
     my $sort_by_1 = 'estimates.estimate_date';    # Timestamp
     my $sort_by_2 = 'estimates.estimate_time';    # string
     my $sort_by_3 = 'me.last_name';               # string
@@ -153,7 +156,8 @@ sub list : Chained('base') : PathPart('list') : Args(0) {
 sub list_by_estimator_id : Chained('base') : PathPart('list_by_estimator_id')
   : Args(1) {
     my ( $self, $c, $estimator_id ) = @_;
-    DEBUG "*** INSIDE list_by_estimator_id. Estimator id is: $estimator_id";
+    $c->log->debug(
+        "*** INSIDE list_by_estimator_id. Estimator id is: $estimator_id");
 
     #----- Get the estimates for this estimator
     $c->stash->{resultset} =
@@ -184,7 +188,7 @@ sub list_by_estimator_id : Chained('base') : PathPart('list_by_estimator_id')
 sub list_by_last_name : Chained('base') : PathPart('list_by_last_name') :
   Args(1) {
     my ( $self, $c, $l_name ) = @_;
-    DEBUG "*** INSIDE list_by_last_name. Last name is: $l_name";
+    $c->log->debug("*** INSIDE list_by_last_name. Last name is: $l_name");
 
     #----- Get the estimates for this shipper
     $c->stash->{resultset} =
@@ -216,7 +220,7 @@ sub list_by_last_name : Chained('base') : PathPart('list_by_last_name') :
 sub list_by_first_name : Chained('base') : PathPart('list_by_first_name') :
   Args(1) {
     my ( $self, $c, $f_name ) = @_;
-    DEBUG "*** INSIDE list_by_first_name.  name is: $f_name";
+    $c->log->debug("*** INSIDE list_by_first_name.  name is: $f_name");
 
     #----- Get the estimates for this shipper
     $c->stash->{resultset} =
@@ -248,7 +252,8 @@ sub list_by_first_name : Chained('base') : PathPart('list_by_first_name') :
 sub list_by_employee_name : Chained('base') :
   PathPart('list_by_employee_name') : Args(1) {
     my ( $self, $c, $first_last_name ) = @_;
-    DEBUG "*** INSIDE list_by_employee_name. Name is: $first_last_name";
+    $c->log->debug(
+        "*** INSIDE list_by_employee_name. Name is: $first_last_name");
     my @wanted_name = split( ' ', $first_last_name );
 
     #----- Get the estimates by this estimator
@@ -290,7 +295,7 @@ sub list_by_multiple_names : Chained('base') :
     # Ensure user has permission to see this resultset.
     $c->detach('/error_noperms')
       unless $c->stash->{object}->display_allowed_by( $c->user->get_object );
-    DEBUG " Searching for names " . Dumper(@wanted_names);
+    $c->log->debug( " Searching for names " . Dumper(@wanted_names) );
     my (@like_names);
     for my $name (@wanted_names) {
         push @like_names, '%' . $name . '%';
@@ -328,7 +333,7 @@ sub list_by_multiple_names : Chained('base') :
 
 sub list_for_today : Chained('base') : PathPart('list_for_today') : Args(0) {
     my ( $self, $c ) = @_;
-    DEBUG "*** Inside list_for_today";
+    $c->log->debug("*** Inside list_for_today");
     my $today =
       DateTime->now( time_zone => 'local' )->set_time_zone('floating');
     $c->stash->{resultset} = $c->stash->{resultset}->scheduled_on_date($today);
@@ -367,13 +372,13 @@ sub list_for_today : Chained('base') : PathPart('list_for_today') : Args(0) {
 sub list_for_this_week : Chained('base') : PathPart('list_for_this_week') :
   Args() {
     my ( $self, $c ) = @_;
-    DEBUG "*** Inside list_for_this_week";
+    $c->log->debug("*** Inside list_for_this_week");
     my ($week) = 0;
     my ( $start_date, $end_date ) =
       MyDate->convert_relative_week_number_to_date_range( $week, $MAX_WEEKS );
-    DEBUG ' This weeks start date is Monday '
-      . $start_date->mdy('/') . ' to '
-      . $end_date->mdy('/');
+    $c->log->debug( ' This weeks start date is Monday '
+          . $start_date->mdy('/') . ' to '
+          . $end_date->mdy('/') );
     $c->stash->{resultset} =
       $c->stash->{resultset}->scheduled_between_dates( $start_date, $end_date );
 
@@ -392,8 +397,8 @@ sub list_for_this_week : Chained('base') : PathPart('list_for_this_week') :
     #------ previous week is this week '-1'. The next week is '+1'
     my ( $prev, $next ) =
       MyDate->move_move_back_or_forward_by_time_period( $week, $MAX_WEEKS );
-    DEBUG "Requested week is $week and previous week is $prev ";
-    DEBUG "Next week is $next";
+    $c->log->debug("Requested week is $week and previous week is $prev ");
+    $c->log->debug("Next week is $next");
     $c->stash->{'prev'} =
       $c->uri_for( $self->action_for('list_by_week'), $prev );
     $c->stash->{'prev_label'} = "Previous Week";
@@ -423,17 +428,17 @@ sub list_for_this_week : Chained('base') : PathPart('list_for_this_week') :
 sub list_for_this_month : Chained('base') : PathPart('list_for_this_month') :
   Args() {
     my ( $self, $c ) = @_;
-    DEBUG "*** Inside list_for_this_month";
+    $c->log->debug("*** Inside list_for_this_month");
     my $current_month = DateTime->now->month;
     my ( $start_date, $end_date ) =
       MyDate->convert_month_number_to_start_end_date(0);
     if ( ( not defined $start_date ) || ( not defined $end_date ) ) {
-        DEBUG "*** Invalid month picked ";
+        $c->log->debug("*** Invalid month picked ");
         $c->detach('/error_other');
     }
-    DEBUG ' The month start date  '
-      . $start_date->mdy('/') . ' to '
-      . $end_date->mdy('/');
+    $c->log->debug( ' The month start date  '
+          . $start_date->mdy('/') . ' to '
+          . $end_date->mdy('/') );
     $c->stash->{resultset} =
       $c->stash->{resultset}->scheduled_between_dates( $start_date, $end_date );
 
@@ -452,8 +457,9 @@ sub list_for_this_month : Chained('base') : PathPart('list_for_this_month') :
     #       can only go from months 1 to 12 in the current year
     my $prev = ( $start_date->month > 1 )  ? ( $start_date->month - 1 ) : undef;
     my $next = ( $start_date->month < 12 ) ? ( $start_date->month + 1 ) : undef;
-    DEBUG "Requested month is $current_month and previous month is $prev ";
-    DEBUG "Next month is $next";
+    $c->log->debug(
+        "Requested month is $current_month and previous month is $prev ");
+    $c->log->debug("Next month is $next");
     if ( defined $prev ) {
         $c->stash->{'prev'} =
           $c->uri_for( $self->action_for('list_by_month'), $prev );
@@ -493,7 +499,7 @@ sub list_by_day_of_week_post : Chained('base') :
   PathPart('list_by_day_of_week') : Args(0) {
     my ( $self, $c, $day ) = @_;
     my ( $err, $date_time ) = undef;
-    DEBUG "*** Inside list_by_day_of_week. Requested day is: $day";
+    $c->log->debug("*** Inside list_by_day_of_week. Requested day is: $day");
     $date_time = $self->validate_day_of_week_miniform($c);
     if ( defined $date_time ) {
 
@@ -544,7 +550,7 @@ sub list_by_day_of_week : Chained('base') : PathPart('list_by_day_of_week') :
   Args(1) {
     my ( $self, $c, $day ) = @_;
     my $err = undef;
-    DEBUG "*** Inside list_by_day_of_week. Requested day is: $day";
+    $c->log->debug("*** Inside list_by_day_of_week. Requested day is: $day");
     if ( MyValid->is_it_numeric($day) && MyValid->is_it_between( $day, 1, 7 ) )
     {
         MyValid->is_it_between( $day, 1, 7 );
@@ -555,7 +561,7 @@ sub list_by_day_of_week : Chained('base') : PathPart('list_by_day_of_week') :
     my $req_date = MyDate->convert_week_day_number_to_date($day)
       if ( $err == $FALSE );
     if ( ( not defined $req_date ) || ( $err == $TRUE ) ) {
-        DEBUG "*** Invalid day picked ";
+        $c->log->debug("*** Invalid day picked ");
         $c->stash->{error_msg_1} = "Invalid day picked!";
         $c->detach('/error_other');
     }
@@ -607,17 +613,18 @@ sub list_by_day_of_week : Chained('base') : PathPart('list_by_day_of_week') :
 
 sub list_by_week : Chained('base') : PathPart('list_by_week') : Args(1) {
     my ( $self, $c, $week ) = @_;
-    DEBUG
-"*** Inside list_by_week. Requested week is $week weeks before or after now";
+    $c->log->debug(
+"*** Inside list_by_week. Requested week is $week weeks before or after now"
+    );
     my ( $start_date, $end_date ) =
       MyDate->convert_relative_week_number_to_date_range( $week, $MAX_WEEKS );
     if ( ( not defined $start_date ) || ( not defined $end_date ) ) {
-        DEBUG "*** Invalid week picked ";
+        $c->log->debug("*** Invalid week picked ");
         $c->detach('/error_other');
     }
-    DEBUG ' The week start date is Monday '
-      . $start_date->mdy('/') . ' to '
-      . $end_date->mdy('/');
+    $c->log->debug( ' The week start date is Monday '
+          . $start_date->mdy('/') . ' to '
+          . $end_date->mdy('/') );
     $c->stash->{resultset} =
       $c->stash->{resultset}->scheduled_between_dates( $start_date, $end_date );
 
@@ -635,8 +642,8 @@ sub list_by_week : Chained('base') : PathPart('list_by_week') : Args(1) {
     #------ previous week is this week '-1'. The next week is '+1'
     my ( $prev, $next ) =
       MyDate->move_move_back_or_forward_by_time_period( $week, $MAX_WEEKS );
-    DEBUG "Requested week is $week and previous week is $prev ";
-    DEBUG "Next week is $next";
+    $c->log->debug("Requested week is $week and previous week is $prev ");
+    $c->log->debug("Next week is $next");
     $c->stash->{'prev'} =
       $c->uri_for( $self->action_for('list_by_week'), $prev );
     $c->stash->{'prev_label'} = "Previous Week";
@@ -669,12 +676,12 @@ sub list_by_week : Chained('base') : PathPart('list_by_week') : Args(1) {
 
 sub list_by_month_post : Chained('base') : PathPart('list_by_month') : Args(0) {
     my ( $self, $c ) = @_;
-    DEBUG "*** Inside list_by_month.";
+    $c->log->debug("*** Inside list_by_month.");
     my ( $start_date, $end_date ) = $self->validate_month_of_year_miniform($c);
     if ( ( defined $start_date ) && ( defined $end_date ) ) {
-        DEBUG ' The month start date  '
-          . $start_date->mdy('/') . ' to '
-          . $end_date->mdy('/');
+        $c->log->debug( ' The month start date  '
+              . $start_date->mdy('/') . ' to '
+              . $end_date->mdy('/') );
         $c->stash->{resultset} =
           $c->stash->{resultset}
           ->scheduled_between_dates( $start_date, $end_date );
@@ -698,10 +705,10 @@ sub list_by_month_post : Chained('base') : PathPart('list_by_month') : Args(0) {
           ( $start_date->month > 1 ) ? ( $start_date->month - 1 ) : undef;
         my $next =
           ( $start_date->month < 12 ) ? ( $start_date->month + 1 ) : undef;
-        DEBUG 'Requested month is '
-          . $c->form->valid('month_of_year')
-          . " and previous month is $prev ";
-        DEBUG "Next month is $next";
+        $c->log->debug( 'Requested month is '
+              . $c->form->valid('month_of_year')
+              . " and previous month is $prev " );
+        $c->log->debug("Next month is $next");
         if ( defined $prev ) {
             $c->stash->{'prev'} =
               $c->uri_for( $self->action_for('list_by_month'), $prev );
@@ -741,16 +748,17 @@ sub list_by_month_post : Chained('base') : PathPart('list_by_month') : Args(0) {
 
 sub list_by_month : Chained('base') : PathPart('list_by_month') : Args(1) {
     my ( $self, $c, $month ) = @_;
-    DEBUG "*** Inside list_by_month. Requested month number is $month";
+    $c->log->debug(
+        "*** Inside list_by_month. Requested month number is $month");
     my ( $start_date, $end_date ) =
       MyDate->convert_month_number_to_start_end_date($month);
     if ( ( not defined $start_date ) || ( not defined $end_date ) ) {
-        DEBUG "*** Invalid month picked ";
+        $c->log->debug("*** Invalid month picked ");
         $c->detach('/error_other');
     }
-    DEBUG ' The month start date  '
-      . $start_date->mdy('/') . ' to '
-      . $end_date->mdy('/');
+    $c->log->debug( ' The month start date  '
+          . $start_date->mdy('/') . ' to '
+          . $end_date->mdy('/') );
     $c->stash->{resultset} =
       $c->stash->{resultset}->scheduled_between_dates( $start_date, $end_date );
 
@@ -770,8 +778,8 @@ sub list_by_month : Chained('base') : PathPart('list_by_month') : Args(1) {
     #       can only go from months 1 to 12 in the current year
     my $prev = ( $start_date->month > 1 )  ? ( $start_date->month - 1 ) : undef;
     my $next = ( $start_date->month < 12 ) ? ( $start_date->month + 1 ) : undef;
-    DEBUG "Requested month is $month and previous month is $prev ";
-    DEBUG "Next month is $next";
+    $c->log->debug("Requested month is $month and previous month is $prev ");
+    $c->log->debug("Next month is $next");
     if ( defined $prev ) {
         $c->stash->{'prev'} =
           $c->uri_for( $self->action_for('list_by_month'), $prev );
@@ -809,7 +817,7 @@ sub list_by_month : Chained('base') : PathPart('list_by_month') : Args(1) {
 sub list_by_date_post : Chained('base') : PathPart('list_by_date') : Args(0) {
     my ( $self, $c ) = @_;
     my ( $req_date, $date_time );
-    DEBUG "*** Inside list_by_date_post.";
+    $c->log->debug("*** Inside list_by_date_post.");
 
     #------ FormValidator checks if there was a form sent
     $date_time = $self->validate_one_date_miniform($c)
@@ -866,12 +874,12 @@ sub list_by_date_post : Chained('base') : PathPart('list_by_date') : Args(0) {
 
 sub list_by_date : Chained('base') : PathPart('list_by_date') : Args(1) {
     my ( $self, $c, $req_date ) = @_;
-    DEBUG '*** Inside list_by_date.***' . $req_date;
-    DEBUG '*** Inside list_by_date.Request Args Are ***'
-      . Dumper( $c->req->args );
+    $c->log->debug( '*** Inside list_by_date.***' . $req_date );
+    $c->log->debug( '*** Inside list_by_date.Request Args Are ***'
+          . Dumper( $c->req->args ) );
     my ($date_time);
     if ( not defined $req_date ) {
-        DEBUG "*** Undefined Request Date ";
+        $c->log->error("*** Undefined Request Date ");
         $c->stash->{error_msg_1} = "No Date Requested.";
         $c->detach('/error_other');
     }
@@ -880,8 +888,9 @@ sub list_by_date : Chained('base') : PathPart('list_by_date') : Args(1) {
     $date_time = $self->get_date_time_my_way( $c, $req_date )
       if ( not defined $date_time );
     if ( not defined $date_time ) {
-        DEBUG "*** Requested Date Could not be converted to DateTime format: "
-          . Dumper($req_date);
+        $c->log->error(
+            "*** Requested Date Could not be converted to DateTime format: "
+              . Dumper($req_date) );
         $c->stash->{error_msg_1} = "Invalid Date Format.";
         $c->detach('/error_other');
     }
@@ -929,7 +938,7 @@ sub list_date_range : Chained('base') : PathPart('list_date_range') : Args(0) {
     my ( $self, $c ) = @_;
     my ( $date_time_start, $date_time_end );
 
-    DEBUG "**** Inside list_date_range Request Data.";
+    $c->log->debug("**** Inside list_date_range Request Data.");
 
     #------ If processing date range miniform -- Validate it
     ( $date_time_start, $date_time_end ) =
@@ -947,9 +956,9 @@ sub list_date_range : Chained('base') : PathPart('list_date_range') : Args(0) {
           unless $c->stash->{resultset}
           ->viewing_permission( $c->user->get_object );
         $c->stash->{estimate_count} = $c->stash->{resultset}->count // 0;
-        DEBUG '*** Found '
-          . $c->stash->{estimate_count}
-          . ' estimates for time period.';
+        $c->log->debug( '*** Found '
+              . $c->stash->{estimate_count}
+              . ' estimates for time period.' );
         $c->stash->{found_msg} =
             ( $c->stash->{estimate_count} // 0 )
           . ' estimate'
@@ -999,11 +1008,11 @@ sub list_date_range : Chained('base') : PathPart('list_date_range') : Args(0) {
 sub list_date_range_bkp : Chained('base') : PathPart('list_date_range_bkp') :
   Args(2) {
     my ( $self, $c, $start_date, $end_date ) = @_;
-    DEBUG '*** Inside list_date_range.***' . Dumper($start_date);
+    $c->log->debug( '*** Inside list_date_range.***' . Dumper($start_date) );
 
     #------ Format the Date string into DateTime object
     if ( ( not defined $start_date ) or ( not defined $end_date ) ) {
-        DEBUG "*** Undefined Start Date or undefined End Date ";
+        $c->log->error("*** Undefined Start Date or undefined End Date ");
         $c->stash->{error_msg_1} = "Missing a start or an end date.";
         $c->detach('/error_other');
     }
@@ -1013,8 +1022,8 @@ sub list_date_range_bkp : Chained('base') : PathPart('list_date_range_bkp') :
     #    $start_date_time = MyDate->create_date_time_ISO8601($start_date)
     #        if not defined $start_date_time;
     if ( not defined $start_date_time ) {
-        DEBUG "*** Start date is not in recognised string format "
-          . Dumper($start_date);
+        $c->log->debug( "*** Start date is not in recognised string format "
+              . Dumper($start_date) );
         $c->stash->{error_msg_1} =
           "Invalid Date Format for the start date, $start_date";
         $c->detach('/error_other');
@@ -1025,8 +1034,8 @@ sub list_date_range_bkp : Chained('base') : PathPart('list_date_range_bkp') :
     #    $end_date_time = MyDate->create_date_time_ISO8601($end_date)
     #        if not defined $end_date_time;
     if ( not defined $end_date_time ) {
-        DEBUG "*** End date is not in recognised string date format"
-          . Dumper($end_date);
+        $c->log->debug( "*** End date is not in recognised string date format"
+              . Dumper($end_date) );
         $c->stash->{error_msg_1} =
           "Invalid Date Format for the end date, $end_date";
         $c->detach('/error_other');
@@ -1049,7 +1058,7 @@ sub list_date_range_bkp : Chained('base') : PathPart('list_date_range_bkp') :
     #    $self->add_date_range_miniform_to_stash($c);
     $self->add_multiple_date_miniforms_to_stash($c);
 
-#     DEBUG "Including the miniform ". $c->stash->{mini_form};
+#     $c->log->debug( "Including the miniform ". $c->stash->{mini_form};
 #------ Add js to bottom template  (jQ Datepicker And Date Validation to JS array)
 #      $c->stash(
 #        bottom_js        => 'js/bottom_js.tt2',
@@ -1083,7 +1092,8 @@ sub list_date_range_bkp : Chained('base') : PathPart('list_date_range_bkp') :
 sub display_estimate_details : Chained('object') :
   PathPart('display_estimate_details') : Args(0) {
     my ( $self, $c ) = @_;
-    DEBUG "*** INSIDE display_estimate_details." . $c->stash->{object}->id;
+    $c->log->debug(
+        "*** INSIDE display_estimate_details." . $c->stash->{object}->id );
 
     # Ensure user has permission to see this resultset.
     $c->detach('/error_noperms')
@@ -1093,47 +1103,12 @@ sub display_estimate_details : Chained('object') :
     $c->stash->{updated} = DateTime->compare( $c->stash->{object}->created,
         $c->stash->{object}->updated );
 
-    DEBUG '*** The Created date is .' . Dumper ($c->stash->{object}->created);
-    DEBUG '*** The Updated  date is .' . Dumper ($c->stash->{object}->updated);
-    
+    $c->log->debug(
+        '*** The Created date is .' . Dumper( $c->stash->{object}->created ) );
+    $c->log->debug(
+        '*** The Updated  date is .' . Dumper( $c->stash->{object}->updated ) );
+
     $c->stash->{template} = 'Estimates/display_estimate_details.tt2';
-}
-
-#---- Create an estimate using passed args
-sub url_create : Chained('base') : PathPart('url_create') : Args(3) {
-    my ( $self, $c, $estimate_id, $cust_last_name, $cust_addr_1, $estimator_id )
-      = @_;
-    my ($estimate);
-
-    # Does the user have permission to view this estimate.
-    $c->detach('/error_noperms')
-      unless $c->stash->{object}->create_allowed_by( $c->user->get_object );
-    $estimate = $c->model('DB::Estimate')->create(
-        {
-            id        => $estimate_id,
-            last_name => $cust_last_name,
-            address_1 => $cust_addr_1,
-        }
-    );
-
-    # Join table
-    $estimate->add_to_estimate_estimators(
-        {
-            estimate_id  => $estimate_id,
-            estimator_id => $estimator_id,
-        }
-    );
-
-    #------ Assign the Estimate object to the stash for display and set template
-    $c->stash(
-        new_estimate => $estimate,
-        template     => 'Estimates/create_est.tmpl',
-        return_url   => $c->uri_for('/estimates/list')
-    );
-    $self->create_estimate_entry( $c, $estimate );
-
-    #----- Disable caching for this page
-    $c->response->header( 'Cache-Control' => 'no-cache' );
 }
 
 =head2 list_recent
@@ -1254,26 +1229,27 @@ sub list_one_day_name : Chained('base') : PathPart('list_one_day_name') :
     #    $c->forward( $c->view('HTML::Template') );
 }
 
-
 #-------------------------------------------------------------------------------
 #  Delete
 #  Delete an estimate.
 #-------------------------------------------------------------------------------
+
 =head2 delete
     Delete an estimate
 =cut
+
 sub delete : Chained('object') : PathPart('delete') : Args(0) {
     my ( $self, $c ) = @_;
     $c->log->debug( '*** INSIDE delete . User is ' . $c->user->id . ' ***' );
 
-    # Ensure the user has permission to delete estimates
-#    $c->detach('/error_noperms')
-#      unless $c->stash->{object}->delete_allowed_by( $c->user->get_object );
+   # Ensure the user has permission to delete estimates
+   #    $c->detach('/error_noperms')
+   #      unless $c->stash->{object}->delete_allowed_by( $c->user->get_object );
 
-# Uses  'Catalyst::Plugin::Authorization::Roles' to ensure this user 
-# has permission to Delete an estimate
+    # Uses  'Catalyst::Plugin::Authorization::Roles' to ensure this user
+    # has permission to Delete an estimate
     $c->detach('/error_noperms')
-          unless $c->check_user_roles('can_delete_estimate');
+      unless $c->check_user_roles('can_delete_estimate');
 
     # Saved the PK id for status_msg below
     my $id = $c->stash->{object}->id;
@@ -1309,13 +1285,13 @@ sub schedule_estimate : Chained('base') : PathPart('schedule_estimate' ) :
     $c->log->debug("*** INSIDE $SCHEDULE_ESTIMATE ***");
 
     # Does the user have permission to create estimates
-#    $c->detach('/error_noperms')
-#      unless $c->model('DB::Estimate')->create_allowed_by( $c->user );
+    #    $c->detach('/error_noperms')
+    #      unless $c->model('DB::Estimate')->create_allowed_by( $c->user );
 
-# Uses  'Catalyst::Plugin::Authorization::Roles' to ensure this user 
-# has permission to Schedule an estimate
+    # Uses  'Catalyst::Plugin::Authorization::Roles' to ensure this user
+    # has permission to Schedule an estimate
     $c->detach('/error_noperms')
-          unless $c->check_user_roles('can_create_estimate');
+      unless $c->check_user_roles('can_create_estimate');
 
     # Get the form that the :FormConfig attribute saved in the stash
     my $form = $c->stash->{form};
@@ -1382,16 +1358,16 @@ sub update_estimate : Chained('object') : PathPart('update_estimate') :
   Args(0) : FormConfig('estimates/update_estimate.yml') {
     my ( $self, $c ) = @_;
     my ( $est_cust_rs, $customer );
-    DEBUG "*** Just Inside Update Estimate ***";
+    $c->log->debug("*** Just Inside Update Estimate ***");
 
-#    # Check permissions
-#    $c->detach('/error_noperms')
-#      unless $c->stash->{object}->update_allowed_by( $c->user->get_object );
+   #    # Check permissions
+   #    $c->detach('/error_noperms')
+   #      unless $c->stash->{object}->update_allowed_by( $c->user->get_object );
 
-# Uses  'Catalyst::Plugin::Authorization::Roles' to ensure this user 
-# has permission to Update an estimate
+    # Uses  'Catalyst::Plugin::Authorization::Roles' to ensure this user
+    # has permission to Update an estimate
     $c->detach('/error_noperms')
-          unless $c->check_user_roles('can_update_estimate');
+      unless $c->check_user_roles('can_update_estimate');
 
 # Get the specified estimate/customer result set already saved by the 'object' method
     $est_cust_rs = $c->stash->{object};
@@ -1462,7 +1438,8 @@ sub update_estimate : Chained('object') : PathPart('update_estimate') :
         $self->create_estimator_list( $c, $form );
 
         #------ Set the time value to the time from the database
-        DEBUG "***  Original Estimate time is " . $est_cust_rs->estimate_time;
+        $c->log->debug(
+            "***  Original Estimate time is " . $est_cust_rs->estimate_time );
         my $schedule_time = $form->get_field(
             {
                 name => 'estimate_time',
@@ -1487,7 +1464,7 @@ sub update_estimate : Chained('object') : PathPart('update_estimate') :
         #------ Populate the form with existing values from DB
         $form->model->default_values( $est_cust_rs->customer );
         $form->model->default_values($est_cust_rs);
-        DEBUG " The New Submit Element is $submit_el";
+        $c->log->debug(" The New Submit Element is $submit_el");
     }
 
 #------ Add js to bottom template  (jQ Datepicker And Form Validation to JS array)
@@ -1811,11 +1788,11 @@ sub validate_day_of_week_miniform : Private {
 
     #------ Bad Form Data. Render Page With Form Again
     if ( $c->form->has_error ) {
-        DEBUG "*** Bad Day Of Week Form  data ... " if $c->form->has_error;
-        DEBUG "*** Bad form is  ... " . Dumper( $c->form );
-        DEBUG "*** Missing  ... " . Dumper( $c->form->missing );
-        DEBUG "*** Invalid  ... " . Dumper( $c->form->invalid );
-        DEBUG "*** error  ... " . Dumper( $c->form->error );
+        $c->log->error("*** Bad Day Of Week Form  data ... ");
+        $c->log->error( "*** Bad form is  ... " . Dumper( $c->form ) );
+        $c->log->error( "*** Missing  ... " . Dumper( $c->form->missing ) );
+        $c->log->error( "*** Invalid  ... " . Dumper( $c->form->invalid ) );
+        $c->log->error( "*** error  ... " . Dumper( $c->form->error ) );
         $c->stash->{resultset} = undef;
 
         #-- To make the tab selector active
@@ -1824,13 +1801,13 @@ sub validate_day_of_week_miniform : Private {
         return undef;
     }
 
-    #    DEBUG "*** Good form is  ... " . Dumper($c->form);
+    #    $c->log->debug( "*** Good form is  ... " . Dumper($c->form);
     my $date_time_date =
       MyDate->convert_week_day_number_to_date( $c->form->valid('day_of_week') );
     $date_time_date || return undef;
     $c->stash->{'tab_class_dow'}       = undef;
     $c->stash->{'tab_active_flag_dow'} = undef;
-    DEBUG "*** Validated Date is :  $date_time_date ";
+    $c->log->debug("*** Validated Date is :  $date_time_date ");
     return $date_time_date;
 }
 
@@ -1853,11 +1830,11 @@ sub validate_month_of_year_miniform : Private {
 
     #------ Bad Form Data. Render Page With Form Again
     if ( $c->form->has_error ) {
-        DEBUG "*** Bad Month Of Year Form  data ... " if $c->form->has_error;
-        DEBUG "*** Bad form is  ... " . Dumper( $c->form );
-        DEBUG "*** Missing  ... " . Dumper( $c->form->missing );
-        DEBUG "*** Invalid  ... " . Dumper( $c->form->invalid );
-        DEBUG "*** error  ... " . Dumper( $c->form->error );
+        $c->log->error("*** Bad Month Of Year Form  data ... ");
+        $c->log->error( "*** Bad form is  ... " . Dumper( $c->form ) );
+        $c->log->error( "*** Missing  ... " . Dumper( $c->form->missing ) );
+        $c->log->error( "*** Invalid  ... " . Dumper( $c->form->invalid ) );
+        $c->log->error( "*** error  ... " . Dumper( $c->form->error ) );
         $c->stash->{resultset} = undef;
 
         #-- To make the tab selector active for this form
@@ -1872,9 +1849,9 @@ sub validate_month_of_year_miniform : Private {
     $month_end   || return undef;
     $c->stash->{'tab_class_mm'}       = undef;
     $c->stash->{'tab_active_flag_mm'} = undef;
-    DEBUG '*** Validated Month Range is : '
-      . $month_begin->mdy('/') . ' to '
-      . $month_end->mdy('/');
+    $c->log->debug( '*** Validated Month Range is : '
+          . $month_begin->mdy('/') . ' to '
+          . $month_end->mdy('/') );
     return ( $month_begin, $month_end );
 }
 
@@ -1902,11 +1879,11 @@ sub validate_one_date_miniform : Private {
 
     #------ Bad Form Data. Render Page With Form Again
     if ( $c->form->has_error ) {
-        DEBUG "*** Bad form data ... " if $c->form->has_error;
-        DEBUG "*** Bad form is  ... " . Dumper( $c->form );
-        DEBUG "*** Missing  ... " . Dumper( $c->form->missing );
-        DEBUG "*** Invalid  ... " . Dumper( $c->form->invalid );
-        DEBUG "*** error  ... " . Dumper( $c->form->error );
+        $c->log->error("*** Bad form data ... ");
+        $c->log->error( "*** Bad form is  ... " . Dumper( $c->form ) );
+        $c->log->error( "*** Missing  ... " . Dumper( $c->form->missing ) );
+        $c->log->error( "*** Invalid  ... " . Dumper( $c->form->invalid ) );
+        $c->log->error( "*** error  ... " . Dumper( $c->form->error ) );
         $c->stash->{resultset}            = undef;
         $c->stash->{'tab_class_od'}       = 'class="active"';
         $c->stash->{'tab_active_flag_od'} = 'active';
@@ -1915,7 +1892,7 @@ sub validate_one_date_miniform : Private {
     $c->stash->{'tab_class_od'}       = undef;
     $c->stash->{'tab_active_flag_od'} = undef;
     my $date_time_date = $c->form->valid('input_date') || return undef;
-    DEBUG "*** Validated Date is :  $date_time_date ";
+    $c->log->debug("*** Validated Date is :  $date_time_date ");
     return $date_time_date;
 }
 
@@ -1948,11 +1925,11 @@ sub validate_date_range_miniform : Private {
 
     #------ Bad Form Data. Render Page With Form Again
     if ( $c->form->has_error ) {
-        DEBUG "*** Bad form data ... " if $c->form->has_error;
-        DEBUG "*** Bad form is  ... " . Dumper( $c->form );
-        DEBUG "*** Missing  ... " . Dumper( $c->form->missing );
-        DEBUG "*** Invalid  ... " . Dumper( $c->form->invalid );
-        DEBUG "*** error  ... " . Dumper( $c->form->error );
+        $c->log->error("*** Bad form data ... ");
+        $c->log->error( "*** Bad form is  ... " . Dumper( $c->form ) );
+        $c->log->error( "*** Missing  ... " . Dumper( $c->form->missing ) );
+        $c->log->error( "*** Invalid  ... " . Dumper( $c->form->invalid ) );
+        $c->log->error( "*** error  ... " . Dumper( $c->form->error ) );
         $c->stash->{resultset}            = undef;
         $c->stash->{'tab_class_dr'}       = 'class="active"';
         $c->stash->{'tab_active_flag_dr'} = 'active';
@@ -1962,8 +1939,8 @@ sub validate_date_range_miniform : Private {
     $c->stash->{'tab_active_flag_dr'} = undef;
     my $date_time_start = $c->form->valid('start_date') || return undef;
     my $date_time_end   = $c->form->valid('end_date')   || return undef;
-    DEBUG "*** Validated Date is (start): $date_time_start";
-    DEBUG "*** Validated Date is (end): $date_time_end";
+    $c->log->debug("*** Validated Date is (start): $date_time_start");
+    $c->log->debug("*** Validated Date is (end): $date_time_end");
     return ( $date_time_start, $date_time_end );
 }
 
@@ -2003,54 +1980,16 @@ sub get_date_time_my_way : Private {
     my ( $self, $c, $input_date ) = @_;
     return undef unless defined $input_date;
     my ($date_time);
-    DEBUG "*** Using MyDate ";
+    $c->log->debug("*** Using MyDate ");
     eval {
         $date_time = MyDate->convert_date_string_to_date_time($input_date); };
     return $date_time if ( defined $date_time );
 
     #------ Still not working.....
-    DEBUG "Eval output: $@ " if $@;
+    $c->log->error("Eval output: $@ ") if $@;
     $c->stash->{error_msg_1} =
       "Requested Date Could not be converted to DateTime format.";
     $c->detach('/error_other');
-}
-
-=d2 list
-Populate the stash with one estimate
-=cut
-
-sub create_estimate_entry : Private {
-    my ( $self, $c, $est_obj ) = @_;
-    my ( $est_date, $est_time );
-
-    #----- Parse the Date Time from Timestamp;
-    if ( $est_obj->estimate_date =~ /\A(.*)T(\d\d:\d\d):.*\Z/ ) {
-        $est_date = $1;
-        $est_time = $2;
-    }
-
-    #    $c->stash->{ESTIMATE_ID}  = $est_obj->id  // undef;
-    #    $c->stash->{ESTIMATOR} = $est_obj->belongs_to // undef;
-    $c->stash->{L_NAME}        = $est_obj->last_name              // undef;
-    $c->stash->{SUFFIX}        = $est_obj->suffix                 // undef;
-    $c->stash->{PREFIX}        = $est_obj->prefix                 // undef;
-    $c->stash->{F_NAME}        = $est_obj->first_name             // undef;
-    $c->stash->{ADR_1}         = $est_obj->address_1              // undef;
-    $c->stash->{ADR_2}         = $est_obj->address_2              // undef;
-    $c->stash->{CITY}          = $est_obj->city                   // undef;
-    $c->stash->{STATE}         = $est_obj->state                  // undef;
-    $c->stash->{PHONE_1}       = $est_obj->phone_1                // undef;
-    $c->stash->{PHONE_2}       = $est_obj->phone_2                // undef;
-    $c->stash->{PHONE_3}       = $est_obj->phone_3                // undef;
-    $c->stash->{EMAIL_1}       = $est_obj->email_1                // undef;
-    $c->stash->{EMAIL_2}       = $est_obj->email_2                // undef;
-    $c->stash->{SCHEDULE_DATE} = $est_obj->estimate_date          // undef;
-    $c->stash->{SCHEDULE_TIME} = '</br>' . $est_time              // undef;
-    $c->stash->{ESTIMATOR}     = $est_obj->belongs_to->first_name // undef;
-    $c->stash->{REC_BY}        = $est_obj->recommended_by         // undef;
-    $c->stash->{REP_CUST}      = $est_obj->repeat_cust            // undef;
-
-#    $c->stash->{ESTIMATOR}      = $est_obj->belongs_to->first_name    // undef;
 }
 
 #-----------------  FILTERING AND VALIDATION AREA
@@ -2082,7 +2021,7 @@ sub create_estimator_list : Private {
         } @estimator_objs
       )
     {
-        push( @estimators, [ $_->id, ( $_->alias // $_->first_name ) ] );
+        push( @estimators, [ $_->id, ( $_->first_last_name // $_->alias ) ] );
     }
     my $select = $form->get_field( { name => 'estimator_id', } );
 

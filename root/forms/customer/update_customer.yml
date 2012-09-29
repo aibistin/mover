@@ -196,8 +196,6 @@ elements:
             eval: 1
           #- type: Callback
             #callback: "MyValid::city_stripper"
-            #callback: "mover::Controller::Estimates::MyValid::city_stripper"
-          #- +mover::View::HTML::FormFu::Filter::MyFilter::city_stripper
         constraints:
           - Required
             #message: Enter a city

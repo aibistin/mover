@@ -3,7 +3,6 @@ use strict;
 use warnings;
 use Data::Dumper;
 use base 'DBIx::Class::ResultSet';
-use Log::Log4perl qw(:easy);
 
 #-------------------------------------------------------------------------------
 #  Lots of pre defined searches to get estimate information
